@@ -1,5 +1,6 @@
 package com.app.repository.impl;
 
+import com.app.dto.ProductDto;
 import com.app.dto.StockDto;
 import com.app.exceptions.MyException;
 import com.app.model.Stock;
@@ -10,9 +11,8 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implements StockRepository {
     @Override
@@ -34,7 +34,7 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
                     .getResultList());
 
             tx.commit();
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
@@ -86,4 +86,5 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
 
 
     }
+
 }

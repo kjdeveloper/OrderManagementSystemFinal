@@ -42,15 +42,13 @@ public class CustomerService {
 
         String countryName = customerDto.getCountryDTO().getName();
 
-        Country country = null;
+        Country country = countryRepository.findByName(countryName).orElse(null);
 
-        if (countryName != null) {
-            country = countryRepository.findByName(countryName).orElse(null);
-            if (country == null) {
-                country = Mappers.fromCountryDTOToCountry(customerDto.getCountryDTO());
-                country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY"));
-            }
+        if (country == null) {
+            country = Mappers.fromCountryDTOToCountry(customerDto.getCountryDTO());
+            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY IN CUSTOMER SERVICE"));
         }
+
 
         Customer customer = Mappers.fromCustomerDTOToCustomer(customerDto);
         customer.setCountry(country);

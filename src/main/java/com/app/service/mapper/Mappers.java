@@ -73,9 +73,9 @@ public interface Mappers {
                 .date((customer_order.getDate().toLocalDateTime()))
                 .discount(customer_order.getDiscount())
                 .quantity(customer_order.getQuantity())
-                .customerDTO(customer_order.getCustomer() == null ? null : fromCustomerToCustomerDTO(customer_order.getCustomer()))
+                .customerDto(customer_order.getCustomer() == null ? null : fromCustomerToCustomerDTO(customer_order.getCustomer()))
                 .ePayments(new HashSet<>())
-                .productDTO(customer_order.getProduct() == null ? null : fromProductToProductDTO(customer_order.getProduct()))
+                .productDto(customer_order.getProduct() == null ? null : fromProductToProductDTO(customer_order.getProduct()))
                 .build();
     }
 
@@ -85,9 +85,9 @@ public interface Mappers {
                 .date(Timestamp.valueOf(customer_orderDTO.getDate()))
                 .discount(customer_orderDTO.getDiscount())
                 .quantity(customer_orderDTO.getQuantity())
-                .customer(customer_orderDTO.getCustomerDTO() == null ? null : fromCustomerDTOToCustomer(customer_orderDTO.getCustomerDTO()))
+                .customer(customer_orderDTO.getCustomerDto() == null ? null : fromCustomerDTOToCustomer(customer_orderDTO.getCustomerDto()))
                 .ePayments(new HashSet<>())
-                .product(customer_orderDTO.getProductDTO() == null ? null : fromProductDTOToProduct(customer_orderDTO.getProductDTO()))
+                .product(customer_orderDTO.getProductDto() == null ? null : fromProductDTOToProduct(customer_orderDTO.getProductDto()))
                 .build();
     }
 /*

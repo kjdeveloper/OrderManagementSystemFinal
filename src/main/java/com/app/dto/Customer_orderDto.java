@@ -19,8 +19,8 @@ public class Customer_orderDto {
     private LocalDateTime date;
     private Double discount;
     private int quantity;
-    private CustomerDto customerDTO;
+    private CustomerDto customerDto;
     private Set<EPayment> ePayments;
-    private ProductDto productDTO;
+    private ProductDto productDto;
 
 }

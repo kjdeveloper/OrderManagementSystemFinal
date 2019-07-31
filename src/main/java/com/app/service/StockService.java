@@ -51,7 +51,7 @@ public class StockService {
         String productName = productDto.getName();
 
         Shop shop = shopRepository.findByName(shopName).orElse(null);
-        Product product = productRepository.findByName(productDto.getName()).orElse(null);
+        Product product = productRepository.findByName(productName).orElse(null);
 
         if (shop == null) {
             shop = Mappers.fromShopDTOToShop(shopDto);

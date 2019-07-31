@@ -21,7 +21,7 @@ public class Customer_orderValidator extends AbstractValidator<Customer_orderDto
         if (!isDateValid(customer_orderDto)){
             throw new MyException("INVALID DATE IN CUSTOMER ORDER");
         }
-        if (!isDicsountValid(customer_orderDto)){
+        if (!isDiscountValid(customer_orderDto)){
             throw  new MyException("INVALID DISCOUNT IN CUSTOMER ORDER");
         }
     }
@@ -30,7 +30,7 @@ public class Customer_orderValidator extends AbstractValidator<Customer_orderDto
         return customer_orderDto.getDate().isAfter(LocalDateTime.now());
     }
 
-    private boolean isDicsountValid(Customer_orderDto customer_orderDto){
+    private boolean isDiscountValid(Customer_orderDto customer_orderDto){
         return customer_orderDto.getDiscount() > 0.0 && customer_orderDto.getDiscount() < 1.0;
     }
 }
