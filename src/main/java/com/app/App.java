@@ -4,6 +4,7 @@ import com.app.dto.*;
 import com.app.mainmenu.menu.MenuService;
 import com.app.model.enums.EGuarantee;
 import com.app.model.enums.EPayment;
+import com.app.service.CountryService;
 import com.app.service.CustomerOrderService;
 import com.app.service.ProductService;
 import com.app.service.StockService;
@@ -21,32 +22,32 @@ public class App {
         //menuService.service();
 
         CountryDto countryDto = CountryDto.builder()
-                .name("PORTUGAL")
+                .name("POLAND")
                 .build();
 
         CustomerDto customerDto = CustomerDto.builder()
-                .name("Fara")
-                .surname("BLALOR")
+                .name("ERASDASD")
+                .surname("DZIWNOLAAAAAAG")
                 .age(34)
                 .countryDTO(countryDto)
                 .build();
 
         CategoryDto categoryDto = CategoryDto.builder()
-                .name("NIEWIEM_CO_TO_zA_KATEGORIA")
+                .name("NIEWIEMCOTO")
                 .build();
 
         TradeDto tradeDto = TradeDto.builder()
-                .name("BRANZA_LOL")
+                .name("DZIWNABRANZA")
                 .build();
 
         ProducerDto producerDto = ProducerDto.builder()
                 .countryDTO(countryDto)
-                .name("PARALIZATOR_NAME")
+                .name("TREWDET")
                 .tradeDTO(tradeDto)
                 .build();
 
         ProductDto productDto = ProductDto.builder()
-                .name("PARASOL")
+                .name("CHLEBAK")
                 .categoryDTO(categoryDto)
                 .price(new BigDecimal(150))
                 .producerDTO(producerDto)
@@ -64,12 +65,14 @@ public class App {
 
         ShopDto shopDto = ShopDto.builder()
                 .countryDTO(countryDto)
-                .name("ABRAKADABRA")
+                .name("DZIWNY")
                 .build();
 
         StockService stockService = new StockService();
         //stockService.addProductToStock(productDto, shopDto, 20);
 
+        CountryService countryService = new CountryService();
+        //countryService.addCountry(countryDto);
         CustomerOrderService customerOrderService = new CustomerOrderService();
         customerOrderService.addCustomerOrder(customer_orderDto, shopDto);
 

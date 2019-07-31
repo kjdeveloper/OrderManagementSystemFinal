@@ -76,7 +76,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCT FIND BY IS EXIST BY NAME AND CATEGORY AND PRODUCER EXCEPTION ");
+            throw new MyException("PRODUCT FIND BY METHOD = IS EXIST BY NAME AND CATEGORY AND PRODUCER EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
