@@ -70,7 +70,7 @@ public class CustomerOrderService {
     }
 
     private Shop returnShopIfExist(ShopDto shopDto) {
-        Shop shop = shopRepository.findByName(shopDto.getName()).orElse(null);
+        Shop shop = shopRepository.findByName(shopDto).orElse(null);
         if (shop == null) {
             shop = Mappers.fromShopDTOToShop(shopDto);
             shopRepository.addOrUpdate(shop).orElseThrow(() -> new MyException("CAN NOT ADD SHOP IN ORDER CUSTOMER SERVICE"));

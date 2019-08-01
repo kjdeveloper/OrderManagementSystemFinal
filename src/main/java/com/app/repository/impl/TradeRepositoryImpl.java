@@ -1,5 +1,6 @@
 package com.app.repository.impl;
 
+import com.app.dto.TradeDto;
 import com.app.exceptions.MyException;
 import com.app.model.Trade;
 import com.app.repository.TradeRepository;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 public class TradeRepositoryImpl extends AbstractGenericRepository<Trade> implements TradeRepository {
     @Override
-    public Optional<Trade> findByName(String name) {
+    public Optional<Trade> findByName(TradeDto tradeDto) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         Optional<Trade> optionalTrade = Optional.empty();
@@ -27,7 +28,7 @@ public class TradeRepositoryImpl extends AbstractGenericRepository<Trade> implem
 
             optionalTrade = entityManager
                     .createQuery("select t from Trade t where t.name = :name", Trade.class)
-                    .setParameter("name", name)
+                    .setParameter("name", tradeDto.getName())
                     .getResultList()
                     .stream()
                     .findFirst();

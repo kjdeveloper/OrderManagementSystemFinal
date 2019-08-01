@@ -31,7 +31,7 @@ public class ShopService {
         return !shopValidator.hasErrors();
     }*/
 
-    public void addShop(final ShopDto shopDTO) {
+    public ShopDto addShop(final ShopDto shopDTO) {
         shopValidator.validateShop(shopDTO);
         countryValidator.validateCountry(shopDTO.getCountryDTO());
 
@@ -43,7 +43,7 @@ public class ShopService {
         String countryName = shopDTO.getCountryDTO().getName();
 
         Country country = countryRepository.findByName(countryName).orElse(null);
-        Shop shop = shopRepository.findByName(shopDTO.getName()).orElse(null);
+        Shop shop = shopRepository.findByName(shopDTO).orElse(null);
         if (country == null){
             country = Mappers.fromCountryDTOToCountry(shopDTO.getCountryDTO());
             country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY WITH SHOP"));
@@ -54,6 +54,7 @@ public class ShopService {
 
         shop.setCountry(country);
         shopRepository.addOrUpdate(shop);
+        return Mappers.fromShopToShopDTO(shop);
     }
 
 }

@@ -64,8 +64,8 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             exist = entityManager
                     .createQuery("select p from Product p where p.name = :name AND p.category.name =:categoryName AND p.producer.name = :producerName", Product.class)
                     .setParameter("name", productDTO.getName())
-                    .setParameter("categoryName", productDTO.getCategoryDTO())
-                    .setParameter("producerName", productDTO.getProducerDTO())
+                    .setParameter("categoryName", productDTO.getCategoryDTO().getName())
+                    .setParameter("producerName", productDTO.getProducerDTO().getName())
                     .getResultList()
                     .stream()
                     .findFirst()
@@ -83,10 +83,6 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             }
         }
 
-        if (exist) {
-            return true;
-        }
-
-        return false;
+        return exist;
     }
 }

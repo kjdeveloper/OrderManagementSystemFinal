@@ -47,10 +47,9 @@ public class StockService {
         productValidator.validateProduct(productDto);
         shopValidator.validateShop(shopDto);
 
-        String shopName = shopDto.getName();
         String productName = productDto.getName();
 
-        Shop shop = shopRepository.findByName(shopName).orElse(null);
+        Shop shop = shopRepository.findByName(shopDto).orElse(null);
         Product product = productRepository.findByName(productName).orElse(null);
 
         if (shop == null) {

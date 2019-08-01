@@ -1,6 +1,7 @@
 package com.app.service;
 
 import com.app.dto.ProducerDto;
+import com.app.dto.TradeDto;
 import com.app.exceptions.MyException;
 import com.app.model.Country;
 import com.app.model.Producer;
@@ -37,7 +38,7 @@ public class ProducerService {
         return !producerValidator.hasErrors();
     }*/
 
-    public void addProducer(ProducerDto producerDTO) {
+    public ProducerDto addProducer(ProducerDto producerDTO) {
         producerValidator.validateProducer(producerDTO);
         countryValidator.validateCountry(producerDTO.getCountryDTO());
         tradeValidator.validateTrade(producerDTO.getTradeDTO());
@@ -49,12 +50,11 @@ public class ProducerService {
         }
 
         String countryName = producerDTO.getCountryDTO().getName();
-        String tradeName = producerDTO.getTradeDTO().getName();
-        String producerName = producerDTO.getName();
+        TradeDto tradeDto = producerDTO.getTradeDTO();
 
-        Producer producer = producerRepository.findByName(producerName).orElse(null);
+        Producer producer = producerRepository.findByName(producerDTO).orElse(null);
         Country country = countryRepository.findByName(countryName).orElse(null);
-        Trade trade = tradeRepository.findByName(tradeName).orElse(null);
+        Trade trade = tradeRepository.findByName(tradeDto).orElse(null);
 
         if (country == null){
             country = Mappers.fromCountryDTOToCountry(producerDTO.getCountryDTO());
@@ -71,6 +71,7 @@ public class ProducerService {
         producer.setTrade(trade);
         producer.setCountry(country);
         producerRepository.addOrUpdate(producer);
+        return Mappers.fromProducerToProducerDTO(producer);
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> implements ProducerRepository {
     @Override
-    public Optional<Producer> findByName(String name) {
+    public Optional<Producer> findByName(ProducerDto producerDto) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         Optional<Producer> optionalProducer = Optional.empty();
@@ -28,7 +28,7 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
 
             optionalProducer = entityManager
                     .createQuery("select p from Producer p where p.name = :name", Producer.class)
-                    .setParameter("name", name)
+                    .setParameter("name", producerDto.getName())
                     .getResultList()
                     .stream()
                     .findFirst();

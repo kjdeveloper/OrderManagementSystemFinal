@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.dto.ProducerDto;
 import com.app.dto.ProductDto;
 import com.app.exceptions.MyException;
 import com.app.model.Category;
@@ -39,7 +40,7 @@ public class ProductService {
         return !productValidator.hasErrors();
     }
 
-    public void addProduct(ProductDto productDTO) {
+    public ProductDto addProduct(ProductDto productDTO) {
         productValidator.validateProduct(productDTO);
         categoryValidator.validateCategory(productDTO.getCategoryDTO());
         producerValidator.validateProducer(productDTO.getProducerDTO());
@@ -52,11 +53,11 @@ public class ProductService {
 
         String productName = productDTO.getName();
         String categoryName = productDTO.getCategoryDTO().getName();
-        String producerName = productDTO.getProducerDTO().getName();
+        ProducerDto producerDto = productDTO.getProducerDTO();
 
         Product product = productRepository.findByName(productName).orElse(null);
         Category category = categoryRepository.findByName(categoryName).orElse(null);
-        Producer producer = producerRepository.findByName(producerName).orElse(null);
+        Producer producer = producerRepository.findByName(producerDto).orElse(null);
 
         if (category == null) {
             category = Mappers.fromCategoryDTOtoCategory(productDTO.getCategoryDTO());
@@ -73,5 +74,6 @@ public class ProductService {
         product.setCategory(category);
         product.setProducer(producer);
         productRepository.addOrUpdate(product);
+        return Mappers.fromProductToProductDTO(product);
     }
 }
