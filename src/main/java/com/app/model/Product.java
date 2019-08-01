@@ -40,11 +40,6 @@ import java.util.Set;
     @EqualsAndHashCode.Exclude
     private Set<Stock> stocks = new HashSet<>();
 
-
-   /* @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "product")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude*/
-
     @ElementCollection
     @CollectionTable(
             name = "guarantees",

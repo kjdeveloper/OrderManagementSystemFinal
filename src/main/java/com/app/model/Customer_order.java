@@ -30,9 +30,7 @@ public class Customer_order {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    /*
-        @ManyToOne(cascade = CascadeType.PERSIST)
-        @JoinColumn(name = "payment_id")*/
+
     @ElementCollection
     @CollectionTable(
             name = "payments",

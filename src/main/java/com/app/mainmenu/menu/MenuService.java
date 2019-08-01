@@ -23,16 +23,23 @@ public class MenuService {
 
     private void menu() {
         System.out.println("\nMENU");
-        System.out.println("\nAdding methods");
+        System.out.println("\n========== Adding methods ==========");
         System.out.println("1.Add new customer");
         System.out.println("2.Add new shop");
         System.out.println("3.Add new producer");
         System.out.println("4.Add new product");
         System.out.println("5.Add new position in stock");
         System.out.println("6.Add new customer order");
-        System.out.println("Downloads methods");
+        System.out.println("\n========== Downloads methods ==========");
         System.out.println("8.");
-        System.out.println("----------------------------------------------------");
+        System.out.println("9.");
+        System.out.println("10.");
+        System.out.println("11.");
+        System.out.println("12.");
+        System.out.println("13.");
+        System.out.println("14.");
+        System.out.println("15.");
+        System.out.println(" ========================================");
         System.out.println("0. EXIT");
     }
 
