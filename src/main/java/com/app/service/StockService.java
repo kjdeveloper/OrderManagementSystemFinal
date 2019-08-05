@@ -46,11 +46,12 @@ public class StockService {
     public void addProductToStock(ProductDto productDto, ShopDto shopDto, int quantity) {
         productValidator.validateProduct(productDto);
         shopValidator.validateShop(shopDto);
-
-        String productName = productDto.getName();
+        if (quantity <= 0){
+            throw new MyException("QUANTITY CAN NOT BE LESS OR EQUAL ZERO");
+        }
 
         Shop shop = shopRepository.findByName(shopDto).orElse(null);
-        Product product = productRepository.findByName(productName).orElse(null);
+        Product product = productRepository.findByName(productDto).orElse(null);
 
         if (shop == null) {
             shop = Mappers.fromShopDTOToShop(shopDto);

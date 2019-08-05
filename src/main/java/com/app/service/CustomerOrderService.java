@@ -31,9 +31,9 @@ public class CustomerOrderService {
         Stock stock = returnStockIfExist(customer_orderDto, shopDto);
         Customer customer = returnTheCustomerIfExist(customer_orderDto.getCustomerDto());
         Product product = returnTheProductIfExist(customer_orderDto.getProductDto());
-        Shop shop = returnShopIfExist(shopDto);
-        int quantityToOrder = customer_orderDto.getQuantity();
+        // tutaj nie bardzo wiem co z tym sklepem zrobic -> Shop shop = returnShopIfExist(shopDto);
 
+        int quantityToOrder = customer_orderDto.getQuantity();
         int quantityOnStock = stock.getQuantity();
 
         if (quantityToOrder > quantityOnStock) {
@@ -61,7 +61,7 @@ public class CustomerOrderService {
     }
 
     private Product returnTheProductIfExist(ProductDto productDto) {
-        Product product = productRepository.findByName(productDto.getName()).orElse(null);
+        Product product = productRepository.findByName(productDto).orElse(null);
         if (product == null) {
             product = Mappers.fromProductDTOToProduct(productDto);
             product = productRepository.addOrUpdate(product).orElseThrow(() -> new MyException("CAN NOT ADD PRODUCT IN CUSTOMER ORDER SERVICE"));

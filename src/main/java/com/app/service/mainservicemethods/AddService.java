@@ -1,10 +1,10 @@
-package com.app.service;
+package com.app.service.mainservicemethods;
 
 import com.app.dto.CustomerDto;
 import com.app.dto.ProducerDto;
 import com.app.dto.ProductDto;
 import com.app.dto.ShopDto;
-import com.app.model.Shop;
+import com.app.service.*;
 
 public class AddService {
 
@@ -28,7 +28,6 @@ public class AddService {
     public ProducerDto addProducer(ProducerDto producerDto) {
         return producerService.addProducer(producerDto);
     }
-
 
     public ProductDto addProduct(ProductDto productDto) {
         return productService.addProduct(productDto);

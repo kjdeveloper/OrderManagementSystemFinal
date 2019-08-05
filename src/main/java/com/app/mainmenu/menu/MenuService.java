@@ -2,8 +2,9 @@ package com.app.mainmenu.menu;
 
 import com.app.dto.*;
 import com.app.model.enums.EGuarantee;
-import com.app.service.AddService;
+import com.app.service.mainservicemethods.AddService;
 import com.app.service.UserDataService;
+import com.app.service.mainservicemethods.DataDownloadService;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ public class MenuService {
 
     private final UserDataService userDataService = new UserDataService();
     private final AddService addService = new AddService();
+    private final DataDownloadService dataDownloadService = new DataDownloadService();
 
     private Scanner sc = new Scanner(System.in);
 
@@ -71,25 +73,31 @@ public class MenuService {
                     System.out.println(productDto + " ADDED.");
                     break;
                 case 5:
+
                     break;
                 case 6:
+
                     break;
                 case 7:
+
                     break;
                 case 8:
+
                     break;
                 case 9:
+
                     break;
                 case 10:
+
                     break;
                 case 11:
+
                     break;
                 case 0:
                     userDataService.close();
                     System.out.println("Bye Bye");
                     return;
             }
-
 
         } while (true);
     }
@@ -175,7 +183,7 @@ public class MenuService {
         ProducerDto producerDto = ProducerDto.builder()
                 .name(producerName)
                 .countryDTO(CountryDto.builder()
-                        .name(category)
+                        .name(producerCountry)
                         .build())
                 .build();
 

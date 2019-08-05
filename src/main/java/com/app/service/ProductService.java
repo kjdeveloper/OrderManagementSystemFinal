@@ -2,22 +2,27 @@ package com.app.service;
 
 import com.app.dto.ProducerDto;
 import com.app.dto.ProductDto;
+import com.app.dto.TradeDto;
 import com.app.exceptions.MyException;
 import com.app.model.Category;
 import com.app.model.Producer;
 import com.app.model.Product;
+import com.app.model.Trade;
 import com.app.repository.CategoryRepository;
 import com.app.repository.ProducerRepository;
 import com.app.repository.ProductRepository;
+import com.app.repository.TradeRepository;
 import com.app.repository.impl.CategoryRepositoryImpl;
 import com.app.repository.impl.ProducerRepositoryImpl;
 import com.app.repository.impl.ProductRepositoryImpl;
+import com.app.repository.impl.TradeRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CategoryValidator;
 import com.app.validation.impl.ProducerValidator;
 import com.app.validation.impl.ProductValidator;
 
 import java.util.Map;
+import java.util.Scanner;
 
 public class ProductService {
 
@@ -28,10 +33,14 @@ public class ProductService {
     private final ProductValidator productValidator = new ProductValidator();
     private final CategoryValidator categoryValidator = new CategoryValidator();
     private final ProducerValidator producerValidator = new ProducerValidator();
+    private final TradeRepository tradeRepository = new TradeRepositoryImpl();
+    private final TradeService tradeService = new TradeService();
 
-    private boolean validateProduct(ProductDto productDTO) {
+    private final Scanner sc = new Scanner(System.in);
 
-        Map<String, String> productErrorsMap = productValidator.validate(productDTO);
+    private boolean validateProduct(ProductDto productDto) {
+
+        Map<String, String> productErrorsMap = productValidator.validate(productDto);
         if (productValidator.hasErrors()) {
             System.out.println("------PRODUCT VALIDATION ERRORS");
             productErrorsMap.forEach((k, v) -> System.out.println(k + " -> " + v));
@@ -40,35 +49,39 @@ public class ProductService {
         return !productValidator.hasErrors();
     }
 
-    public ProductDto addProduct(ProductDto productDTO) {
-        productValidator.validateProduct(productDTO);
-        categoryValidator.validateCategory(productDTO.getCategoryDTO());
-        producerValidator.validateProducer(productDTO.getProducerDTO());
+    public ProductDto addProduct(ProductDto productDto) {
+        productValidator.validateProduct(productDto);
+        categoryValidator.validateCategory(productDto.getCategoryDTO());
+        producerValidator.validateProducer(productDto.getProducerDTO());
 
-        final boolean exist = productRepository.isExistByNameAndCategoryAndProducer(productDTO);
+        final boolean exist = productRepository.isExistByNameAndCategoryAndProducer(productDto);
 
         if (exist) {
             throw new MyException("PRODUCT WITH GIVEN CATEGORY AND PRODUCER EXIST");
         }
 
-        String productName = productDTO.getName();
-        String categoryName = productDTO.getCategoryDTO().getName();
-        ProducerDto producerDto = productDTO.getProducerDTO();
+        ProducerDto producerDto = productDto.getProducerDTO();
 
-        Product product = productRepository.findByName(productName).orElse(null);
-        Category category = categoryRepository.findByName(categoryName).orElse(null);
+        Product product = productRepository.findByName(productDto).orElse(null);
+        Category category = categoryRepository.findByName(productDto.getCategoryDTO()).orElse(null);
         Producer producer = producerRepository.findByName(producerDto).orElse(null);
 
         if (category == null) {
-            category = Mappers.fromCategoryDTOtoCategory(productDTO.getCategoryDTO());
+            category = Mappers.fromCategoryDTOtoCategory(productDto.getCategoryDTO());
             category = categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException("CANNOT ADD CATEGORY"));
         }
         if (producer == null) {
-            producer = Mappers.fromProducerDTOToProducer(productDTO.getProducerDTO());
+            System.out.println("Please enter a name of producers trade: ");
+            String t = sc.next();
+            TradeDto tradeDto = TradeDto.builder().name(t).build();
+            tradeService.addTrade(tradeDto);
+            Trade trade = Mappers.fromTradeDTOToTrade(tradeDto);
+            producer = Mappers.fromProducerDTOToProducer(productDto.getProducerDTO());
+            producer.setTrade(trade);
             producer = producerRepository.addOrUpdate(producer).orElseThrow(() -> new MyException("CANNOT ADD PRODUCER"));
         }
         if (product == null) {
-            product = Mappers.fromProductDTOToProduct(productDTO);
+            product = Mappers.fromProductDTOToProduct(productDto);
         }
 
         product.setCategory(category);

@@ -8,7 +8,5 @@ public class App {
         MenuService menuService = new MenuService();
         menuService.service();
 
-
-
     }
 }
