@@ -15,18 +15,6 @@ public class CategoryService {
     private CategoryRepository categoryRepository = new CategoryRepositoryImpl();
     private CategoryValidator categoryValidator = new CategoryValidator();
 
-    private boolean validate(CategoryDto categoryDTO) {
-
-        Map<String, String> categoryErrorsMap = categoryValidator.validate(categoryDTO);
-
-        if (categoryValidator.hasErrors()) {
-            System.out.println("------CATEGORY VALIDATION ERRORS------");
-            categoryErrorsMap.forEach((k, v) -> System.out.println(k + " -> " + v));
-            System.out.println("--------------------------------------");
-        }
-        return !categoryValidator.hasErrors();
-    }
-
     public void addCategory(CategoryDto categoryDTO) {
         categoryValidator.validateCategory(categoryDTO);
 

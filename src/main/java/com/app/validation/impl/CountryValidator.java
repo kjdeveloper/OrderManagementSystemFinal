@@ -2,24 +2,12 @@ package com.app.validation.impl;
 
 import com.app.dto.CountryDto;
 import com.app.exceptions.MyException;
-import com.app.validation.generic.AbstractValidator;
 
 import java.util.Map;
 
 import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
 
-public class CountryValidator extends AbstractValidator<CountryDto> {
-
-    @Override
-    public Map<String, String> validate(final CountryDto countryDTO) {
-        if (countryDTO == null) {
-            errors.put("countryDTO", "null");
-        }
-        if (!isNameValid(countryDTO)) {
-            errors.put("countryDTO name", "Name is not valid => " + countryDTO.getName());
-        }
-        return errors;
-    }
+public class CountryValidator{
 
     public void validateCountry(final CountryDto countryDto){
         if (isNullOrEmpty(countryDto.getName())){

@@ -30,19 +30,6 @@ public class StockService {
     private final ShopValidator shopValidator = new ShopValidator();
     private final ProductValidator productValidator = new ProductValidator();
 
-
-    private boolean validateStock(StockDto stockDTO) {
-
-        Map<String, String> stockErrorsMap = stockValidator.validate(stockDTO);
-        if (stockValidator.hasErrors()) {
-            System.out.println("------STOCK VALIDATION ERRORS");
-            stockErrorsMap.forEach((k, v) -> System.out.println(k + " -> " + v));
-            System.out.println("-----------------------------");
-        }
-
-        return !stockValidator.hasErrors();
-    }
-
     public StockDto addProductToStock(ProductDto productDto, ShopDto shopDto, int quantity) {
         productValidator.validateProduct(productDto);
         shopValidator.validateShop(shopDto);

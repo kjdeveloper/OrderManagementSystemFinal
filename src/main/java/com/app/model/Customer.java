@@ -29,5 +29,5 @@ public class Customer {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "customer")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Customer_order> customerOrders = new HashSet<>();
+    private Set<CustomerOrder> customerOrders = new HashSet<>();
 }

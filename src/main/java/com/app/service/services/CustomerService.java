@@ -19,17 +19,6 @@ public class CustomerService {
     private final CountryValidator countryValidator = new CountryValidator();
     private final CountryRepository countryRepository = new CountryRepositoryImpl();
 
- /*   private boolean isValidCustomer(CustomerDto customerDTO) {
-
-        Map<String, String> customerErrorsMap = customerDtoValidator.validate(customerDTO);
-        if (customerDtoValidator.hasErrors()) {
-            System.out.println("------CUSTOMER VALIDATION ERRORS------");
-            customerErrorsMap.forEach((k, v) -> System.out.println(k + " -> " + v));
-            System.out.println("--------------------------------------");
-        }
-        return !customerDtoValidator.hasErrors();
-    }*/
-
     public CustomerDto addCustomer(final CustomerDto customerDto) {
         customerDtoValidator.validateCustomer(customerDto);
         countryValidator.validateCountry(customerDto.getCountryDTO());

@@ -19,7 +19,7 @@ public class ProductDto {
     private String name;
     private BigDecimal price;
     private CategoryDto categoryDTO;
-    private Set<Customer_orderDto> customerOrderDTOS;
+    private Set<CustomerOrderDto> customerOrderDTOS;
     private ProducerDto producerDTO;
     private Set<StockDto> stockDtos;
     private Set<EGuarantee> eGuarantees;

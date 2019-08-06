@@ -29,7 +29,7 @@ import java.util.Set;
     private Category category;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "product")
-    private Set<Customer_order> customer_orders = new HashSet<>();
+    private Set<CustomerOrder> customer_orders = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "producer_id")

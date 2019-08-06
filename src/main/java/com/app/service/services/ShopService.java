@@ -16,20 +16,8 @@ public class ShopService {
 
     private final ShopRepository shopRepository = new ShopRepositoryImpl();
     private final ShopValidator shopValidator = new ShopValidator();
-    private final CountryService countryService = new CountryService();
     private final CountryValidator countryValidator = new CountryValidator();
     private final CountryRepository countryRepository = new CountryRepositoryImpl();
-    /*private boolean validateShop(ShopDto shopDTO) {
-
-        Map<String, String> shopErrorsMap = shopValidator.validate(shopDTO);
-        if (shopValidator.hasErrors()) {
-            System.out.println("------SHOP VALIDATION ERRORS------");
-            shopErrorsMap.forEach((k, v) -> System.out.println(k + " -> " + v));
-            System.out.println("----------------------------------");
-        }
-
-        return !shopValidator.hasErrors();
-    }*/
 
     public ShopDto addShop(final ShopDto shopDTO) {
         shopValidator.validateShop(shopDTO);

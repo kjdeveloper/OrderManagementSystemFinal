@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "customers_orders")
-public class Customer_order {
+public class CustomerOrder {
 
     @Id
     @GeneratedValue

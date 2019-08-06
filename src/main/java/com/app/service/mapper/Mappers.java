@@ -67,8 +67,8 @@ public interface Mappers {
                 .build();
     }
 
-    static Customer_orderDto fromCustomer_orderToCustomer_orderDTO(Customer_order customer_order) {
-        return customer_order == null ? null : Customer_orderDto.builder()
+    static CustomerOrderDto fromCustomer_orderToCustomer_orderDTO(CustomerOrder customer_order) {
+        return customer_order == null ? null : CustomerOrderDto.builder()
                 .id(customer_order.getId())
                 .date((customer_order.getDate().toLocalDateTime()))
                 .discount(customer_order.getDiscount())
@@ -79,8 +79,8 @@ public interface Mappers {
                 .build();
     }
 
-    static Customer_order fromCustomer_orderDTOToCustomer_order(Customer_orderDto customer_orderDTO) {
-        return customer_orderDTO == null ? null : Customer_order.builder()
+    static CustomerOrder fromCustomer_orderDTOToCustomer_order(CustomerOrderDto customer_orderDTO) {
+        return customer_orderDTO == null ? null : CustomerOrder.builder()
                 .id(customer_orderDTO.getId())
                 .date(Timestamp.valueOf(customer_orderDTO.getDate()))
                 .discount(customer_orderDTO.getDiscount())

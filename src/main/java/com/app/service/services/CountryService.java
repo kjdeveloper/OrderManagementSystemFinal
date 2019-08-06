@@ -15,17 +15,6 @@ public class CountryService {
     private CountryRepository countryRepository = new CountryRepositoryImpl();
     private CountryValidator countryValidator = new CountryValidator();
 
-    boolean validateCountry(CountryDto countryDTO) {
-
-        Map<String, String> countryErrorsMap = countryValidator.validate(countryDTO);
-        if (countryValidator.hasErrors()) {
-            System.out.println("------COUNTRY VALIDATION ERRORS------");
-            countryErrorsMap.forEach((k, v) -> System.out.println(k + " -> " + v));
-            System.out.println("-------------------------------------");
-        }
-        return !countryValidator.hasErrors();
-    }
-
     public void addCountry(CountryDto countryDTO) {
         countryValidator.validateCountry(countryDTO);
 

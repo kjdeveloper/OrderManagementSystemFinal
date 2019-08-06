@@ -7,7 +7,7 @@ import com.app.repository.*;
 import com.app.repository.impl.*;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CustomerValidator;
-import com.app.validation.impl.Customer_orderValidator;
+import com.app.validation.impl.CustomerOrderValidator;
 import com.app.validation.impl.ProductValidator;
 
 public class CustomerOrderService {
@@ -18,7 +18,7 @@ public class CustomerOrderService {
     private final CustomerRepository customerRepository = new CustomerRepositoryImpl();
     private final ProductRepository productRepository = new ProductRepositoryImpl();
 
-    private final Customer_orderValidator customer_orderValidator = new Customer_orderValidator();
+    private final CustomerOrderValidator customer_orderValidator = new CustomerOrderValidator();
     private final CustomerValidator customerValidator = new CustomerValidator();
     private final ProductValidator productValidator = new ProductValidator();
 

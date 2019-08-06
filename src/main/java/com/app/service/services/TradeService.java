@@ -13,18 +13,6 @@ public class TradeService {
     private TradeRepository tradeRepository = new TradeRepositoryImpl();
     private TradeValidator tradeValidator = new TradeValidator();
 
-   /* private boolean validate(TradeDto tradeDTO) {
-
-        Map<String, String> tradeErrorsMap = tradeValidator.validate(tradeDTO);
-        if (tradeValidator.hasErrors()) {
-            System.out.println("------TRADE VALIDATION ERRORS------");
-            tradeErrorsMap.forEach((k, v) -> System.out.println(k + " -> " + v));
-            System.out.println("-----------------------------------");
-        }
-
-        return !tradeValidator.hasErrors();
-    }*/
-
     public void addTrade(TradeDto tradeDTO) {
         tradeValidator.validateTrade(tradeDTO);
 

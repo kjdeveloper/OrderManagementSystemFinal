@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Customer_orderDto {
+public class CustomerOrderDto {
 
     private Long id;
     private LocalDateTime date;

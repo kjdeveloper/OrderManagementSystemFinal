@@ -2,22 +2,8 @@ package com.app.validation.impl;
 
 import com.app.dto.StockDto;
 import com.app.exceptions.MyException;
-import com.app.validation.generic.AbstractValidator;
 
-import java.util.Map;
-
-public class StockValidator extends AbstractValidator<StockDto> {
-
-    @Override
-    public Map<String, String> validate(StockDto stockDTO) {
-        if (stockDTO == null){
-            errors.put("stockDTO", "null");
-        }
-        if (!isQuantityValid(stockDTO)){
-            errors.put("stodkDTO quantity", "Quantity is not valid => " + stockDTO.getQuantity());
-        }
-        return errors;
-    }
+public class StockValidator{
 
     public void validateStock(StockDto stockDto){
         if (stockDto == null){

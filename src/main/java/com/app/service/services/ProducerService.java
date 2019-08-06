@@ -26,18 +26,6 @@ public class ProducerService {
     private CountryRepository countryRepository = new CountryRepositoryImpl();
     private TradeRepository tradeRepository = new TradeRepositoryImpl();
 
-   /* private boolean validateProducer(ProducerDto producerDTO) {
-
-        Map<String, String> producerErrorsMap = producerValidator.validate(producerDTO);
-        if (producerValidator.hasErrors()) {
-            System.out.println("------PRODUCER VALIDATION ERRORS------");
-            producerErrorsMap.forEach((k, v) -> System.out.println(k + " -> " + v));
-            System.out.println("--------------------------------------");
-        }
-
-        return !producerValidator.hasErrors();
-    }*/
-
     public ProducerDto addProducer(ProducerDto producerDTO) {
         producerValidator.validateProducer(producerDTO);
         countryValidator.validateCountry(producerDTO.getCountryDTO());
