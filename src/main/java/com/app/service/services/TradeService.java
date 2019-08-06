@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.service.services;
 
 import com.app.dto.TradeDto;
 import com.app.exceptions.MyException;

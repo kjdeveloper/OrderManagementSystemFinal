@@ -74,7 +74,7 @@ public interface Mappers {
                 .discount(customer_order.getDiscount())
                 .quantity(customer_order.getQuantity())
                 .customerDto(customer_order.getCustomer() == null ? null : fromCustomerToCustomerDTO(customer_order.getCustomer()))
-                .ePayments(new HashSet<>())
+                .ePayments(customer_order.getEPayments())
                 .productDto(customer_order.getProduct() == null ? null : fromProductToProductDTO(customer_order.getProduct()))
                 .build();
     }
@@ -86,42 +86,10 @@ public interface Mappers {
                 .discount(customer_orderDTO.getDiscount())
                 .quantity(customer_orderDTO.getQuantity())
                 .customer(customer_orderDTO.getCustomerDto() == null ? null : fromCustomerDTOToCustomer(customer_orderDTO.getCustomerDto()))
-                .ePayments(new HashSet<>())
+                .ePayments(customer_orderDTO.getEPayments())
                 .product(customer_orderDTO.getProductDto() == null ? null : fromProductDTOToProduct(customer_orderDTO.getProductDto()))
                 .build();
     }
-/*
-    static Guarantee_componentsDto fromGuarantee_componentsToGuarantee_componentsDTO(Guarantee_components guarantee_components) {
-        return guarantee_components == null ? null : Guarantee_componentsDto.builder()
-                .id(guarantee_components.getId())
-                .eGuarantees(new HashSet<>())
-                .productDTO(guarantee_components.getProduct() == null ? null : fromProductToProductDTO(guarantee_components.getProduct()))
-                .build();
-    }
-
-    static Guarantee_components fromGuarantee_componentsDTOToGuarantee_componenets(Guarantee_componentsDto guarantee_componentsDTO) {
-        return guarantee_componentsDTO == null ? null : Guarantee_components.builder()
-                .id(guarantee_componentsDTO.getId())
-                .guarantees(new HashSet<>())
-                .product(guarantee_componentsDTO.getProductDTO() == null ? null : fromProductDTOToProduct(guarantee_componentsDTO.getProductDTO()))
-                .build();
-    }*/
-
-    /*static PaymentDto fromPaymentToPaymenrDTO(Payment payment) {
-        return payment == null ? null : PaymentDto.builder()
-                .id(payment.getId())
-                .ePayment(payment.getPayment())
-                .customerOrderDTOS(new HashSet<>())
-                .build();
-    }
-
-    static Payment fromPaymentDTOToPayment(PaymentDto paymentDTO) {
-        return paymentDTO == null ? null : Payment.builder()
-                .id(paymentDTO.getId())
-                .payment(paymentDTO.getEPayment())
-                .customer_orders(new HashSet<>())
-                .build();
-    }*/
 
     static ProducerDto fromProducerToProducerDTO(Producer producer) {
         return producer == null ? null : ProducerDto.builder()
@@ -149,7 +117,7 @@ public interface Mappers {
                 .name(product.getName())
                 .price(product.getPrice())
                 .customerOrderDTOS(new HashSet<>())
-                .eGuarantees(new HashSet<>())
+                .eGuarantees(product.getEGuarantees())
                 .stockDtos(new HashSet<>())
                 .categoryDTO(product.getCategory() == null ? null : fromCategoryToCategoryDTO(product.getCategory()))
                 .producerDTO(product.getProducer() == null ? null : fromProducerToProducerDTO(product.getProducer()))
@@ -162,7 +130,7 @@ public interface Mappers {
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
                 .customer_orders(new HashSet<>())
-                .eGuarantees(new HashSet<>())
+                .eGuarantees(productDTO.getEGuarantees())
                 .stocks(new HashSet<>())
                 .category(productDTO.getCategoryDTO() == null ? null : fromCategoryDTOtoCategory(productDTO.getCategoryDTO()))
                 .producer(productDTO.getProducerDTO() == null ? null : fromProducerDTOToProducer(productDTO.getProducerDTO()))

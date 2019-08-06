@@ -2,9 +2,8 @@ package com.app.mainmenu.menu;
 
 import com.app.dto.*;
 import com.app.model.enums.EGuarantee;
-import com.app.service.mainservicemethods.AddService;
-import com.app.service.UserDataService;
-import com.app.service.mainservicemethods.DataDownloadService;
+import com.app.repository.generic.DbConnection;
+import com.app.service.services.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -15,8 +14,12 @@ import java.util.Set;
 public class MenuService {
 
     private final UserDataService userDataService = new UserDataService();
-    private final AddService addService = new AddService();
-    private final DataDownloadService dataDownloadService = new DataDownloadService();
+    private final DbConnection dbConnection = DbConnection.getInstance();
+
+    private final CustomerService customerService = new CustomerService();
+    private final ShopService shopService = new ShopService();
+    private final ProducerService producerService = new ProducerService();
+    private final ProductService productService = new ProductService();
 
     private Scanner sc = new Scanner(System.in);
 
@@ -94,23 +97,18 @@ public class MenuService {
 
                     break;
                 case 0:
-                    userDataService.close();
+                    dbConnection.close();
                     System.out.println("Bye Bye");
                     return;
             }
-
         } while (true);
     }
 
     private CustomerDto option1() {
-        System.out.println("Please enter a name of customer: ");
-        String name = sc.next();
-        System.out.println("Please enter a surname of customer: ");
-        String surname = sc.next();
-        System.out.println("Please enter the age of the customer: ");
-        int age = sc.nextInt();
-        System.out.println("Please enter the customer's country: ");
-        String country = sc.next();
+        String name = userDataService.getString("Please enter a name of customer: ");
+        String surname = userDataService.getString("Please enter a surname of customer: ");
+        int age = userDataService.getInt("Please enter the age of the customer: ");
+        String country = userDataService.getString("Please enter the customer's country: ");
 
         CustomerDto customerDto = CustomerDto.builder()
                 .name(name)
@@ -119,14 +117,13 @@ public class MenuService {
                 .countryDTO(CountryDto.builder().name(country).build())
                 .build();
 
-        return addService.addCustomer(customerDto);
+        return customerService.addCustomer(customerDto);
     }
 
     private ShopDto option2() {
-        System.out.println("Please enter a name of shop: ");
-        String name = sc.next();
-        System.out.println("Please enter a shop country: ");
-        String country = sc.next();
+        String name = userDataService.getString("Please enter a name of shop: ");
+        String country = userDataService.getString("Please enter a shop country: ");
+
         CountryDto countryDto = CountryDto.builder()
                 .name(country)
                 .build();
@@ -136,16 +133,13 @@ public class MenuService {
                 .countryDTO(countryDto)
                 .build();
 
-        return addService.addShop(shopDto);
+        return shopService.addShop(shopDto);
     }
 
     private ProducerDto option3() {
-        System.out.println("Please enter a name of producer: ");
-        String name = sc.next();
-        System.out.println("Please enter a producer's country: ");
-        String country = sc.next();
-        System.out.println("Please enter a name of trade: ");
-        String trade = sc.next();
+        String name = userDataService.getString("Please enter a name of producer: ");
+        String country = userDataService.getString("Please enter a producer's country: ");
+        String trade = userDataService.getString("Please enter a name of trade: ");
 
         CountryDto countryDto = CountryDto.builder()
                 .name(country)
@@ -161,20 +155,15 @@ public class MenuService {
                 .countryDTO(countryDto)
                 .build();
 
-        return addService.addProducer(producerDto);
+        return producerService.addProducer(producerDto);
     }
 
     private ProductDto option4(Set<EGuarantee> eGuarantees) {
-        System.out.println("Please enter a name of product: ");
-        String name = sc.next();
-        System.out.println("Please enter a product category: ");
-        String category = sc.next();
-        System.out.println("Please enter a product price: ");
-        BigDecimal price = sc.nextBigDecimal();
-        System.out.println("Please enter a name of the product producer: ");
-        String producerName = sc.next();
-        System.out.println("Please enter a producer's country: ");
-        String producerCountry = sc.next();
+        String name = userDataService.getString("Please enter a name of product: ");
+        String category = userDataService.getString("Please enter a product category: ");
+        BigDecimal price = userDataService.getBigDecimal("Please enter a product price: ");
+        String producerName = userDataService.getString("Please enter a name of the product producer: ");
+        String producerCountry = userDataService.getString("Please enter a producer's country: ");
 
         CategoryDto categoryDto = CategoryDto.builder()
                 .name(category)
@@ -195,7 +184,33 @@ public class MenuService {
                 .eGuarantees(eGuarantees)
                 .build();
 
-        return addService.addProduct(productDto);
+        return productService.addProduct(productDto);
+    }
+
+    private StockDto option5() {
+        String productName = userDataService.getString("Please enter a name of product: ");
+        String categoryName = userDataService.getString("Please enter a name of category: ");
+        String shopName = userDataService.getString("Please enter a shop name: ");
+        String countryName = userDataService.getString("Please enter a shop country: ");
+        int quantity = userDataService.getInt("Please enter a quantity: ");
+
+        CountryDto countryDto = CountryDto.builder()
+                .name(categoryName)
+                .build();
+
+        ShopDto shopDto = ShopDto.builder()
+                .name(shopName)
+                .countryDTO(countryDto)
+                .build();
+        /*
+        ProductDto productDto = ProductDto.builder()
+                .
+                .build()
+        */
+        StockDto stockDto = StockDto.builder()
+
+                .build();
+        return stockDto;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.service.services;
 
 import com.app.dto.ProducerDto;
 import com.app.dto.TradeDto;
@@ -49,11 +49,10 @@ public class ProducerService {
             throw new MyException("PRODUCER WITH GIVEN NAME, TRADE AND COUNTRY EXIST");
         }
 
-        String countryName = producerDTO.getCountryDTO().getName();
         TradeDto tradeDto = producerDTO.getTradeDTO();
 
         Producer producer = producerRepository.findByName(producerDTO).orElse(null);
-        Country country = countryRepository.findByName(countryName).orElse(null);
+        Country country = countryRepository.findByName(producerDTO.getCountryDTO()).orElse(null);
         Trade trade = tradeRepository.findByName(tradeDto).orElse(null);
 
         if (country == null){

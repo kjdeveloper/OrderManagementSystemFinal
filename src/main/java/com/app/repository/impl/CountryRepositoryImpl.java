@@ -1,5 +1,6 @@
 package com.app.repository.impl;
 
+import com.app.dto.CountryDto;
 import com.app.exceptions.MyException;
 import com.app.model.Country;
 import com.app.repository.CountryRepository;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 public class CountryRepositoryImpl extends AbstractGenericRepository<Country> implements CountryRepository {
     @Override
-    public Optional<Country> findByName(String name) {
+    public Optional<Country> findByName(CountryDto countryDto) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         Optional<Country> optionalCountry = Optional.empty();
@@ -27,7 +28,7 @@ public class CountryRepositoryImpl extends AbstractGenericRepository<Country> im
 
             optionalCountry = entityManager
                     .createQuery("select c from Country c where c.name = :name", Country.class)
-                    .setParameter("name", name)
+                    .setParameter("name", countryDto.getName())
                     .getResultList()
                     .stream()
                     .findFirst();

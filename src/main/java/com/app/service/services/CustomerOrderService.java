@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.service.services;
 
 import com.app.dto.*;
 import com.app.exceptions.MyException;
@@ -23,15 +23,14 @@ public class CustomerOrderService {
     private final ProductValidator productValidator = new ProductValidator();
 
 
-    public void addCustomerOrder(Customer_orderDto customer_orderDto, ShopDto shopDto) {
+ /*   public void addCustomerOrder(Customer_orderDto customer_orderDto) {
         customer_orderValidator.validateCustomerOrder(customer_orderDto);
         customerValidator.validateCustomer(customer_orderDto.getCustomerDto());
         productValidator.validateProduct(customer_orderDto.getProductDto());
 
-        Stock stock = returnStockIfExist(customer_orderDto, shopDto);
+        Stock stock = returnStockIfExist(customer_orderDto);
         Customer customer = returnTheCustomerIfExist(customer_orderDto.getCustomerDto());
         Product product = returnTheProductIfExist(customer_orderDto.getProductDto());
-        // tutaj nie bardzo wiem co z tym sklepem zrobic -> Shop shop = returnShopIfExist(shopDto);
 
         int quantityToOrder = customer_orderDto.getQuantity();
         int quantityOnStock = stock.getQuantity();
@@ -46,7 +45,7 @@ public class CustomerOrderService {
         customer_order.setCustomer(customer);
         customer_order.setProduct(product);
         customerOrderRepository.addOrUpdate(customer_order);
-    }
+    }*/
 
     private Customer returnTheCustomerIfExist(CustomerDto customerDto) {
         Customer customer = customerRepository.findByName(customerDto.getName()).orElse(null);
@@ -77,7 +76,7 @@ public class CustomerOrderService {
         }
         return shop;
     }
-
+/*
     private Stock returnStockIfExist(Customer_orderDto customer_orderDto, ShopDto shopDto){
         ProductDto productDto = customer_orderDto.getProductDto();
 
@@ -93,5 +92,11 @@ public class CustomerOrderService {
         }
 
         return stock;
+    }*/
+
+    private boolean isProductInStock( Long productId, Integer expectedQuantity ) {
+
+        return stockRepository.countProduct(productId) >= expectedQuantity;
+
     }
 }

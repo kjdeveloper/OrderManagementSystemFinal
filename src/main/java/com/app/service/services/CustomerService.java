@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.service.services;
 
 import com.app.dto.CustomerDto;
 import com.app.exceptions.MyException;
@@ -40,9 +40,7 @@ public class CustomerService {
             throw new MyException("CUSTOMER WITH GIVEN NAME, SURNAME AND COUNTRY IS ALREADY EXIST");
         }
 
-        String countryName = customerDto.getCountryDTO().getName();
-
-        Country country = countryRepository.findByName(countryName).orElse(null);
+        Country country = countryRepository.findByName(customerDto.getCountryDTO()).orElse(null);
 
         if (country == null) {
             country = Mappers.fromCountryDTOToCountry(customerDto.getCountryDTO());

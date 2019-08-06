@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.service.services;
 
 import com.app.dto.CountryDto;
 import com.app.exceptions.MyException;
@@ -29,7 +29,7 @@ public class CountryService {
     public void addCountry(CountryDto countryDTO) {
         countryValidator.validateCountry(countryDTO);
 
-        Country country = countryRepository.findByName(countryDTO.getName()).orElse(null);
+        Country country = countryRepository.findByName(countryDTO).orElse(null);
         if (country == null){
             country = Mappers.fromCountryDTOToCountry(countryDTO);
         }else{

@@ -18,7 +18,6 @@ public class ProducerValidator extends AbstractValidator<ProducerDto> {
         if (!isNameValid(producerDTO)) {
             errors.put("producerDTO name", "Name is not valid => " + producerDTO.getName());
         }
-
         return errors;
     }
 

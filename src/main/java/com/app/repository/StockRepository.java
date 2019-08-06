@@ -13,5 +13,6 @@ public interface StockRepository extends GenericRepository<Stock> {
     List<Stock> findByQuantity(int quantity);
 
     Optional<Stock> findStockByProductAndShop(StockDto stockDTO);
+    int countProduct( Long productId );
 
 }

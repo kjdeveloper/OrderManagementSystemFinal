@@ -87,4 +87,37 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
 
     }
 
+    @Override
+    public int countProduct(Long productId) {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        int counter = 0;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            counter = entityManager
+                    .createQuery("select sum( s.quantity ) from Stock s where s.product.id = :id", Integer.class)
+                    .setParameter("id", productId)
+                    .getSingleResult();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new MyException("COUNT PRODUCT EXCEPTION ");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+
+        return counter;
+    }
+
 }

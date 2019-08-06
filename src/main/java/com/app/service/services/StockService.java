@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.service.services;
 
 import com.app.dto.ProductDto;
 import com.app.dto.ShopDto;
@@ -43,7 +43,7 @@ public class StockService {
         return !stockValidator.hasErrors();
     }
 
-    public void addProductToStock(ProductDto productDto, ShopDto shopDto, int quantity) {
+    public StockDto addProductToStock(ProductDto productDto, ShopDto shopDto, int quantity) {
         productValidator.validateProduct(productDto);
         shopValidator.validateShop(shopDto);
         if (quantity <= 0){
@@ -72,6 +72,7 @@ public class StockService {
         stock.setShop(shop);
         stock.setQuantity(stock.getQuantity() + quantity);
         stockRepository.addOrUpdate(stock);
+        return Mappers.fromStockToStockDTO(stock);
     }
 
 

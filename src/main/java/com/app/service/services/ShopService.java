@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.service.services;
 
 import com.app.dto.ShopDto;
 import com.app.exceptions.MyException;
@@ -40,9 +40,7 @@ public class ShopService {
             throw new MyException("SHOP WITH GIVEN NAME AND COUNTRY IS ALREADY EXIST");
         }
 
-        String countryName = shopDTO.getCountryDTO().getName();
-
-        Country country = countryRepository.findByName(countryName).orElse(null);
+        Country country = countryRepository.findByName(shopDTO.getCountryDTO()).orElse(null);
         Shop shop = shopRepository.findByName(shopDTO).orElse(null);
         if (country == null){
             country = Mappers.fromCountryDTOToCountry(shopDTO.getCountryDTO());
