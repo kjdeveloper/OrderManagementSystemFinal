@@ -1,6 +1,5 @@
 package com.app.repository.impl;
 
-import com.app.dto.ProductDto;
 import com.app.dto.StockDto;
 import com.app.exceptions.MyException;
 import com.app.model.Stock;
@@ -11,42 +10,9 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implements StockRepository {
-    @Override
-    public List<Stock> findByQuantity(int quantity) {
-        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
-        List<Stock> optionalStock = new ArrayList<>();
-        EntityManager entityManager = null;
-        EntityTransaction tx = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            tx = entityManager.getTransaction();
-
-            tx.begin();
-
-            optionalStock = new ArrayList<>(entityManager
-                    .createQuery("select s from Stock s where s.quantity = :quantity", Stock.class)
-                    .setParameter("quantity", quantity)
-                    .getResultList());
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            throw new MyException("STOCK FIND BY NAME EXCEPTION ");
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-
-        return optionalStock;
-    }
 
     @Override
     public Optional<Stock> findStockByProductAndShop(StockDto stockDTO) {
@@ -81,16 +47,12 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
                 entityManager.close();
             }
         }
-
         return optionalStock;
-
-
     }
 
     @Override
     public int countProduct(Long productId) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
         EntityManager entityManager = null;
         EntityTransaction tx = null;
         int counter = 0;
@@ -116,8 +78,6 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
                 entityManager.close();
             }
         }
-
         return counter;
     }
-
 }

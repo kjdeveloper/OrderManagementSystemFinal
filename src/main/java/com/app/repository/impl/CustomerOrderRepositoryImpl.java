@@ -5,4 +5,6 @@ import com.app.repository.CustomerOrderRepository;
 import com.app.repository.generic.AbstractGenericRepository;
 
 public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<CustomerOrder> implements CustomerOrderRepository {
+
+
 }

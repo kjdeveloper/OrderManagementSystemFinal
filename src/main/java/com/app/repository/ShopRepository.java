@@ -10,4 +10,5 @@ public interface ShopRepository extends GenericRepository<Shop> {
     Optional<Shop> findByName(ShopDto shopDto);
 
     boolean isExistByShopAndCountry(ShopDto shopDTO);
+
 }

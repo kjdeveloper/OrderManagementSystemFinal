@@ -1,10 +1,7 @@
 package com.app.model;
 
 import com.app.model.enums.EPayment;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "customers_orders")
+@Table(name = "customersOrders")
 public class CustomerOrder {
 
     @Id
@@ -38,6 +35,8 @@ public class CustomerOrder {
     )
     @Column(name = "epayment")
     @Enumerated(EnumType.STRING)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<EPayment> ePayments = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)

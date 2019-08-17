@@ -3,6 +3,7 @@ package com.app.model;
 
 import com.app.model.enums.EGuarantee;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "products")
-        public class Product {
+public class Product {
 
     @Id
     @GeneratedValue
@@ -29,7 +30,9 @@ import java.util.Set;
     private Category category;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "product")
-    private Set<CustomerOrder> customer_orders = new HashSet<>();
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<CustomerOrder> customerOrders = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "producer_id")
@@ -47,6 +50,8 @@ import java.util.Set;
     )
     @Column(name = "eguarantee")
     @Enumerated(EnumType.STRING)
-   private Set<EGuarantee> eGuarantees = new HashSet<>();
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<EGuarantee> eGuarantees = new HashSet<>();
 
 }

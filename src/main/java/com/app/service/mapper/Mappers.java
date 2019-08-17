@@ -5,6 +5,7 @@ import com.app.exceptions.Error;
 import com.app.model.*;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashSet;
 
 public interface Mappers {
@@ -129,7 +130,7 @@ public interface Mappers {
                 .id(productDTO.getId())
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
-                .customer_orders(new HashSet<>())
+                .customerOrders(new HashSet<>())
                 .eGuarantees(productDTO.getEGuarantees())
                 .stocks(new HashSet<>())
                 .category(productDTO.getCategoryDTO() == null ? null : fromCategoryDTOtoCategory(productDTO.getCategoryDTO()))

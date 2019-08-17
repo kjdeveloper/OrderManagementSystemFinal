@@ -1,5 +1,6 @@
 package com.app.service.services;
 
+import com.app.dto.CategoryDto;
 import com.app.dto.ProductDto;
 import com.app.dto.ShopDto;
 import com.app.dto.StockDto;
@@ -17,6 +18,8 @@ import com.app.service.mapper.Mappers;
 import com.app.validation.impl.ProductValidator;
 import com.app.validation.impl.ShopValidator;
 import com.app.validation.impl.StockValidator;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.util.Map;
 
@@ -31,24 +34,28 @@ public class StockService {
     private final ProductValidator productValidator = new ProductValidator();
 
     public StockDto addProductToStock(ProductDto productDto, ShopDto shopDto, int quantity) {
-        productValidator.validateProduct(productDto);
-        shopValidator.validateShop(shopDto);
-        if (quantity <= 0){
+        Product product = productRepository.findByName(productDto).orElse(null);
+        Shop shop = shopRepository.findByName(shopDto).orElse(null);
+
+        if (quantity <= 0) {
             throw new MyException("QUANTITY CAN NOT BE LESS OR EQUAL ZERO");
         }
 
-        Shop shop = shopRepository.findByName(shopDto).orElse(null);
-        Product product = productRepository.findByName(productDto).orElse(null);
-
         if (shop == null) {
+            shopValidator.validateShop(shopDto);
             shop = Mappers.fromShopDTOToShop(shopDto);
             shop = shopRepository.addOrUpdate(shop).orElseThrow(() -> new MyException("CANNOT ADD SHOP IN STOCK"));
         }
         if (product == null) {
+            productValidator.validateProduct(productDto);
             product = Mappers.fromProductDTOToProduct(productDto);
             product = productRepository.addOrUpdate(product).orElseThrow(() -> new MyException("CANNOT ADD PRODUCT IN STOCK"));
         }
-        StockDto stockDto = StockDto.builder().productDTO(productDto).shopDTO(shopDto).build();
+        StockDto stockDto = StockDto.builder()
+                .productDTO(productDto)
+                .shopDTO(shopDto)
+                .build();
+
         Stock stock = stockRepository.findStockByProductAndShop(stockDto).orElse(null);
 
         if (stock == null) {

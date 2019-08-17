@@ -1,6 +1,5 @@
 package com.app.service.services;
 
-import com.app.dto.CountryDto;
 import com.app.dto.ProducerDto;
 import com.app.dto.ProductDto;
 import com.app.dto.TradeDto;
@@ -14,9 +13,9 @@ import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ProducerValidator;
 import com.app.validation.impl.ProductValidator;
 
+import java.util.Comparator;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ProductService {
 
@@ -51,7 +50,6 @@ public class ProductService {
         Category category = categoryRepository.findByName(productDto.getCategoryDTO()).orElse(null);
         Producer producer = producerRepository.findByName(producerDto).orElse(null);
         Country country = countryRepository.findByName(producerDto.getCountryDTO()).orElse(null);
-        Trade trade = null;
 
         if (country == null) {
             country = Mappers.fromCountryDTOToCountry(producerDto.getCountryDTO());
@@ -70,7 +68,7 @@ public class ProductService {
                     .name(tradeName)
                     .build();
 
-            trade = tradeRepository.findByName(tradeDto).orElse(null);
+            Trade trade = tradeRepository.findByName(tradeDto).orElse(null);
             if (trade == null) {
                 trade = Mappers.fromTradeDTOToTrade(tradeDto);
                 trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException("CAN NOT ADD TRADE IN PRODUCT SERVICE"));
@@ -91,4 +89,15 @@ public class ProductService {
         productRepository.addOrUpdate(product);
         return Mappers.fromProductToProductDTO(product);
     }
+
+    public Map<Category, Product> findBiggestPriceInCategory(){
+        return productRepository.findAll()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Product::getCategory,
+                        Collectors.collectingAndThen(
+                                Collectors.maxBy(Comparator.comparing(Product::getPrice)), proOp -> proOp.orElseThrow(NullPointerException::new))));
+    }
+
+
 }

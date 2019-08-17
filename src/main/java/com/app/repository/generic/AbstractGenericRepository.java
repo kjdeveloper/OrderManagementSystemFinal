@@ -5,13 +5,14 @@ import com.app.exceptions.MyException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractGenericRepository<T> implements GenericRepository<T> {
 
-    EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+    private EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
     private Class<T> entityClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 
     protected EntityManagerFactory getEntityManagerFactory() {
@@ -83,8 +84,9 @@ public abstract class AbstractGenericRepository<T> implements GenericRepository<
             tx = entityManager.getTransaction();
 
             tx.begin();
+
             items = entityManager
-                    .createQuery("select t from T t" + entityClass.getCanonicalName() + " i", entityClass)
+                    .createQuery("select t from " + entityClass.getCanonicalName() + " t", entityClass)
                     .getResultList();
 
             tx.commit();
