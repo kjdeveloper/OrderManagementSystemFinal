@@ -30,21 +30,22 @@ public class MenuService {
     private void menu() {
         System.out.println("\nMENU");
         System.out.println("\n========== Adding methods ==========");
-        System.out.println("1.Add new customer");
-        System.out.println("2.Add new shop");
-        System.out.println("3.Add new producer");
-        System.out.println("4.Add new product");
-        System.out.println("5.Add new position in stock");
-        System.out.println("6.Add new customer order");
+        System.out.println("1. Add new customer");
+        System.out.println("2. Add new shop");
+        System.out.println("3. Add new producer");
+        System.out.println("4. Add new product");
+        System.out.println("5. Add new position in stock");
+        System.out.println("6. Add new customer order");
         System.out.println("\n========== Downloads methods ==========");
-        System.out.println("8.");
-        System.out.println("9.");
-        System.out.println("10.");
-        System.out.println("11.");
-        System.out.println("12.");
-        System.out.println("13.");
-        System.out.println("14.");
-        System.out.println("15.");
+        System.out.println("7. Get products with biggest price in each category");
+        System.out.println("8. Get products with the same country as given and age range");
+        System.out.println("9. Get products with same guarantees as given ");
+        System.out.println("10. Get shops with products from different country than shop");
+        System.out.println("11. Get producers with given trade name and more products produced than specified by the user");
+        System.out.println("12. Get orders from a specified period of time and total price greater than that given by the user");
+        System.out.println("13. Get products by customer name, surname and country. Grouped by producers");
+        System.out.println("14. Get customers which ordered at least one product produced in the same country as the customer. " +
+                "additionally display all the product from different country than customer country");
         System.out.println(" ========================================");
         System.out.println("0. EXIT");
     }
@@ -87,10 +88,10 @@ public class MenuService {
                     Map<Category, Product> biggestPriceInEachCategory = option7();
                     biggestPriceInEachCategory.forEach((k, v) ->
                             System.out.println(k.getName() + " => " + v.getName() +
-                                    ", price: " + v.getPrice() +
-                                    ", category: " + v.getCategory().getName() +
-                                    ", producer: " + v.getProducer().getName() +
-                                    ", from " + v.getProducer().getCountry().getName()
+                                            ", price: " + v.getPrice() +
+                                            ", category: " + v.getCategory().getName() +
+                                            ", producer: " + v.getProducer().getName() +
+                                            ", from " + v.getProducer().getCountry().getName()
                                     //" ordered " + custOrdServ.customerOrdersWithSpecificProduct(v.getName()) + " times"
                             ));
                     break;
@@ -300,7 +301,7 @@ public class MenuService {
         return custOrdServ.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 
-    private Map<Country, List<String>> option14(){
+    private Map<Country, List<String>> option14() {
         return customerService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
 }
