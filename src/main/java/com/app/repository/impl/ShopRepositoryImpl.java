@@ -63,7 +63,7 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
             exist = entityManager
                     .createQuery("select s from Shop s where s.name = :name AND s.country.name = :countryName", Shop.class)
                     .setParameter("name", shopDTO.getName())
-                    .setParameter("countryName", shopDTO.getCountryDTO().getName())
+                    .setParameter("countryName", shopDTO.getCountryDto().getName())
                     .getResultList()
                     .stream()
                     .findFirst()

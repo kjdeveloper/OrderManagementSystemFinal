@@ -1,15 +1,14 @@
 package com.app.mainmenu.menu;
 
 import com.app.dto.*;
+import com.app.model.*;
 import com.app.model.enums.EGuarantee;
 import com.app.repository.generic.DbConnection;
 import com.app.service.services.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 public class MenuService {
 
@@ -17,9 +16,11 @@ public class MenuService {
     private final DbConnection dbConnection = DbConnection.getInstance();
 
     private final CustomerService customerService = new CustomerService();
+    private final CustomerOrderService custOrdServ = new CustomerOrderService();
     private final ShopService shopService = new ShopService();
     private final ProducerService producerService = new ProducerService();
     private final ProductService productService = new ProductService();
+    private final StockService stockService = new StockService();
 
     private Scanner sc = new Scanner(System.in);
 
@@ -72,29 +73,74 @@ public class MenuService {
                             EGuarantee.SERVICE
                     ));
 
-                    ProductDto productDto = option4(eGuarantees);
-                    System.out.println(productDto + " ADDED.");
+                    ProductDto productDtoAdded = option4(eGuarantees);
+                    System.out.println(productDtoAdded + " ADDED.");
                     break;
                 case 5:
-
+                    //StockDto stockDto = option5();
+                    //System.out.println(stockDto + " ADDED.");
                     break;
                 case 6:
 
                     break;
                 case 7:
-
+                    Map<Category, Product> biggestPriceInEachCategory = option7();
+                    biggestPriceInEachCategory.forEach((k, v) ->
+                            System.out.println(k.getName() + " => " + v.getName() +
+                                    ", price: " + v.getPrice() +
+                                    ", category: " + v.getCategory().getName() +
+                                    ", producer: " + v.getProducer().getName() +
+                                    ", from " + v.getProducer().getCountry().getName()
+                                    //" ordered " + custOrdServ.customerOrdersWithSpecificProduct(v.getName()) + " times"
+                            ));
                     break;
                 case 8:
+                    String country = userDataService.getString("Please, enter a name of country: ");
+                    int ageFrom = userDataService.getInt("Please, enter a minimum age for the customers you want to see: ");
+                    int ageTo = userDataService.getInt("Please, enter a maximum age for the customers you want to see: ");
+                    List<ProductDto> products = option8(country, ageFrom, ageTo);
 
+                    products.forEach(productDto -> System.out.println(productDto.getName() +
+                            ", price: " + productDto.getPrice() +
+                            ", category: " + productDto.getCategoryDto().getName() +
+                            ", producent: " + productDto.getProducerDto().getName() +
+                            ", from: " + productDto.getProducerDto().getCountryDto().getName()));
                     break;
                 case 9:
+                    Set<EGuarantee> eGuaranteesForProductWithSameComponents = new HashSet<>(Arrays.asList(
+                            EGuarantee.EXCHANGE,
+                            EGuarantee.SERVICE
+                    ));
 
+                    Set<ProductDto> productWithSameGuaranteeComponents = option9(eGuaranteesForProductWithSameComponents);
+                    System.out.println(productWithSameGuaranteeComponents);
                     break;
                 case 10:
-
+                    List<ShopDto> shops = option10();
                     break;
                 case 11:
-
+                    String tradeName = userDataService.getString("Please, enter a trade name; ");
+                    Long quantity = (long) userDataService.getInt("Please, enter a quantity: ");
+                    Set<ProducerDto> producers = option11(tradeName, quantity);
+                    System.out.println(producers);
+                    break;
+                case 12:
+                    LocalDate dateFrom = LocalDate.parse(userDataService.getString("Please, enter a date from which to start filtering: (FORMAT: YYYY-mm-dd)"));
+                    LocalDate dateTo = LocalDate.parse(userDataService.getString("Please, enter a date from which to finish filtering: (FORMAT: YYYY-mm-dd)"));
+                    BigDecimal price = userDataService.getBigDecimal("Please, enter the price at which you want to filter orders: ");
+                    List<CustomerOrderDto> listOfOrders = option12(dateFrom, dateTo, price);
+                    System.out.println(listOfOrders);
+                    break;
+                case 13:
+                    String customerName = userDataService.getString("Please, enter a customer name: ");
+                    String customerSurname = userDataService.getString("Please, enter a customer surname: ");
+                    String countryName = userDataService.getString("Please, enter a country name: ");
+                    Map<Producer, List<Product>> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
+                    System.out.println(mapOfProductWithGivenCustomerGroupedByProducer);
+                    break;
+                case 14:
+                    Map<Country, List<String>> map = option14();
+                    System.out.println(map);
                     break;
                 case 0:
                     dbConnection.close();
@@ -114,7 +160,7 @@ public class MenuService {
                 .name(name)
                 .surname(surname)
                 .age(age)
-                .countryDTO(CountryDto.builder().name(country).build())
+                .countryDto(CountryDto.builder().name(country).build())
                 .build();
 
         return customerService.addCustomer(customerDto);
@@ -130,7 +176,7 @@ public class MenuService {
 
         ShopDto shopDto = ShopDto.builder()
                 .name(name)
-                .countryDTO(countryDto)
+                .countryDto(countryDto)
                 .build();
 
         return shopService.addShop(shopDto);
@@ -151,8 +197,8 @@ public class MenuService {
 
         ProducerDto producerDto = ProducerDto.builder()
                 .name(name)
-                .tradeDTO(tradeDto)
-                .countryDTO(countryDto)
+                .tradeDto(tradeDto)
+                .countryDto(countryDto)
                 .build();
 
         return producerService.addProducer(producerDto);
@@ -171,7 +217,7 @@ public class MenuService {
 
         ProducerDto producerDto = ProducerDto.builder()
                 .name(producerName)
-                .countryDTO(CountryDto.builder()
+                .countryDto(CountryDto.builder()
                         .name(producerCountry)
                         .build())
                 .build();
@@ -179,38 +225,82 @@ public class MenuService {
         ProductDto productDto = ProductDto.builder()
                 .name(name)
                 .price(price)
-                .categoryDTO(categoryDto)
-                .producerDTO(producerDto)
+                .categoryDto(categoryDto)
+                .producerDto(producerDto)
                 .eGuarantees(eGuarantees)
                 .build();
 
         return productService.addProduct(productDto);
     }
 
-    private StockDto option5() {
+   /* private StockDto option5() {
         String productName = userDataService.getString("Please enter a name of product: ");
         String categoryName = userDataService.getString("Please enter a name of category: ");
         String shopName = userDataService.getString("Please enter a shop name: ");
         String countryName = userDataService.getString("Please enter a shop country: ");
         int quantity = userDataService.getInt("Please enter a quantity: ");
 
-        CountryDto countryDto = CountryDto.builder()
+        return stockService.addProductToStock(productName, categoryName, shopName, countryName, quantity);
+    }*/
+
+ /*   private StockDto option5() {
+        String productName = userDataService.getString("Please enter a name of product: ");
+        String categoryName = userDataService.getString("Please enter a name of category: ");
+        String shopName = userDataService.getString("Please enter a shop name: ");
+        String countryName = userDataService.getString("Please enter a shop country: ");
+        int quantity = userDataService.getInt("Please enter a quantity: ");
+
+        CategoryDto categoryDto = CategoryDto.builder()
                 .name(categoryName)
+                .build();
+
+        ProductDto productDto = ProductDto.builder()
+                .name(productName)
+                .categoryDTO(categoryDto)
+                .build();
+
+        CountryDto countryDto = CountryDto.builder()
+                .name(countryName)
                 .build();
 
         ShopDto shopDto = ShopDto.builder()
                 .name(shopName)
                 .countryDTO(countryDto)
                 .build();
-        /*
-        ProductDto productDto = ProductDto.builder()
-                .
-                .build()
-        */
-        StockDto stockDto = StockDto.builder()
 
-                .build();
-        return stockDto;
+        return stockService.addProductToStock(productDto, shopDto, quantity);
+    }*/
+
+
+    private Map<Category, Product> option7() {
+        return productService.findBiggestPriceInCategory();
     }
 
+    private List<ProductDto> option8(String country, int ageTo, int ageFrom) {
+        return productService.findAllProductsFromSpecificCountryBetweenCustomerAges(country, ageTo, ageFrom);
+    }
+
+    private Set<ProductDto> option9(Set<EGuarantee> eGuarantees) {
+        return productService.findAllProductsWithGivenGuarantees(eGuarantees);
+    }
+
+    private List<ShopDto> option10() {
+        return shopService.findAllShopsWithProductsWithCountryDifferentThanShopsCountry();
+    }
+
+    private Set<ProducerDto> option11(String tradeName, Long quantity) {
+        return producerService.findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(tradeName, quantity);
+    }
+
+    private List<CustomerOrderDto> option12(LocalDate dateFrom, LocalDate dateTo, BigDecimal price) {
+        return custOrdServ.findOrdersBetweenDatesAndGivenPrice(dateFrom, dateTo, price);
+    }
+
+    private Map<Producer, List<Product>> option13(String customerName, String customerSurname, String countryName) {
+        return custOrdServ.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
+    }
+
+    private Map<Country, List<String>> option14(){
+        return customerService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
+    }
 }

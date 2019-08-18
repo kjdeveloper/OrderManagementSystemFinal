@@ -9,7 +9,7 @@ public class TradeValidator{
         if (tradeDto == null){
             throw new MyException("TRADE IS NULL");
         }
-        if (isNameValid(tradeDto)){
+        if (!isNameValid(tradeDto)){
             throw new MyException("TRADE NAME IS NOT VALID");
         }
     }

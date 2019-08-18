@@ -17,7 +17,7 @@ public class CustomerDto {
     private int age;
     private String name;
     private String surname;
-    private Set<CustomerOrderDto> customerOrderDTOS;
-    private CountryDto countryDTO;
+    private Set<CustomerOrderDto> customerOrderDtos;
+    private CountryDto countryDto;
 
 }

@@ -44,7 +44,6 @@ public class TradeRepositoryImpl extends AbstractGenericRepository<Trade> implem
                 entityManager.close();
             }
         }
-
         return optionalTrade;
     }
 }

@@ -13,7 +13,7 @@ public class StockDto {
 
     private Long id;
     private int quantity;
-    private ProductDto productDTO;
-    private ShopDto shopDTO;
+    private ProductDto productDto;
+    private ShopDto shopDto;
 
 }

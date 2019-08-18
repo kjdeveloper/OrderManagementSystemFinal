@@ -5,12 +5,11 @@ import com.app.exceptions.Error;
 import com.app.model.*;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.HashSet;
 
 public interface Mappers {
 
-    static CategoryDto fromCategoryToCategoryDTO(Category category) {
+    static CategoryDto fromCategoryToCategoryDto(Category category) {
         return category == null ? null : CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())
@@ -18,7 +17,7 @@ public interface Mappers {
                 .build();
     }
 
-    static Category fromCategoryDTOtoCategory(CategoryDto categoryDTO) {
+    static Category fromCategoryDtoToCategory(CategoryDto categoryDTO) {
         return categoryDTO == null ? null : Category.builder()
                 .id(categoryDTO.getId())
                 .name(categoryDTO.getName())
@@ -26,7 +25,7 @@ public interface Mappers {
                 .build();
     }
 
-    static CountryDto fromCountryToCountryDTO(Country country) {
+    static CountryDto fromCountryToCountryDto(Country country) {
         return country == null ? null : CountryDto.builder()
                 .id(country.getId())
                 .name(country.getName())
@@ -36,145 +35,145 @@ public interface Mappers {
                 .build();
     }
 
-    static Country fromCountryDTOToCountry(CountryDto countryDTO) {
-        return countryDTO == null ? null : Country.builder()
-                .id(countryDTO.getId())
-                .name(countryDTO.getName())
+    static Country fromCountryDtoToCountry(CountryDto countryDto) {
+        return countryDto == null ? null : Country.builder()
+                .id(countryDto.getId())
+                .name(countryDto.getName())
                 .customers(new HashSet<>())
                 .producers(new HashSet<>())
                 .shops(new HashSet<>())
                 .build();
     }
 
-    static CustomerDto fromCustomerToCustomerDTO(Customer customer) {
+    static CustomerDto fromCustomerToCustomerDto(Customer customer) {
         return customer == null ? null : CustomerDto.builder()
                 .id(customer.getId())
                 .name(customer.getName())
                 .surname(customer.getSurname())
                 .age(customer.getAge())
-                .countryDTO(customer.getCountry() == null ? null : fromCountryToCountryDTO(customer.getCountry()))
-                .customerOrderDTOS(new HashSet<>())
+                .countryDto(customer.getCountry() == null ? null : fromCountryToCountryDto(customer.getCountry()))
+                .customerOrderDtos(new HashSet<>())
                 .build();
     }
 
-    static Customer fromCustomerDTOToCustomer(CustomerDto customerDTO) {
-        return customerDTO == null ? null : Customer.builder()
-                .id(customerDTO.getId())
-                .name(customerDTO.getName())
-                .surname(customerDTO.getSurname())
-                .age(customerDTO.getAge())
+    static Customer fromCustomerDtoToCustomer(CustomerDto customerDto) {
+        return customerDto == null ? null : Customer.builder()
+                .id(customerDto.getId())
+                .name(customerDto.getName())
+                .surname(customerDto.getSurname())
+                .age(customerDto.getAge())
                 .customerOrders(new HashSet<>())
-                .country(customerDTO.getCountryDTO() == null ? null : fromCountryDTOToCountry(customerDTO.getCountryDTO()))
+                .country(customerDto.getCountryDto() == null ? null : fromCountryDtoToCountry(customerDto.getCountryDto()))
                 .build();
     }
 
-    static CustomerOrderDto fromCustomer_orderToCustomer_orderDTO(CustomerOrder customer_order) {
-        return customer_order == null ? null : CustomerOrderDto.builder()
-                .id(customer_order.getId())
-                .date((customer_order.getDate().toLocalDateTime()))
-                .discount(customer_order.getDiscount())
-                .quantity(customer_order.getQuantity())
-                .customerDto(customer_order.getCustomer() == null ? null : fromCustomerToCustomerDTO(customer_order.getCustomer()))
-                .ePayments(customer_order.getEPayments())
-                .productDto(customer_order.getProduct() == null ? null : fromProductToProductDTO(customer_order.getProduct()))
+    static CustomerOrderDto fromCustomerOrderToCustomerOrderDto(CustomerOrder customerOrder) {
+        return customerOrder == null ? null : CustomerOrderDto.builder()
+                .id(customerOrder.getId())
+                .date((customerOrder.getDate().toLocalDateTime()))
+                .discount(customerOrder.getDiscount())
+                .quantity(customerOrder.getQuantity())
+                .customerDto(customerOrder.getCustomer() == null ? null : fromCustomerToCustomerDto(customerOrder.getCustomer()))
+                .ePayments(customerOrder.getEPayments())
+                .productDto(customerOrder.getProduct() == null ? null : fromProductToProductDto(customerOrder.getProduct()))
                 .build();
     }
 
-    static CustomerOrder fromCustomer_orderDTOToCustomer_order(CustomerOrderDto customer_orderDTO) {
-        return customer_orderDTO == null ? null : CustomerOrder.builder()
-                .id(customer_orderDTO.getId())
-                .date(Timestamp.valueOf(customer_orderDTO.getDate()))
-                .discount(customer_orderDTO.getDiscount())
-                .quantity(customer_orderDTO.getQuantity())
-                .customer(customer_orderDTO.getCustomerDto() == null ? null : fromCustomerDTOToCustomer(customer_orderDTO.getCustomerDto()))
-                .ePayments(customer_orderDTO.getEPayments())
-                .product(customer_orderDTO.getProductDto() == null ? null : fromProductDTOToProduct(customer_orderDTO.getProductDto()))
+    static CustomerOrder fromCustomerOrderDtoToCustomerOrder(CustomerOrderDto customerOrderDTO) {
+        return customerOrderDTO == null ? null : CustomerOrder.builder()
+                .id(customerOrderDTO.getId())
+                .date(Timestamp.valueOf(customerOrderDTO.getDate()))
+                .discount(customerOrderDTO.getDiscount())
+                .quantity(customerOrderDTO.getQuantity())
+                .customer(customerOrderDTO.getCustomerDto() == null ? null : fromCustomerDtoToCustomer(customerOrderDTO.getCustomerDto()))
+                .ePayments(customerOrderDTO.getEPayments())
+                .product(customerOrderDTO.getProductDto() == null ? null : fromProductDtoToProduct(customerOrderDTO.getProductDto()))
                 .build();
     }
 
-    static ProducerDto fromProducerToProducerDTO(Producer producer) {
+    static ProducerDto fromProducerToProducerDto(Producer producer) {
         return producer == null ? null : ProducerDto.builder()
                 .id(producer.getId())
                 .name(producer.getName())
-                .countryDTO(producer.getCountry() == null ? null : fromCountryToCountryDTO(producer.getCountry()))
-                .productsDTOS(new HashSet<>())
-                .tradeDTO(producer.getTrade() == null ? null : fromTradeToTradeDTO(producer.getTrade()))
+                .countryDto(producer.getCountry() == null ? null : fromCountryToCountryDto(producer.getCountry()))
+                .productsDtos(new HashSet<>())
+                .tradeDto(producer.getTrade() == null ? null : fromTradeToTradeDto(producer.getTrade()))
                 .build();
     }
 
-    static Producer fromProducerDTOToProducer(ProducerDto producerDTO) {
-        return producerDTO == null ? null : Producer.builder()
-                .id(producerDTO.getId())
-                .name(producerDTO.getName())
-                .country(producerDTO.getCountryDTO() == null ? null : fromCountryDTOToCountry(producerDTO.getCountryDTO()))
+    static Producer fromProducerDtoToProducer(ProducerDto producerDto) {
+        return producerDto == null ? null : Producer.builder()
+                .id(producerDto.getId())
+                .name(producerDto.getName())
+                .country(producerDto.getCountryDto() == null ? null : fromCountryDtoToCountry(producerDto.getCountryDto()))
                 .products(new HashSet<>())
-                .trade(producerDTO.getTradeDTO() == null ? null : fromTradeDTOToTrade(producerDTO.getTradeDTO()))
+                .trade(producerDto.getTradeDto() == null ? null : fromTradeDtoToTrade(producerDto.getTradeDto()))
                 .build();
     }
 
-    static ProductDto fromProductToProductDTO(Product product) {
+    static ProductDto fromProductToProductDto(Product product) {
         return product == null ? null : ProductDto.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
-                .customerOrderDTOS(new HashSet<>())
+                .customerOrderDtos(new HashSet<>())
                 .eGuarantees(product.getEGuarantees())
                 .stockDtos(new HashSet<>())
-                .categoryDTO(product.getCategory() == null ? null : fromCategoryToCategoryDTO(product.getCategory()))
-                .producerDTO(product.getProducer() == null ? null : fromProducerToProducerDTO(product.getProducer()))
+                .categoryDto(product.getCategory() == null ? null : fromCategoryToCategoryDto(product.getCategory()))
+                .producerDto(product.getProducer() == null ? null : fromProducerToProducerDto(product.getProducer()))
                 .build();
     }
 
-    static Product fromProductDTOToProduct(ProductDto productDTO) {
-        return productDTO == null ? null : Product.builder()
-                .id(productDTO.getId())
-                .name(productDTO.getName())
-                .price(productDTO.getPrice())
+    static Product fromProductDtoToProduct(ProductDto productDto) {
+        return productDto == null ? null : Product.builder()
+                .id(productDto.getId())
+                .name(productDto.getName())
+                .price(productDto.getPrice())
                 .customerOrders(new HashSet<>())
-                .eGuarantees(productDTO.getEGuarantees())
+                .eGuarantees(productDto.getEGuarantees())
                 .stocks(new HashSet<>())
-                .category(productDTO.getCategoryDTO() == null ? null : fromCategoryDTOtoCategory(productDTO.getCategoryDTO()))
-                .producer(productDTO.getProducerDTO() == null ? null : fromProducerDTOToProducer(productDTO.getProducerDTO()))
+                .category(productDto.getCategoryDto() == null ? null : fromCategoryDtoToCategory(productDto.getCategoryDto()))
+                .producer(productDto.getProducerDto() == null ? null : fromProducerDtoToProducer(productDto.getProducerDto()))
                 .build();
     }
 
-    static ShopDto fromShopToShopDTO(Shop shop) {
+    static ShopDto fromShopToShopDto(Shop shop) {
         return shop == null ? null : ShopDto.builder()
                 .id(shop.getId())
                 .name(shop.getName())
-                .countryDTO(shop.getCountry() == null ? null : fromCountryToCountryDTO(shop.getCountry()))
+                .countryDto(shop.getCountry() == null ? null : fromCountryToCountryDto(shop.getCountry()))
                 .stockDtos(new HashSet<>())
                 .build();
     }
 
-    static Shop fromShopDTOToShop(ShopDto shopDTO) {
-        return shopDTO == null ? null : Shop.builder()
-                .id(shopDTO.getId())
-                .name(shopDTO.getName())
+    static Shop fromShopDtoToShop(ShopDto shopDto) {
+        return shopDto == null ? null : Shop.builder()
+                .id(shopDto.getId())
+                .name(shopDto.getName())
                 .stocks(new HashSet<>())
-                .country(shopDTO.getCountryDTO() == null ? null : fromCountryDTOToCountry(shopDTO.getCountryDTO()))
+                .country(shopDto.getCountryDto() == null ? null : fromCountryDtoToCountry(shopDto.getCountryDto()))
                 .build();
     }
 
-    static StockDto fromStockToStockDTO(Stock stock) {
+    static StockDto fromStockToStockDto(Stock stock) {
         return stock == null ? null : StockDto.builder()
                 .id(stock.getId())
                 .quantity(stock.getQuantity())
-                .productDTO(stock.getProduct() == null ? null : fromProductToProductDTO(stock.getProduct()))
-                .shopDTO(stock.getShop() == null ? null : fromShopToShopDTO(stock.getShop()))
+                .productDto(stock.getProduct() == null ? null : fromProductToProductDto(stock.getProduct()))
+                .shopDto(stock.getShop() == null ? null : fromShopToShopDto(stock.getShop()))
                 .build();
     }
 
-    static Stock fromStockDTOToStock(StockDto stockDTO) {
-        return stockDTO == null ? null : Stock.builder()
-                .id(stockDTO.getId())
-                .quantity(stockDTO.getQuantity())
-                .product(stockDTO.getProductDTO() == null ? null : fromProductDTOToProduct(stockDTO.getProductDTO()))
-                .shop(stockDTO.getShopDTO() == null ? null : fromShopDTOToShop(stockDTO.getShopDTO()))
+    static Stock fromStockDtoToStock(StockDto stockDto) {
+        return stockDto == null ? null : Stock.builder()
+                .id(stockDto.getId())
+                .quantity(stockDto.getQuantity())
+                .product(stockDto.getProductDto() == null ? null : fromProductDtoToProduct(stockDto.getProductDto()))
+                .shop(stockDto.getShopDto() == null ? null : fromShopDtoToShop(stockDto.getShopDto()))
                 .build();
     }
 
-    static TradeDto fromTradeToTradeDTO(Trade trade) {
+    static TradeDto fromTradeToTradeDto(Trade trade) {
         return trade == null ? null : TradeDto.builder()
                 .id(trade.getId())
                 .name(trade.getName())
@@ -182,15 +181,15 @@ public interface Mappers {
                 .build();
     }
 
-    static Trade fromTradeDTOToTrade(TradeDto tradeDTO) {
-        return tradeDTO == null ? null : Trade.builder()
-                .id(tradeDTO.getId())
-                .name(tradeDTO.getName())
+    static Trade fromTradeDtoToTrade(TradeDto tradeDto) {
+        return tradeDto == null ? null : Trade.builder()
+                .id(tradeDto.getId())
+                .name(tradeDto.getName())
                 .producers(new HashSet<>())
                 .build();
     }
 
-    static ErrorDto fromErrorToErrorDTO(Error error) {
+    static ErrorDto fromErrorToErrorDto(Error error) {
         return error == null ? null : ErrorDto.builder()
                 .id(error.getId())
                 .date(error.getDate())
@@ -198,11 +197,11 @@ public interface Mappers {
                 .build();
     }
 
-    static Error fromErrorDTOToError(ErrorDto errorDTO) {
-        return errorDTO == null ? null : Error.builder()
-                .id(errorDTO.getId())
-                .date(errorDTO.getDate())
-                .message(errorDTO.getMessage())
+    static Error fromErrorDtoToError(ErrorDto errorDto) {
+        return errorDto == null ? null : Error.builder()
+                .id(errorDto.getId())
+                .date(errorDto.getDate())
+                .message(errorDto.getMessage())
                 .build();
 
     }

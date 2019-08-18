@@ -8,8 +8,6 @@ import com.app.repository.impl.CountryRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
 
-import java.util.Map;
-
 public class CountryService {
 
     private CountryRepository countryRepository = new CountryRepositoryImpl();
@@ -20,7 +18,7 @@ public class CountryService {
 
         Country country = countryRepository.findByName(countryDTO).orElse(null);
         if (country == null){
-            country = Mappers.fromCountryDTOToCountry(countryDTO);
+            country = Mappers.fromCountryDtoToCountry(countryDTO);
         }else{
             throw new MyException("COUNTRY WITH GIVEN NAME EXIST");
         }

@@ -18,9 +18,9 @@ public class ProductDto {
     private Long id;
     private String name;
     private BigDecimal price;
-    private CategoryDto categoryDTO;
-    private Set<CustomerOrderDto> customerOrderDTOS;
-    private ProducerDto producerDTO;
+    private CategoryDto categoryDto;
+    private Set<CustomerOrderDto> customerOrderDtos;
+    private ProducerDto producerDto;
     private Set<StockDto> stockDtos;
     private Set<EGuarantee> eGuarantees;
 

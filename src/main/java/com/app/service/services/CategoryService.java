@@ -8,8 +8,6 @@ import com.app.repository.impl.CategoryRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CategoryValidator;
 
-import java.util.Map;
-
 public class CategoryService {
 
     private CategoryRepository categoryRepository = new CategoryRepositoryImpl();
@@ -21,7 +19,7 @@ public class CategoryService {
         Category category = categoryRepository.findByName(categoryDTO).orElse(null);
 
         if (category == null){
-            category = Mappers.fromCategoryDTOtoCategory(categoryDTO);
+            category = Mappers.fromCategoryDtoToCategory(categoryDTO);
         }else{
             throw new MyException("CATEGORY WITH GIVEN NAME EXIST");
         }

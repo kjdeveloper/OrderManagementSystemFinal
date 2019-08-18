@@ -99,7 +99,7 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
                     .createQuery("select c from Customer c where c.name = :name AND c.surname = :surname AND c.country.name = :country", Customer.class)
                     .setParameter("name", customerDTO.getName())
                     .setParameter("surname", customerDTO.getSurname())
-                    .setParameter("country", customerDTO.getCountryDTO().getName())
+                    .setParameter("country", customerDTO.getCountryDto().getName())
                     .getResultList()
                     .stream()
                     .findFirst()

@@ -16,6 +16,6 @@ public class ShopDto {
     private Long id;
     private String name;
     private Set<StockDto> stockDtos;
-    private CountryDto countryDTO;
+    private CountryDto countryDto;
 
 }

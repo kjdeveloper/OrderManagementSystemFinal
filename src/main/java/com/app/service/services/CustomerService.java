@@ -12,6 +12,9 @@ import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.CustomerValidator;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class CustomerService {
 
     private final CustomerRepository customerRepository = new CustomerRepositoryImpl();
@@ -21,7 +24,7 @@ public class CustomerService {
 
     public CustomerDto addCustomer(final CustomerDto customerDto) {
         customerDtoValidator.validateCustomer(customerDto);
-        countryValidator.validateCountry(customerDto.getCountryDTO());
+        countryValidator.validateCountry(customerDto.getCountryDto());
 
         final boolean exist = customerRepository.isExistByNameAndSurnameAndCountry(customerDto);
 
@@ -29,19 +32,37 @@ public class CustomerService {
             throw new MyException("CUSTOMER WITH GIVEN NAME, SURNAME AND COUNTRY IS ALREADY EXIST");
         }
 
-        Country country = countryRepository.findByName(customerDto.getCountryDTO()).orElse(null);
+        Country country = countryRepository.findByName(customerDto.getCountryDto()).orElse(null);
 
         if (country == null) {
-            country = Mappers.fromCountryDTOToCountry(customerDto.getCountryDTO());
+            country = Mappers.fromCountryDtoToCountry(customerDto.getCountryDto());
             country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY IN CUSTOMER SERVICE"));
         }
 
 
-        Customer customer = Mappers.fromCustomerDTOToCustomer(customerDto);
+        Customer customer = Mappers.fromCustomerDtoToCustomer(customerDto);
         customer.setCountry(country);
         customerRepository.addOrUpdate(customer);
 
-        return Mappers.fromCustomerToCustomerDTO(customer);
+        return Mappers.fromCustomerToCustomerDto(customer);
     }
 
+    public Map<Country, List<String>> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
+
+        return customerRepository.findAll()
+                .stream()
+                .collect(Collectors.groupingBy(Customer::getCountry, Collectors.toList()))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        k -> k.getValue()
+                                .stream()
+                                .map(Customer::getName)
+                                .filter(c -> k.getKey().getName().equals(c)).collect(Collectors.toList()),
+                        (k, v) -> k,
+                        LinkedHashMap::new
+                ));
+
+    }
 }

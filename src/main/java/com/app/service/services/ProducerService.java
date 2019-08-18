@@ -3,9 +3,7 @@ package com.app.service.services;
 import com.app.dto.ProducerDto;
 import com.app.dto.TradeDto;
 import com.app.exceptions.MyException;
-import com.app.model.Country;
-import com.app.model.Producer;
-import com.app.model.Trade;
+import com.app.model.*;
 import com.app.repository.CountryRepository;
 import com.app.repository.ProducerRepository;
 import com.app.repository.TradeRepository;
@@ -16,6 +14,9 @@ import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ProducerValidator;
 import com.app.validation.impl.TradeValidator;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ProducerService {
 
@@ -28,8 +29,8 @@ public class ProducerService {
 
     public ProducerDto addProducer(ProducerDto producerDTO) {
         producerValidator.validateProducer(producerDTO);
-        countryValidator.validateCountry(producerDTO.getCountryDTO());
-        tradeValidator.validateTrade(producerDTO.getTradeDTO());
+        countryValidator.validateCountry(producerDTO.getCountryDto());
+        tradeValidator.validateTrade(producerDTO.getTradeDto());
 
         final boolean exist = producerRepository.isExistByNameAndTradeAndCountry(producerDTO);
 
@@ -37,28 +38,35 @@ public class ProducerService {
             throw new MyException("PRODUCER WITH GIVEN NAME, TRADE AND COUNTRY EXIST");
         }
 
-        TradeDto tradeDto = producerDTO.getTradeDTO();
+        TradeDto tradeDto = producerDTO.getTradeDto();
 
         Producer producer = producerRepository.findByName(producerDTO).orElse(null);
-        Country country = countryRepository.findByName(producerDTO.getCountryDTO()).orElse(null);
+        Country country = countryRepository.findByName(producerDTO.getCountryDto()).orElse(null);
         Trade trade = tradeRepository.findByName(tradeDto).orElse(null);
 
         if (country == null){
-            country = Mappers.fromCountryDTOToCountry(producerDTO.getCountryDTO());
+            country = Mappers.fromCountryDtoToCountry(producerDTO.getCountryDto());
             country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY"));
         }
         if (trade == null){
-            trade = Mappers.fromTradeDTOToTrade(producerDTO.getTradeDTO());
+            trade = Mappers.fromTradeDtoToTrade(producerDTO.getTradeDto());
             trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException("CANNOT ADD TRADE"));
         }
         if (producer == null){
-            producer = Mappers.fromProducerDTOToProducer(producerDTO);
+            producer = Mappers.fromProducerDtoToProducer(producerDTO);
         }
 
         producer.setTrade(trade);
         producer.setCountry(country);
         producerRepository.addOrUpdate(producer);
-        return Mappers.fromProducerToProducerDTO(producer);
+        return Mappers.fromProducerToProducerDto(producer);
     }
 
+    public Set<ProducerDto> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
+        return producerRepository.findAll()
+                .stream()
+                .filter(producer -> producer.getTrade().getName().equals(tradeName))
+                .map(Mappers::fromProducerToProducerDto)
+                .collect(Collectors.toSet());
+    }
 }

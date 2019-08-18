@@ -1,6 +1,5 @@
 package com.app.service.services;
 
-import com.app.dto.CategoryDto;
 import com.app.dto.ProductDto;
 import com.app.dto.ShopDto;
 import com.app.dto.StockDto;
@@ -18,10 +17,6 @@ import com.app.service.mapper.Mappers;
 import com.app.validation.impl.ProductValidator;
 import com.app.validation.impl.ShopValidator;
 import com.app.validation.impl.StockValidator;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-
-import java.util.Map;
 
 public class StockService {
 
@@ -43,30 +38,30 @@ public class StockService {
 
         if (shop == null) {
             shopValidator.validateShop(shopDto);
-            shop = Mappers.fromShopDTOToShop(shopDto);
+            shop = Mappers.fromShopDtoToShop(shopDto);
             shop = shopRepository.addOrUpdate(shop).orElseThrow(() -> new MyException("CANNOT ADD SHOP IN STOCK"));
         }
         if (product == null) {
             productValidator.validateProduct(productDto);
-            product = Mappers.fromProductDTOToProduct(productDto);
+            product = Mappers.fromProductDtoToProduct(productDto);
             product = productRepository.addOrUpdate(product).orElseThrow(() -> new MyException("CANNOT ADD PRODUCT IN STOCK"));
         }
         StockDto stockDto = StockDto.builder()
-                .productDTO(productDto)
-                .shopDTO(shopDto)
+                .productDto(productDto)
+                .shopDto(shopDto)
                 .build();
 
         Stock stock = stockRepository.findStockByProductAndShop(stockDto).orElse(null);
 
         if (stock == null) {
-            stock = Mappers.fromStockDTOToStock(stockDto);
+            stock = Mappers.fromStockDtoToStock(stockDto);
         }
 
         stock.setProduct(product);
         stock.setShop(shop);
         stock.setQuantity(stock.getQuantity() + quantity);
         stockRepository.addOrUpdate(stock);
-        return Mappers.fromStockToStockDTO(stock);
+        return Mappers.fromStockToStockDto(stock);
     }
 
 

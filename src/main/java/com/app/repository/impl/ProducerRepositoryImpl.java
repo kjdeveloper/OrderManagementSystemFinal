@@ -64,8 +64,8 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
             exist = entityManager
                     .createQuery("select p from Producer p where p.name = :name AND p.trade.name = :tradeName AND p.country.name = :countryName", Producer.class)
                     .setParameter("name", producerDto.getName())
-                    .setParameter("tradeName", producerDto.getTradeDTO().getName())
-                    .setParameter("countryName", producerDto.getCountryDTO().getName())
+                    .setParameter("tradeName", producerDto.getTradeDto().getName())
+                    .setParameter("countryName", producerDto.getCountryDto().getName())
                     .getResultList()
                     .stream()
                     .findFirst()

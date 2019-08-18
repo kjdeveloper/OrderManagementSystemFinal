@@ -19,7 +19,7 @@ public class TradeService {
         Trade trade = tradeRepository.findByName(tradeDTO).orElse(null);
 
         if (trade == null) {
-            trade = Mappers.fromTradeDTOToTrade(tradeDTO);
+            trade = Mappers.fromTradeDtoToTrade(tradeDTO);
         } else {
             throw new MyException("TRADE WITH GIVEN NAME EXIST");
         }

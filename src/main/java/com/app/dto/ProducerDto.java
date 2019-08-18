@@ -15,8 +15,8 @@ public class ProducerDto {
 
     private Long id;
     private String name;
-    private Set<ProductDto> productsDTOS;
-    private CountryDto countryDTO;
-    private TradeDto tradeDTO;
+    private Set<ProductDto> productsDtos;
+    private CountryDto countryDto;
+    private TradeDto tradeDto;
 
 }

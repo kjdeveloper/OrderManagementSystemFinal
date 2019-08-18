@@ -12,6 +12,8 @@ import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ShopValidator;
 
+import java.util.List;
+
 public class ShopService {
 
     private final ShopRepository shopRepository = new ShopRepositoryImpl();
@@ -21,26 +23,29 @@ public class ShopService {
 
     public ShopDto addShop(final ShopDto shopDTO) {
         shopValidator.validateShop(shopDTO);
-        countryValidator.validateCountry(shopDTO.getCountryDTO());
+        countryValidator.validateCountry(shopDTO.getCountryDto());
 
         final boolean exist = shopRepository.isExistByShopAndCountry(shopDTO);
         if (exist){
             throw new MyException("SHOP WITH GIVEN NAME AND COUNTRY IS ALREADY EXIST");
         }
 
-        Country country = countryRepository.findByName(shopDTO.getCountryDTO()).orElse(null);
+        Country country = countryRepository.findByName(shopDTO.getCountryDto()).orElse(null);
         Shop shop = shopRepository.findByName(shopDTO).orElse(null);
         if (country == null){
-            country = Mappers.fromCountryDTOToCountry(shopDTO.getCountryDTO());
+            country = Mappers.fromCountryDtoToCountry(shopDTO.getCountryDto());
             country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY WITH SHOP"));
         }
         if (shop == null){
-            shop = Mappers.fromShopDTOToShop(shopDTO);
+            shop = Mappers.fromShopDtoToShop(shopDTO);
         }
 
         shop.setCountry(country);
         shopRepository.addOrUpdate(shop);
-        return Mappers.fromShopToShopDTO(shop);
+        return Mappers.fromShopToShopDto(shop);
     }
 
+    public List<ShopDto> findAllShopsWithProductsWithCountryDifferentThanShopsCountry() {
+        return null;
+    }
 }

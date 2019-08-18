@@ -45,7 +45,7 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(
-            name = "guarantees",
+            name = "eguarantees",
             joinColumns = @JoinColumn(name = "guarantee_components_id")
     )
     @Column(name = "eguarantee")

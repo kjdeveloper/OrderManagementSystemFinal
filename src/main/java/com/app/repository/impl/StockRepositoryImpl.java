@@ -30,8 +30,8 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
 
             optionalStock = entityManager
                     .createQuery("select s from Stock s where s.product.name = :productName AND s.shop.name = :shopName", Stock.class)
-                    .setParameter("productName", stockDTO.getProductDTO().getName())
-                    .setParameter("shopName", stockDTO.getShopDTO().getName())
+                    .setParameter("productName", stockDTO.getProductDto().getName())
+                    .setParameter("shopName", stockDTO.getShopDto().getName())
                     .getResultList()
                     .stream()
                     .findFirst();
