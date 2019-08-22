@@ -1,5 +1,7 @@
 package com.app.service.services;
 
+import com.app.dto.CategoryDto;
+import com.app.dto.ProducerDto;
 import com.app.dto.ProductDto;
 import com.app.dto.TradeDto;
 import com.app.exceptions.MyException;
@@ -33,7 +35,11 @@ public class ProductService {
 
     private final UserDataService userDataService = new UserDataService();
 
-    public ProductDto addProduct(ProductDto productDto) {
+    public ProductDto addProduct(ProductDto productDto){
+        if (productDto == null){
+            throw new MyException("PRODUCTDTO IS NULL");
+        }
+
         productValidator.validateProduct(productDto);
         categoryValidator.validateCategory(productDto.getCategoryDto());
         producerValidator.validateProducer(productDto.getProducerDto());
@@ -44,60 +50,26 @@ public class ProductService {
         if (exist) {
             throw new MyException("PRODUCT WITH GIVEN CATEGORY AND PRODUCER EXIST");
         }
+        Product product = Mappers.fromProductDtoToProduct(productDto);
 
-        Product product = productRepository.findByName(productDto).orElse(null);
-        Category category = categoryRepository.findByName(productDto.getCategoryDto()).orElse(null);
-        Producer producer = producerRepository.findByName(productDto.getProducerDto()).orElse(null);
-        Country country = countryRepository.findByName(productDto.getProducerDto().getCountryDto()).orElse(null);
-        Trade trade = tradeRepository.findByName(productDto.getProducerDto().getTradeDto()).orElse(null);
-
-        if (category == null) {
-            category = Mappers.fromCategoryDtoToCategory(productDto.getCategoryDto());
-            category = categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException("CAN NOT ADD CATEGORY IN PRODUCT SERVICE"));
+        CategoryDto categoryDto = productDto.getCategoryDto();
+        if (categoryDto == null){
+            throw new MyException("CATEGORY IS NULL");
         }
-        if (trade == null) {
-            String tradeName = userDataService.getString("Please enter a name of producer trade: ");
+        Category category = categoryRepository
+                .findByName(categoryDto)
+                .orElseThrow(() -> new MyException("CATEGORY WAS NOT FOUND"));
 
-            TradeDto tradeDto = TradeDto.builder()
-                    .name(tradeName)
-                    .build();
-
-            tradeValidator.validateTrade(tradeDto);
-            trade = Mappers.fromTradeDtoToTrade(tradeDto);
-            trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException("CAN NOT ADD TRADE IN PRODUCT SERVICE"));
+        ProducerDto producerDto = productDto.getProducerDto();
+        if (producerDto == null){
+            throw new MyException("PRODUCER IS NULL");
         }
-        if (trade == null) {
-            String tradeName = userDataService.getString("Please enter a name of producer trade: ");
+        Producer producer = producerRepository
+                .findByName(producerDto)
+                .orElseThrow(() -> new MyException("PRODUCER WAS NOT FOUND;"));
 
-            TradeDto tradeDto = TradeDto.builder()
-                    .name(tradeName)
-                    .build();
-
-            tradeValidator.validateTrade(tradeDto);
-            trade = Mappers.fromTradeDtoToTrade(tradeDto);
-            trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException("CAN NOT ADD TRADE IN PRODUCT SERVICE"));
-        }
-        if (country == null) {
-            country = Mappers.fromCountryDtoToCountry(producerDto.getCountryDTO());
-            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CAN NOT ADD COUNTRY IN PRODUCT SERVICE"));
-        }
-        if (producer == null) {
-
-
-            producer = Mappers.fromProducerDtoToProducer(producerDto);
-            producer.setCountry(country);
-            producer.setTrade(trade);
-            producer = producerRepository.addOrUpdate(producer).orElseThrow(() -> new MyException("CAN NOT ADD PRODUCER IN PRODUCT SERVICE"));
-        }
-
-        if (product == null) {
-
-            product = Mappers.fromProductDtoToProduct(productDto);
-        }
-
-        product.setCategory(category);
         product.setProducer(producer);
-        product = Mappers.fromProductDtoToProduct(productDto);
+        product.setCategory(category);
         productRepository.addOrUpdate(product);
         return Mappers.fromProductToProductDto(product);
     }

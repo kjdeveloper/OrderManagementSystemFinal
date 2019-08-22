@@ -52,7 +52,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
     public boolean isExistByNameAndCategoryAndProducer(ProductDto productDTO) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
-        boolean exist;
+        boolean exist = false;
         EntityManager entityManager = null;
         EntityTransaction tx = null;
         try {
