@@ -25,11 +25,33 @@ public class CustomerOrderService {
     private final ProductRepository productRepository = new ProductRepositoryImpl();
 
     private final CustomerOrderValidator customerOrderValidator = new CustomerOrderValidator();
-    private final CustomerValidator customerValidator = new CustomerValidator();
     private final ProductValidator productValidator = new ProductValidator();
 
+    public CustomerOrderDto addCustomerOrder(CustomerOrderDto customerOrderDto) {
+        customerOrderValidator.validateCustomerOrder(customerOrderDto);
 
-    public void addCustomerOrder(CustomerOrderDto customerOrderDto) {
+        CustomerOrder customerOrder = Mappers.fromCustomerOrderDtoToCustomerOrder(customerOrderDto);
+
+        CustomerDto customerDto = customerOrderDto.getCustomerDto();
+
+        Customer customer = customerRepository
+                .findByName(customerDto.getName())
+                .orElseGet(() -> customerRepository
+                        .findBySurname(customerDto.getSurname())
+                        .orElseThrow(() -> new MyException("CUSTOMER WAS NOT FOUND")));
+
+        ProductDto productDto = customerOrderDto.getProductDto();
+
+        Product product = productRepository
+                .findByName(productDto)
+                .orElseThrow(() -> new MyException("PRODUCT WAS NOT FOUND"));
+
+        //gdzie ustawic set EGuarantees
+
+        customerOrder.setCustomer(customer);
+        customerOrder.setProduct(product);
+        customerOrderRepository.addOrUpdate(customerOrder);
+        return Mappers.fromCustomerOrderToCustomerOrderDto(customerOrder);
     }
 
 
@@ -42,6 +64,10 @@ public class CustomerOrderService {
     }
 
     private BigDecimal productPriceAfterDiscount(CustomerOrder customerOrder) {
+        if (customerOrder == null){
+            throw new MyException("CUSTOMER ORDER IS NULL");
+        }
+
         BigDecimal price = customerOrder.getProduct().getPrice();
         BigDecimal discount = BigDecimal.valueOf(customerOrder.getDiscount());
         BigDecimal quantity = BigDecimal.valueOf(customerOrder.getQuantity());

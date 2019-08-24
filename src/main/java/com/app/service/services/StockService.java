@@ -28,13 +28,14 @@ public class StockService {
     private final ShopValidator shopValidator = new ShopValidator();
     private final ProductValidator productValidator = new ProductValidator();
 
-    public StockDto addProductToStock(ProductDto productDto, ShopDto shopDto, int quantity) {
+    public StockDto addProductToStock(StockDto stockDto, int quantity) {
+        ShopDto shopDto = stockDto.getShopDto();
+        ProductDto productDto = stockDto.getProductDto();
+
         Product product = productRepository.findByName(productDto).orElse(null);
         Shop shop = shopRepository.findByName(shopDto).orElse(null);
 
-        if (quantity <= 0) {
-            throw new MyException("QUANTITY CAN NOT BE LESS OR EQUAL ZERO");
-        }
+        stockValidator.validateStock(stockDto);
 
         if (shop == null) {
             shopValidator.validateShop(shopDto);
@@ -46,10 +47,6 @@ public class StockService {
             product = Mappers.fromProductDtoToProduct(productDto);
             product = productRepository.addOrUpdate(product).orElseThrow(() -> new MyException("CANNOT ADD PRODUCT IN STOCK"));
         }
-        StockDto stockDto = StockDto.builder()
-                .productDto(productDto)
-                .shopDto(shopDto)
-                .build();
 
         Stock stock = stockRepository.findStockByProductAndShop(stockDto).orElse(null);
 

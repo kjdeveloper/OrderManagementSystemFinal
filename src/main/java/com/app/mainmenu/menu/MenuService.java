@@ -3,11 +3,13 @@ package com.app.mainmenu.menu;
 import com.app.dto.*;
 import com.app.model.*;
 import com.app.model.enums.EGuarantee;
+import com.app.model.enums.EPayment;
 import com.app.repository.generic.DbConnection;
 import com.app.service.services.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class MenuService {
@@ -21,8 +23,6 @@ public class MenuService {
     private final ProducerService producerService = new ProducerService();
     private final ProductService productService = new ProductService();
     private final StockService stockService = new StockService();
-
-    private Scanner sc = new Scanner(System.in);
 
     public MenuService() {
     }
@@ -73,7 +73,6 @@ public class MenuService {
                             EGuarantee.EXCHANGE,
                             EGuarantee.SERVICE
                     ));
-
                     ProductDto productDtoAdded = option4(eGuarantees);
                     System.out.println(productDtoAdded + " ADDED.");
                     break;
@@ -82,7 +81,13 @@ public class MenuService {
                     //System.out.println(stockDto + " ADDED.");
                     break;
                 case 6:
+                    Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
+                            EPayment.CASH, EPayment.CARD
+                    ));
+                    double discount = 0.75;
 
+                    CustomerOrderDto customerOrderDto = option6(ePayments, discount);
+                    System.out.println(customerOrderDto);
                     break;
                 case 7:
                     Map<Category, Product> biggestPriceInEachCategory = option7();
@@ -212,22 +217,18 @@ public class MenuService {
         String producerName = userDataService.getString("Please enter a name of the product producer: ");
         String producerCountry = userDataService.getString("Please enter a producer's country: ");
 
-        CategoryDto categoryDto = CategoryDto.builder()
-                .name(category)
-                .build();
-
-        ProducerDto producerDto = ProducerDto.builder()
-                .name(producerName)
-                .countryDto(CountryDto.builder()
-                        .name(producerCountry)
-                        .build())
-                .build();
-
         ProductDto productDto = ProductDto.builder()
                 .name(name)
                 .price(price)
-                .categoryDto(categoryDto)
-                .producerDto(producerDto)
+                .categoryDto(CategoryDto.builder()
+                        .name(category)
+                        .build())
+                .producerDto(ProducerDto.builder()
+                        .name(producerName)
+                        .countryDto(CountryDto.builder()
+                                .name(producerCountry)
+                                .build())
+                        .build())
                 .eGuarantees(eGuarantees)
                 .build();
 
@@ -272,6 +273,40 @@ public class MenuService {
         return stockService.addProductToStock(productDto, shopDto, quantity);
     }*/
 
+    private CustomerOrderDto option6(Set<EPayment> ePayments, double discount) {
+        String customerName = userDataService.getString("Please enter customer name: ");
+        String customerSurname = userDataService.getString("Please enter customer surname: ");
+        String countryName = userDataService.getString("Please enter the country: ");
+
+        String productName = userDataService.getString("Please enter product name: ");
+        String categoryName = userDataService.getString("Please enter product category name: ");
+
+        int quantity = userDataService.getInt("Please enter the quantity of product you want to buy: ");
+        LocalDateTime ldt = LocalDateTime.now();
+
+        CustomerOrderDto customerOrderDto = CustomerOrderDto.builder()
+                .date(ldt)
+                .quantity(quantity)
+                .discount(discount)
+                .customerDto(CustomerDto.builder()
+                        .name(customerName)
+                        .surname(customerSurname)
+                        .countryDto(CountryDto.builder()
+                                .name(countryName)
+                                .build())
+                        .build())
+                .productDto(ProductDto.builder()
+                        .name(productName)
+                        .categoryDto(CategoryDto.builder()
+                                .name(categoryName)
+                                .build())
+                        .build())
+                .ePayments(ePayments)
+                .build();
+
+        return custOrdServ.addCustomerOrder(customerOrderDto);
+    }
+
 
     private Map<Category, Product> option7() {
         return productService.findBiggestPriceInCategory();
@@ -304,4 +339,5 @@ public class MenuService {
     private Map<Country, List<String>> option14() {
         return customerService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
+
 }

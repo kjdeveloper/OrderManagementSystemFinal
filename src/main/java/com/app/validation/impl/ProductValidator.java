@@ -10,8 +10,8 @@ import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
 public class ProductValidator {
 
     public void validateProduct(ProductDto productDto){
-        if(isNullOrEmpty(productDto.getName())){
-            throw new MyException("PRODUCT CANNOT BE NULL OR EMPTY");
+        if(productDto == null){
+            throw new MyException("PRODUCT CAN NOT BE NULL");
         }
         if (!isNameValid(productDto)){
             throw new MyException("PRODUCT NAME IS NOT VALID");

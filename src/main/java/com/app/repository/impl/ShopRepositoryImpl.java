@@ -51,7 +51,7 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
     public boolean isExistByShopAndCountry(ShopDto shopDTO) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
-        boolean exist;
+        boolean exist = false;
         EntityManager entityManager = null;
         EntityTransaction tx = null;
         try {

@@ -85,7 +85,7 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
     public boolean isExistByNameAndSurnameAndCountry(CustomerDto customerDTO) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
-        boolean exist;
+        boolean exist = false;
 
         EntityManager entityManager = null;
         EntityTransaction tx = null;

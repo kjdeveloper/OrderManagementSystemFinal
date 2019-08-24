@@ -36,9 +36,6 @@ public class ProductService {
     private final UserDataService userDataService = new UserDataService();
 
     public ProductDto addProduct(ProductDto productDto){
-        if (productDto == null){
-            throw new MyException("PRODUCTDTO IS NULL");
-        }
 
         productValidator.validateProduct(productDto);
         categoryValidator.validateCategory(productDto.getCategoryDto());

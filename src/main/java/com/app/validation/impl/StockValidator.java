@@ -7,7 +7,7 @@ public class StockValidator{
 
     public void validateStock(StockDto stockDto){
         if (stockDto == null){
-            throw new MyException("STOCK IS NULL");
+            throw new MyException("STOCK DTO IS NULL");
         }
         if (isQuantityValid(stockDto)){
             throw new MyException("QUANTITY CANNOT LESS THAN ZERO");
@@ -15,7 +15,7 @@ public class StockValidator{
     }
 
     private boolean isQuantityValid(StockDto stockDTO){
-        return stockDTO.getQuantity() < 0;
+        return stockDTO.getQuantity() <= 0;
     }
 
 }
