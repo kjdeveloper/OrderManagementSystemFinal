@@ -54,7 +54,7 @@ public class ProductService {
             throw new MyException("CATEGORY IS NULL");
         }
         Category category = categoryRepository
-                .findByName(categoryDto)
+                .findByName(categoryDto.getName())
                 .orElseThrow(() -> new MyException("CATEGORY WAS NOT FOUND"));
 
         ProducerDto producerDto = productDto.getProducerDto();
@@ -62,7 +62,7 @@ public class ProductService {
             throw new MyException("PRODUCER IS NULL");
         }
         Producer producer = producerRepository
-                .findByName(producerDto)
+                .findByName(producerDto.getName())
                 .orElseThrow(() -> new MyException("PRODUCER WAS NOT FOUND;"));
 
         product.setProducer(producer);

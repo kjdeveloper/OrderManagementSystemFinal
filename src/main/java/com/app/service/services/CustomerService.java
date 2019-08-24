@@ -32,7 +32,7 @@ public class CustomerService {
             throw new MyException("CUSTOMER WITH GIVEN NAME, SURNAME AND COUNTRY IS ALREADY EXIST");
         }
 
-        Country country = countryRepository.findByName(customerDto.getCountryDto()).orElse(null);
+        Country country = countryRepository.findByName(customerDto.getCountryDto().getName()).orElse(null);
 
         if (country == null) {
             country = Mappers.fromCountryDtoToCountry(customerDto.getCountryDto());

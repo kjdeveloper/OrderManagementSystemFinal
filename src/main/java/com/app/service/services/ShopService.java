@@ -30,8 +30,8 @@ public class ShopService {
             throw new MyException("SHOP WITH GIVEN NAME AND COUNTRY IS ALREADY EXIST");
         }
 
-        Country country = countryRepository.findByName(shopDTO.getCountryDto()).orElse(null);
-        Shop shop = shopRepository.findByName(shopDTO).orElse(null);
+        Country country = countryRepository.findByName(shopDTO.getCountryDto().getName()).orElse(null);
+        Shop shop = shopRepository.findByName(shopDTO.getName()).orElse(null);
         if (country == null){
             country = Mappers.fromCountryDtoToCountry(shopDTO.getCountryDto());
             country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY WITH SHOP"));

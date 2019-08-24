@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface StockRepository extends GenericRepository<Stock> {
 
-    Optional<Stock> findStockByProductAndShop(StockDto stockDTO);
+    Optional<Stock> findStockByProductAndShop(String productName, String shopName);
 
     int countProduct( Long productId );
 

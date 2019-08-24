@@ -7,7 +7,7 @@ import com.app.repository.generic.GenericRepository;
 import java.util.Optional;
 
 public interface ShopRepository extends GenericRepository<Shop> {
-    Optional<Shop> findByName(ShopDto shopDto);
+    Optional<Shop> findByName(String shopName);
 
     boolean isExistByShopAndCountry(ShopDto shopDTO);
 

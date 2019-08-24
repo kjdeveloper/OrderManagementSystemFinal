@@ -7,5 +7,5 @@ import com.app.repository.generic.GenericRepository;
 import java.util.Optional;
 
 public interface CountryRepository extends GenericRepository<Country> {
-    Optional<Country> findByName(CountryDto countryDto);
+    Optional<Country> findByName(String countryName);
 }

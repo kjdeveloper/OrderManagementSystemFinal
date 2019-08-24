@@ -18,7 +18,7 @@ public class MenuService {
     private final DbConnection dbConnection = DbConnection.getInstance();
 
     private final CustomerService customerService = new CustomerService();
-    private final CustomerOrderService custOrdServ = new CustomerOrderService();
+    private final CustomerOrderService customerOrderService = new CustomerOrderService();
     private final ShopService shopService = new ShopService();
     private final ProducerService producerService = new ProducerService();
     private final ProductService productService = new ProductService();
@@ -77,8 +77,8 @@ public class MenuService {
                     System.out.println(productDtoAdded + " ADDED.");
                     break;
                 case 5:
-                    //StockDto stockDto = option5();
-                    //System.out.println(stockDto + " ADDED.");
+                    StockDto stockDto = option5();
+                    System.out.println(stockDto + " ADDED.");
                     break;
                 case 6:
                     Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
@@ -109,7 +109,7 @@ public class MenuService {
                     products.forEach(productDto -> System.out.println(productDto.getName() +
                             ", price: " + productDto.getPrice() +
                             ", category: " + productDto.getCategoryDto().getName() +
-                            ", producent: " + productDto.getProducerDto().getName() +
+                            ", producer: " + productDto.getProducerDto().getName() +
                             ", from: " + productDto.getProducerDto().getCountryDto().getName()));
                     break;
                 case 9:
@@ -235,7 +235,7 @@ public class MenuService {
         return productService.addProduct(productDto);
     }
 
-   /* private StockDto option5() {
+    private StockDto option5() {
         String productName = userDataService.getString("Please enter a name of product: ");
         String categoryName = userDataService.getString("Please enter a name of category: ");
         String shopName = userDataService.getString("Please enter a shop name: ");
@@ -243,35 +243,7 @@ public class MenuService {
         int quantity = userDataService.getInt("Please enter a quantity: ");
 
         return stockService.addProductToStock(productName, categoryName, shopName, countryName, quantity);
-    }*/
-
- /*   private StockDto option5() {
-        String productName = userDataService.getString("Please enter a name of product: ");
-        String categoryName = userDataService.getString("Please enter a name of category: ");
-        String shopName = userDataService.getString("Please enter a shop name: ");
-        String countryName = userDataService.getString("Please enter a shop country: ");
-        int quantity = userDataService.getInt("Please enter a quantity: ");
-
-        CategoryDto categoryDto = CategoryDto.builder()
-                .name(categoryName)
-                .build();
-
-        ProductDto productDto = ProductDto.builder()
-                .name(productName)
-                .categoryDTO(categoryDto)
-                .build();
-
-        CountryDto countryDto = CountryDto.builder()
-                .name(countryName)
-                .build();
-
-        ShopDto shopDto = ShopDto.builder()
-                .name(shopName)
-                .countryDTO(countryDto)
-                .build();
-
-        return stockService.addProductToStock(productDto, shopDto, quantity);
-    }*/
+    }
 
     private CustomerOrderDto option6(Set<EPayment> ePayments, double discount) {
         String customerName = userDataService.getString("Please enter customer name: ");
@@ -304,7 +276,7 @@ public class MenuService {
                 .ePayments(ePayments)
                 .build();
 
-        return custOrdServ.addCustomerOrder(customerOrderDto);
+        return customerOrderService.addCustomerOrder(customerOrderDto);
     }
 
 
@@ -329,11 +301,11 @@ public class MenuService {
     }
 
     private List<CustomerOrderDto> option12(LocalDate dateFrom, LocalDate dateTo, BigDecimal price) {
-        return custOrdServ.findOrdersBetweenDatesAndGivenPrice(dateFrom, dateTo, price);
+        return customerOrderService.findOrdersBetweenDatesAndGivenPrice(dateFrom, dateTo, price);
     }
 
     private Map<Producer, List<Product>> option13(String customerName, String customerSurname, String countryName) {
-        return custOrdServ.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
+        return customerOrderService.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 
     private Map<Country, List<String>> option14() {

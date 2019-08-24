@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class TradeRepositoryImpl extends AbstractGenericRepository<Trade> implements TradeRepository {
     @Override
-    public Optional<Trade> findByName(TradeDto tradeDto) {
+    public Optional<Trade> findByName(String tradeName) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         Optional<Trade> optionalTrade = Optional.empty();
@@ -28,7 +28,7 @@ public class TradeRepositoryImpl extends AbstractGenericRepository<Trade> implem
 
             optionalTrade = entityManager
                     .createQuery("select t from Trade t where t.name = :name", Trade.class)
-                    .setParameter("name", tradeDto.getName())
+                    .setParameter("name", tradeName)
                     .getResultList()
                     .stream()
                     .findFirst();

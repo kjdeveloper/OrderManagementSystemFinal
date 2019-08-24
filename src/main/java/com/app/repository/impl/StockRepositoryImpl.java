@@ -15,7 +15,7 @@ import java.util.Optional;
 public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implements StockRepository {
 
     @Override
-    public Optional<Stock> findStockByProductAndShop(StockDto stockDTO) {
+    public Optional<Stock> findStockByProductAndShop(String productName, String shopName) {
 
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
@@ -30,8 +30,8 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
 
             optionalStock = entityManager
                     .createQuery("select s from Stock s where s.product.name = :productName AND s.shop.name = :shopName", Stock.class)
-                    .setParameter("productName", stockDTO.getProductDto().getName())
-                    .setParameter("shopName", stockDTO.getShopDto().getName())
+                    .setParameter("productName", productName)
+                    .setParameter("shopName", shopName)
                     .getResultList()
                     .stream()
                     .findFirst();

@@ -1,7 +1,5 @@
 package com.app.service.services;
 
-import com.app.dto.ProductDto;
-import com.app.dto.ShopDto;
 import com.app.dto.StockDto;
 import com.app.exceptions.MyException;
 import com.app.model.Product;
@@ -14,9 +12,6 @@ import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.repository.impl.ShopRepositoryImpl;
 import com.app.repository.impl.StockRepositoryImpl;
 import com.app.service.mapper.Mappers;
-import com.app.validation.impl.ProductValidator;
-import com.app.validation.impl.ShopValidator;
-import com.app.validation.impl.StockValidator;
 
 public class StockService {
 
@@ -24,35 +19,29 @@ public class StockService {
     private final ProductRepository productRepository = new ProductRepositoryImpl();
     private final ShopRepository shopRepository = new ShopRepositoryImpl();
 
-    private final StockValidator stockValidator = new StockValidator();
-    private final ShopValidator shopValidator = new ShopValidator();
-    private final ProductValidator productValidator = new ProductValidator();
-
-    public StockDto addProductToStock(StockDto stockDto, int quantity) {
-        ShopDto shopDto = stockDto.getShopDto();
-        ProductDto productDto = stockDto.getProductDto();
-
-        Product product = productRepository.findByName(productDto).orElse(null);
-        Shop shop = shopRepository.findByName(shopDto).orElse(null);
-
-        stockValidator.validateStock(stockDto);
-
-        if (shop == null) {
-            shopValidator.validateShop(shopDto);
-            shop = Mappers.fromShopDtoToShop(shopDto);
-            shop = shopRepository.addOrUpdate(shop).orElseThrow(() -> new MyException("CANNOT ADD SHOP IN STOCK"));
+    public StockDto addProductToStock(String productName, String categoryName, String shopName, String countryName, int quantity) {
+        if (productName == null){
+            throw new MyException("PRODUCT NAME IS NULL");
         }
-        if (product == null) {
-            productValidator.validateProduct(productDto);
-            product = Mappers.fromProductDtoToProduct(productDto);
-            product = productRepository.addOrUpdate(product).orElseThrow(() -> new MyException("CANNOT ADD PRODUCT IN STOCK"));
+        if (categoryName == null){
+            throw new MyException("CATEGORY NAME IS NULL");
+        }
+        if (shopName == null){
+            throw new MyException("SHOP NAME IS NULL");
+        }
+        if (countryName == null){
+            throw new MyException("COUNTRY NAME IS NULL");
+        }
+        if (quantity <= 0 ){
+            throw new MyException("QUANTITY IS LESS OR EQUAL 0");
         }
 
-        Stock stock = stockRepository.findStockByProductAndShop(stockDto).orElse(null);
+        Product product = productRepository.findByName(productName).orElseThrow(() -> new MyException("PRODUCT WAS NOT FOUND"));
+        Shop shop = shopRepository.findByName(shopName).orElseThrow(() -> new MyException("SHOP WAS NOT FOUND"));
 
-        if (stock == null) {
-            stock = Mappers.fromStockDtoToStock(stockDto);
-        }
+        Stock stock = stockRepository.findStockByProductAndShop(productName, shopName).orElse(
+                new Stock()
+        );
 
         stock.setProduct(product);
         stock.setShop(shop);
@@ -60,6 +49,4 @@ public class StockService {
         stockRepository.addOrUpdate(stock);
         return Mappers.fromStockToStockDto(stock);
     }
-
-
 }

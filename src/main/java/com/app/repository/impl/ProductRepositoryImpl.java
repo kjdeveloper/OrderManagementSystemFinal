@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ProductRepositoryImpl extends AbstractGenericRepository<Product> implements ProductRepository {
 
     @Override
-    public Optional<Product> findByName(ProductDto productDto) {
+    public Optional<Product> findByName(String productName) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         Optional<Product> optionalProduct = Optional.empty();
@@ -29,7 +29,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
 
             optionalProduct = entityManager
                     .createQuery("select p from Product p where p.name = :name", Product.class)
-                    .setParameter("name", productDto.getName())
+                    .setParameter("name", productName)
                     .getResultList()
                     .stream()
                     .findFirst();

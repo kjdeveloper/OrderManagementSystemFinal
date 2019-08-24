@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class CategoryRepositoryImpl extends AbstractGenericRepository<Category> implements CategoryRepository {
     @Override
-    public Optional<Category> findByName(CategoryDto categoryDto) {
+    public Optional<Category> findByName(String categoryName) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         Optional<Category> optionalCategory = Optional.empty();
@@ -28,7 +28,7 @@ public class CategoryRepositoryImpl extends AbstractGenericRepository<Category> 
 
             optionalCategory = entityManager
                     .createQuery("select c from Category c where c.name = :name", Category.class)
-                    .setParameter("name", categoryDto.getName())
+                    .setParameter("name", categoryName)
                     .getResultList()
                     .stream()
                     .findFirst();

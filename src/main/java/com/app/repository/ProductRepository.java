@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends GenericRepository<Product> {
-    Optional<Product> findByName(ProductDto productDto);
+    Optional<Product> findByName(String productName);
 
     boolean isExistByNameAndCategoryAndProducer(ProductDto productDTO);
 

@@ -40,9 +40,9 @@ public class ProducerService {
 
         TradeDto tradeDto = producerDTO.getTradeDto();
 
-        Producer producer = producerRepository.findByName(producerDTO).orElse(null);
-        Country country = countryRepository.findByName(producerDTO.getCountryDto()).orElse(null);
-        Trade trade = tradeRepository.findByName(tradeDto).orElse(null);
+        Producer producer = producerRepository.findByName(producerDTO.getName()).orElse(null);
+        Country country = countryRepository.findByName(producerDTO.getCountryDto().getName()).orElse(null);
+        Trade trade = tradeRepository.findByName(tradeDto.getName()).orElse(null);
 
         if (country == null){
             country = Mappers.fromCountryDtoToCountry(producerDTO.getCountryDto());

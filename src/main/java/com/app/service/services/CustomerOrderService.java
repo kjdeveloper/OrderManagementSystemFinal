@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CustomerOrderService {
@@ -43,8 +44,12 @@ public class CustomerOrderService {
         ProductDto productDto = customerOrderDto.getProductDto();
 
         Product product = productRepository
-                .findByName(productDto)
+                .findByName(productDto.getName())
                 .orElseThrow(() -> new MyException("PRODUCT WAS NOT FOUND"));
+
+        if (stockRepository.countProduct(product.getId()) < customerOrderDto.getQuantity()){
+            throw new MyException("Unfortunately, we do not have " + product.getName() + " in quantity " + customerOrderDto.getQuantity());
+        }
 
         //gdzie ustawic set EGuarantees
 
