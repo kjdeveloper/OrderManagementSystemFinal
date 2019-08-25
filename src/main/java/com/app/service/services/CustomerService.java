@@ -24,7 +24,6 @@ public class CustomerService {
 
     public CustomerDto addCustomer(final CustomerDto customerDto) {
         customerDtoValidator.validateCustomer(customerDto);
-        countryValidator.validateCountry(customerDto.getCountryDto());
 
         final boolean exist = customerRepository.isExistByNameAndSurnameAndCountry(customerDto);
 
@@ -35,10 +34,10 @@ public class CustomerService {
         Country country = countryRepository.findByName(customerDto.getCountryDto().getName()).orElse(null);
 
         if (country == null) {
+            countryValidator.validateCountry(customerDto.getCountryDto());
             country = Mappers.fromCountryDtoToCountry(customerDto.getCountryDto());
-            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY IN CUSTOMER SERVICE"));
+            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CAN NOT ADD COUNTRY IN CUSTOMER SERVICE"));
         }
-
 
         Customer customer = Mappers.fromCustomerDtoToCustomer(customerDto);
         customer.setCountry(country);

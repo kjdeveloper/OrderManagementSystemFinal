@@ -29,8 +29,6 @@ public class ProducerService {
 
     public ProducerDto addProducer(ProducerDto producerDTO) {
         producerValidator.validateProducer(producerDTO);
-        countryValidator.validateCountry(producerDTO.getCountryDto());
-        tradeValidator.validateTrade(producerDTO.getTradeDto());
 
         final boolean exist = producerRepository.isExistByNameAndTradeAndCountry(producerDTO);
 
@@ -45,12 +43,14 @@ public class ProducerService {
         Trade trade = tradeRepository.findByName(tradeDto.getName()).orElse(null);
 
         if (country == null){
+            countryValidator.validateCountry(producerDTO.getCountryDto());
             country = Mappers.fromCountryDtoToCountry(producerDTO.getCountryDto());
-            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY"));
+            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CAN NOT ADD COUNTRY"));
         }
         if (trade == null){
+            tradeValidator.validateTrade(producerDTO.getTradeDto());
             trade = Mappers.fromTradeDtoToTrade(producerDTO.getTradeDto());
-            trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException("CANNOT ADD TRADE"));
+            trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException("CAN NOT ADD TRADE"));
         }
         if (producer == null){
             producer = Mappers.fromProducerDtoToProducer(producerDTO);

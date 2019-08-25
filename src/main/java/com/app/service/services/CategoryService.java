@@ -13,7 +13,7 @@ public class CategoryService {
     private CategoryRepository categoryRepository = new CategoryRepositoryImpl();
     private CategoryValidator categoryValidator = new CategoryValidator();
 
-    public void addCategory(CategoryDto categoryDTO) {
+    public CategoryDto addCategory(CategoryDto categoryDTO) {
         categoryValidator.validateCategory(categoryDTO);
 
         Category category = categoryRepository.findByName(categoryDTO.getName()).orElse(null);
@@ -24,7 +24,8 @@ public class CategoryService {
             throw new MyException("CATEGORY WITH GIVEN NAME EXIST");
         }
 
-        categoryRepository.addOrUpdate(category);
+        categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException("CAN NOT ADD CATEGORY IN CATEGORY SERVICE"));
+        return Mappers.fromCategoryToCategoryDto(category);
     }
 
 }

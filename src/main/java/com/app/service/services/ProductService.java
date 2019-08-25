@@ -3,14 +3,23 @@ package com.app.service.services;
 import com.app.dto.CategoryDto;
 import com.app.dto.ProducerDto;
 import com.app.dto.ProductDto;
-import com.app.dto.TradeDto;
 import com.app.exceptions.MyException;
-import com.app.model.*;
+import com.app.model.Category;
+import com.app.model.CustomerOrder;
+import com.app.model.Producer;
+import com.app.model.Product;
 import com.app.model.enums.EGuarantee;
-import com.app.repository.*;
-import com.app.repository.impl.*;
+import com.app.repository.CategoryRepository;
+import com.app.repository.CustomerOrderRepository;
+import com.app.repository.ProducerRepository;
+import com.app.repository.ProductRepository;
+import com.app.repository.impl.CategoryRepositoryImpl;
+import com.app.repository.impl.CustomerOrderRepositoryImpl;
+import com.app.repository.impl.ProducerRepositoryImpl;
+import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.service.mapper.Mappers;
-import com.app.validation.impl.*;
+import com.app.validation.impl.CategoryValidator;
+import com.app.validation.impl.ProductValidator;
 
 import java.util.Comparator;
 import java.util.List;
@@ -23,24 +32,16 @@ public class ProductService {
     private final ProductRepository productRepository = new ProductRepositoryImpl();
     private final CategoryRepository categoryRepository = new CategoryRepositoryImpl();
     private final ProducerRepository producerRepository = new ProducerRepositoryImpl();
-    private final CountryRepository countryRepository = new CountryRepositoryImpl();
-    private final TradeRepository tradeRepository = new TradeRepositoryImpl();
+
     private CustomerOrderRepository customerOrderRepository = new CustomerOrderRepositoryImpl();
 
     private final ProductValidator productValidator = new ProductValidator();
     private final CategoryValidator categoryValidator = new CategoryValidator();
-    private final ProducerValidator producerValidator = new ProducerValidator();
-    private final CountryValidator countryValidator = new CountryValidator();
-    private final TradeValidator tradeValidator = new TradeValidator();
 
-    private final UserDataService userDataService = new UserDataService();
 
     public ProductDto addProduct(ProductDto productDto){
 
         productValidator.validateProduct(productDto);
-        categoryValidator.validateCategory(productDto.getCategoryDto());
-        producerValidator.validateProducer(productDto.getProducerDto());
-        countryValidator.validateCountry(productDto.getProducerDto().getCountryDto());
 
         final boolean exist = productRepository.isExistByNameAndCategoryAndProducer(productDto);
 
@@ -55,7 +56,13 @@ public class ProductService {
         }
         Category category = categoryRepository
                 .findByName(categoryDto.getName())
-                .orElseThrow(() -> new MyException("CATEGORY WAS NOT FOUND"));
+                .orElse(null);
+
+        if (category == null){
+            categoryValidator.validateCategory(productDto.getCategoryDto());
+            category = Mappers.fromCategoryDtoToCategory(categoryDto);
+            category = categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException("CAN NOT ADD CATEGORY IN PRODUCT SERVICE"));
+        }
 
         ProducerDto producerDto = productDto.getProducerDto();
         if (producerDto == null){
@@ -63,7 +70,7 @@ public class ProductService {
         }
         Producer producer = producerRepository
                 .findByName(producerDto.getName())
-                .orElseThrow(() -> new MyException("PRODUCER WAS NOT FOUND;"));
+                .orElseThrow(() -> new MyException("PRODUCER WAS NOT FOUND. PLEASE ADD PRODUCER THAN PRODUCT"));
 
         product.setProducer(producer);
         product.setCategory(category);

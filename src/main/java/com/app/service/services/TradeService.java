@@ -13,7 +13,7 @@ public class TradeService {
     private TradeRepository tradeRepository = new TradeRepositoryImpl();
     private TradeValidator tradeValidator = new TradeValidator();
 
-    public void addTrade(TradeDto tradeDTO) {
+    public TradeDto addTrade(TradeDto tradeDTO) {
         tradeValidator.validateTrade(tradeDTO);
 
         Trade trade = tradeRepository.findByName(tradeDTO.getName()).orElse(null);
@@ -23,10 +23,7 @@ public class TradeService {
         } else {
             throw new MyException("TRADE WITH GIVEN NAME EXIST");
         }
-
-        tradeRepository.addOrUpdate(trade);
-
+        tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException("CAN NOT ADD TRADE IN TRADE SERVICE"));
+        return Mappers.fromTradeToTradeDto(trade);
     }
-
-
 }

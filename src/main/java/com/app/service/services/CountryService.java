@@ -13,7 +13,7 @@ public class CountryService {
     private CountryRepository countryRepository = new CountryRepositoryImpl();
     private CountryValidator countryValidator = new CountryValidator();
 
-    public void addCountry(CountryDto countryDTO) {
+    public CountryDto addCountry(CountryDto countryDTO) {
         countryValidator.validateCountry(countryDTO);
 
         Country country = countryRepository.findByName(countryDTO.getName()).orElse(null);
@@ -23,7 +23,8 @@ public class CountryService {
             throw new MyException("COUNTRY WITH GIVEN NAME EXIST");
         }
 
-        countryRepository.addOrUpdate(country);
+        countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CAN NOT AD COUNTRY IN COUNTRY SERVICE"));
+        return Mappers.fromCountryToCountryDto(country);
     }
 
 

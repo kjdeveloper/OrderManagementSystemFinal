@@ -1,32 +1,38 @@
 package com.app.service.services;
 
-import com.app.dto.*;
+import com.app.dto.CustomerDto;
+import com.app.dto.CustomerOrderDto;
+import com.app.dto.ProductDto;
 import com.app.exceptions.MyException;
-import com.app.model.*;
-import com.app.repository.*;
-import com.app.repository.impl.*;
+import com.app.model.Customer;
+import com.app.model.CustomerOrder;
+import com.app.model.Producer;
+import com.app.model.Product;
+import com.app.repository.CustomerOrderRepository;
+import com.app.repository.CustomerRepository;
+import com.app.repository.ProductRepository;
+import com.app.repository.StockRepository;
+import com.app.repository.impl.CustomerOrderRepositoryImpl;
+import com.app.repository.impl.CustomerRepositoryImpl;
+import com.app.repository.impl.ProductRepositoryImpl;
+import com.app.repository.impl.StockRepositoryImpl;
 import com.app.service.mapper.Mappers;
-import com.app.validation.impl.CustomerValidator;
 import com.app.validation.impl.CustomerOrderValidator;
-import com.app.validation.impl.ProductValidator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CustomerOrderService {
 
     private final CustomerOrderRepository customerOrderRepository = new CustomerOrderRepositoryImpl();
     private final StockRepository stockRepository = new StockRepositoryImpl();
-    private final ShopRepository shopRepository = new ShopRepositoryImpl();
     private final CustomerRepository customerRepository = new CustomerRepositoryImpl();
     private final ProductRepository productRepository = new ProductRepositoryImpl();
 
     private final CustomerOrderValidator customerOrderValidator = new CustomerOrderValidator();
-    private final ProductValidator productValidator = new ProductValidator();
 
     public CustomerOrderDto addCustomerOrder(CustomerOrderDto customerOrderDto) {
         customerOrderValidator.validateCustomerOrder(customerOrderDto);
@@ -39,16 +45,16 @@ public class CustomerOrderService {
                 .findByName(customerDto.getName())
                 .orElseGet(() -> customerRepository
                         .findBySurname(customerDto.getSurname())
-                        .orElseThrow(() -> new MyException("CUSTOMER WAS NOT FOUND")));
+                        .orElseThrow(() -> new MyException("CUSTOMER WAS NOT FOUND. PLEASE ADD CUSTOMER FIRST")));
 
         ProductDto productDto = customerOrderDto.getProductDto();
 
         Product product = productRepository
                 .findByName(productDto.getName())
-                .orElseThrow(() -> new MyException("PRODUCT WAS NOT FOUND"));
+                .orElseThrow(() -> new MyException("PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
 
         if (stockRepository.countProduct(product.getId()) < customerOrderDto.getQuantity()){
-            throw new MyException("Unfortunately, we do not have " + product.getName() + " in quantity " + customerOrderDto.getQuantity());
+            throw new MyException("Unfortunately, we do not have " + product.getName() + " in an equal amount " + customerOrderDto.getQuantity());
         }
 
         //gdzie ustawic set EGuarantees

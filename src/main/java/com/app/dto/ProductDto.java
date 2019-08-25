@@ -23,5 +23,4 @@ public class ProductDto {
     private ProducerDto producerDto;
     private Set<StockDto> stockDtos;
     private Set<EGuarantee> eGuarantees;
-
 }

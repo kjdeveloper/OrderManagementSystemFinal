@@ -23,20 +23,22 @@ public class ShopService {
 
     public ShopDto addShop(final ShopDto shopDTO) {
         shopValidator.validateShop(shopDTO);
-        countryValidator.validateCountry(shopDTO.getCountryDto());
 
         final boolean exist = shopRepository.isExistByShopAndCountry(shopDTO);
-        if (exist){
+        if (exist) {
             throw new MyException("SHOP WITH GIVEN NAME AND COUNTRY IS ALREADY EXIST");
         }
 
         Country country = countryRepository.findByName(shopDTO.getCountryDto().getName()).orElse(null);
-        Shop shop = shopRepository.findByName(shopDTO.getName()).orElse(null);
-        if (country == null){
+
+        if (country == null) {
+            countryValidator.validateCountry(shopDTO.getCountryDto());
             country = Mappers.fromCountryDtoToCountry(shopDTO.getCountryDto());
             country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY WITH SHOP"));
         }
-        if (shop == null){
+
+        Shop shop = shopRepository.findByName(shopDTO.getName()).orElse(null);
+        if (shop == null) {
             shop = Mappers.fromShopDtoToShop(shopDTO);
         }
 
@@ -45,7 +47,7 @@ public class ShopService {
         return Mappers.fromShopToShopDto(shop);
     }
 
-    public List<ShopDto> findAllShopsWithProductsWithCountryDifferentThanShopsCountry() {
+    public List<ShopDto> findAllShopsWithProductsWithCountryDifferentThanShopCountry() {
         return null;
     }
 }
