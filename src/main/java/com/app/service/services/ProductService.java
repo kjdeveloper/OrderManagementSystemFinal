@@ -78,14 +78,14 @@ public class ProductService {
         return Mappers.fromProductToProductDto(product);
     }
 
-    public Map<Category, Product> findBiggestPriceInCategory() {
+    public Map<Category, ProductDto> findProductsWithBiggestPriceInCategory() {
         return productRepository.findAll()
                 .stream()
-                .peek(s -> System.out.println(s))
                 .collect(Collectors.groupingBy(
                         Product::getCategory,
                         Collectors.collectingAndThen(
-                                Collectors.maxBy(Comparator.comparing(Product::getPrice)), proOp -> proOp.orElseThrow(NullPointerException::new))));
+                                Collectors.maxBy(Comparator.comparing(Product::getPrice)), p -> Mappers.fromProductToProductDto(p.get()))
+                ));
     }
 
     public List<ProductDto> findAllProductsFromSpecificCountryBetweenCustomerAges(String country, int ageFrom, int ageTo) {
@@ -111,12 +111,12 @@ public class ProductService {
 
     public Set<ProductDto> findAllProductsWithGivenGuarantees(Set<EGuarantee> eGuarantees) {
         if (eGuarantees == null) {
-            throw new MyException("EGUARANTEES CAN NOT BE NULL");
+            throw new MyException("GUARANTEES CAN NOT BE NULL");
         }
 
         return productRepository.findAll()
                 .stream()
-                .filter(pr -> pr.getEGuarantees() == eGuarantees)
+                .filter(pr -> pr.getEGuarantees().containsAll(eGuarantees))
                 .map(Mappers::fromProductToProductDto)
                 .collect(Collectors.toSet());
     }

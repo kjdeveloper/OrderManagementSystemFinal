@@ -63,16 +63,18 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
             tx.begin();
 
             counter = entityManager
-                    .createQuery("select sum( s.quantity ) from Stock s where s.product.id = :id", Integer.class)
+                    .createQuery("SELECT SUM( s.quantity ) FROM Stock s where s.product.id = :id", Long.class)
                     .setParameter("id", productId)
-                    .getSingleResult();
+                    .getSingleResult()
+                    .intValue();
 
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("COUNT PRODUCT EXCEPTION ");
+            e.printStackTrace();
+            throw new MyException("SUM PRODUCT EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

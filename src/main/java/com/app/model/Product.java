@@ -43,7 +43,7 @@ public class Product {
     @EqualsAndHashCode.Exclude
     private Set<Stock> stocks = new HashSet<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "eguarantees",
             joinColumns = @JoinColumn(name = "guarantee_components_id")

@@ -90,14 +90,14 @@ public class MenuService {
                     System.out.println(customerOrderDto);
                     break;
                 case 7:
-                    Map<Category, Product> biggestPriceInEachCategory = option7();
+                    Map<Category, ProductDto> biggestPriceInEachCategory = option7();
                     biggestPriceInEachCategory.forEach((k, v) ->
                             System.out.println(k.getName() + " => " + v.getName() +
                                             ", price: " + v.getPrice() +
-                                            ", category: " + v.getCategory().getName() +
-                                            ", producer: " + v.getProducer().getName() +
-                                            ", from " + v.getProducer().getCountry().getName()
-                                    //" ordered " + custOrdServ.customerOrdersWithSpecificProduct(v.getName()) + " times"
+                                            ", category: " + v.getCategoryDto().getName() +
+                                            ", producer: " + v.getProducerDto().getName()
+                                            /*", from " + v.getProducerDto().getCountryDto().getName() +
+                                    " ordered " + customerOrderService.customerOrdersWithSpecificProduct(v.getName()) + " times"*/
                             ));
                     break;
                 case 8:
@@ -142,10 +142,10 @@ public class MenuService {
                     String customerSurname = userDataService.getString("Please, enter a customer surname: ");
                     String countryName = userDataService.getString("Please, enter a country name: ");
                     Map<Producer, List<Product>> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
-                    System.out.println(mapOfProductWithGivenCustomerGroupedByProducer);
+                    mapOfProductWithGivenCustomerGroupedByProducer.forEach((k, v) -> System.out.println(k + " =>  " + v));
                     break;
                 case 14:
-                    Map<Country, List<String>> map = option14();
+                    Map<CountryDto, List<String>> map = option14();
                     System.out.println(map);
                     break;
                 case 0:
@@ -280,8 +280,8 @@ public class MenuService {
     }
 
 
-    private Map<Category, Product> option7() {
-        return productService.findBiggestPriceInCategory();
+    private Map<Category, ProductDto> option7() {
+        return productService.findProductsWithBiggestPriceInCategory();
     }
 
     private List<ProductDto> option8(String country, int ageTo, int ageFrom) {
@@ -308,7 +308,7 @@ public class MenuService {
         return customerOrderService.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 
-    private Map<Country, List<String>> option14() {
+    private Map<CountryDto, List<String>> option14() {
         return customerService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
 

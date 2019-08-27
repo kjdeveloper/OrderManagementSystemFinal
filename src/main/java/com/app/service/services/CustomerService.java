@@ -1,5 +1,6 @@
 package com.app.service.services;
 
+import com.app.dto.CountryDto;
 import com.app.dto.CustomerDto;
 import com.app.exceptions.MyException;
 import com.app.model.Country;
@@ -46,7 +47,7 @@ public class CustomerService {
         return Mappers.fromCustomerToCustomerDto(customer);
     }
 
-    public Map<Country, List<String>> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
+    public Map<CountryDto, List<String>> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
 
         return customerRepository.findAll()
                 .stream()
@@ -54,7 +55,7 @@ public class CustomerService {
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
-                        Map.Entry::getKey,
+                        e -> Mappers.fromCountryToCountryDto(e.getKey()),
                         k -> k.getValue()
                                 .stream()
                                 .map(Customer::getName)
