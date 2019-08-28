@@ -57,8 +57,6 @@ public class CustomerOrderService {
             throw new MyException("Unfortunately, we do not have " + product.getName() + " in an equal amount " + customerOrderDto.getQuantity());
         }
 
-        //gdzie ustawic set EGuarantees
-
         customerOrder.setCustomer(customer);
         customerOrder.setProduct(product);
         customerOrderRepository.addOrUpdate(customerOrder);
@@ -94,7 +92,7 @@ public class CustomerOrderService {
         if (dateTo == null) {
             throw new MyException("FINISH DATE CAN NOT BE NULL");
         }
-        if (dateFrom.isAfter(dateTo)) {
+        if (dateFrom.compareTo(dateTo) >= 0) {
             throw new MyException("START DATE CAN NOT BE AFTER FINISH DATE");
         }
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {

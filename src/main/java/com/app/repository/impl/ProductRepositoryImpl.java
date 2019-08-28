@@ -12,6 +12,7 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,6 +22,9 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
 
     @Override
     public Optional<Product> findByName(String productName) {
+        if (productName == null){
+            throw new MyException("PRODUCT NAME CAN NOT BE NULL");
+        }
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         Optional<Product> optionalProduct = Optional.empty();
@@ -55,6 +59,10 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
 
     @Override
     public boolean isExistByNameAndCategoryAndProducer(ProductDto productDTO) {
+        if (productDTO == null){
+            throw new MyException("PRODUCT CAN NOT BE NULL");
+        }
+
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         boolean exist = false;
@@ -130,7 +138,6 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
     @Override
     public List<Product> findAllProductsFromSpecificCountryBetweenCustomerAges(String countryName, int ageFrom, int ageTo) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
         List<Product> products = null;
         EntityManager entityManager = null;
         EntityTransaction tx = null;
@@ -183,9 +190,9 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             tx.begin();
 
             products = entityManager
-                    .createQuery("SELECT p " +
+                    .createQuery("SELECT p.eGuarantees " +
                             "FROM Product p " +
-                            "WHERE p.eGuarantees = :eGuarantees", Product.class)
+                            "WHERE :eGuarantees MEMBER OF p.eGuarantees", Product.class)
                     .setParameter("eGuarantees", eGuarantees)
                     .getResultList();
 

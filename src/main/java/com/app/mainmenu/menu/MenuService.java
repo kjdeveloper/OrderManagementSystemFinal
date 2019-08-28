@@ -90,14 +90,14 @@ public class MenuService {
                     System.out.println(customerOrderDto);
                     break;
                 case 7:
-                    Map<Category, ProductDto> biggestPriceInEachCategory = option7();
-                    biggestPriceInEachCategory.forEach((k, v) ->
-                            System.out.println(k.getName() + " => " + v.getName() +
-                                            ", price: " + v.getPrice() +
-                                            ", category: " + v.getCategoryDto().getName() +
-                                            ", producer: " + v.getProducerDto().getName()
-                                            /*", from " + v.getProducerDto().getCountryDto().getName() +
-                                    " ordered " + customerOrderService.customerOrdersWithSpecificProduct(v.getName()) + " times"*/
+                    List<ProductDto> biggestPriceInEachCategory = option7();
+                    biggestPriceInEachCategory.forEach( p ->
+                            System.out.println( p.getName() +
+                                            ", price: " + p.getPrice() +
+                                            ", category: " + p.getCategoryDto().getName() +
+                                            ", producer: " + p.getProducerDto().getName() +
+                                            ", from " + p.getProducerDto().getCountryDto().getName() +
+                                    " ordered " + customerOrderService.customerOrdersWithSpecificProduct(p.getName()) + " times"
                             ));
                     break;
                 case 8:
@@ -280,7 +280,7 @@ public class MenuService {
     }
 
 
-    private Map<Category, ProductDto> option7() {
+    private List<ProductDto> option7() {
         return productService.findProductsWithBiggestPriceInCategory();
     }
 

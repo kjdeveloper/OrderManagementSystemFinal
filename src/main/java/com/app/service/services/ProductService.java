@@ -39,7 +39,7 @@ public class ProductService {
     private final CategoryValidator categoryValidator = new CategoryValidator();
 
 
-    public ProductDto addProduct(ProductDto productDto){
+    public ProductDto addProduct(ProductDto productDto) {
 
         productValidator.validateProduct(productDto);
 
@@ -51,21 +51,21 @@ public class ProductService {
         Product product = Mappers.fromProductDtoToProduct(productDto);
 
         CategoryDto categoryDto = productDto.getCategoryDto();
-        if (categoryDto == null){
+        if (categoryDto == null) {
             throw new MyException("CATEGORY IS NULL");
         }
         Category category = categoryRepository
                 .findByName(categoryDto.getName())
                 .orElse(null);
 
-        if (category == null){
+        if (category == null) {
             categoryValidator.validateCategory(productDto.getCategoryDto());
             category = Mappers.fromCategoryDtoToCategory(categoryDto);
             category = categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException("CAN NOT ADD CATEGORY IN PRODUCT SERVICE"));
         }
 
         ProducerDto producerDto = productDto.getProducerDto();
-        if (producerDto == null){
+        if (producerDto == null) {
             throw new MyException("PRODUCER IS NULL");
         }
         Producer producer = producerRepository
@@ -78,14 +78,11 @@ public class ProductService {
         return Mappers.fromProductToProductDto(product);
     }
 
-    public Map<Category, ProductDto> findProductsWithBiggestPriceInCategory() {
-        return productRepository.findAll()
+    public List<ProductDto> findProductsWithBiggestPriceInCategory() {
+        return productRepository.findProductsWithBiggestPriceInCategory()
                 .stream()
-                .collect(Collectors.groupingBy(
-                        Product::getCategory,
-                        Collectors.collectingAndThen(
-                                Collectors.maxBy(Comparator.comparing(Product::getPrice)), p -> Mappers.fromProductToProductDto(p.get()))
-                ));
+                .map(Mappers::fromProductToProductDto)
+                .collect(Collectors.toList());
     }
 
     public List<ProductDto> findAllProductsFromSpecificCountryBetweenCustomerAges(String country, int ageFrom, int ageTo) {
@@ -99,14 +96,11 @@ public class ProductService {
             throw new MyException("LOWER AGE LIMIT CAN NOT BE HIGHER THAN UPPER LIMIT OF AGE");
         }
 
-        return customerOrderRepository.findAll()
+        return productRepository.findAllProductsFromSpecificCountryBetweenCustomerAges(country, ageFrom, ageTo)
                 .stream()
-                .filter(cs -> cs.getCustomer().getCountry().getName().equals(country))
-                .filter(age -> ageFrom < age.getCustomer().getAge() && age.getCustomer().getAge() < ageTo)
-                .map(CustomerOrder::getProduct)
-                .sorted(Comparator.comparing(Product::getPrice))
                 .map(Mappers::fromProductToProductDto)
                 .collect(Collectors.toList());
+
     }
 
     public Set<ProductDto> findAllProductsWithGivenGuarantees(Set<EGuarantee> eGuarantees) {
@@ -114,9 +108,8 @@ public class ProductService {
             throw new MyException("GUARANTEES CAN NOT BE NULL");
         }
 
-        return productRepository.findAll()
+        return productRepository.findAllProductsWithGivenGuarantees(eGuarantees)
                 .stream()
-                .filter(pr -> pr.getEGuarantees().containsAll(eGuarantees))
                 .map(Mappers::fromProductToProductDto)
                 .collect(Collectors.toSet());
     }

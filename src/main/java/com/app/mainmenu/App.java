@@ -2,9 +2,13 @@ package com.app.mainmenu;
 
 import com.app.mainmenu.menu.MenuService;
 import com.app.model.enums.EGuarantee;
+import com.app.repository.CustomerOrderRepository;
 import com.app.repository.ProductRepository;
+import com.app.repository.impl.CustomerOrderRepositoryImpl;
 import com.app.repository.impl.ProductRepositoryImpl;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +19,7 @@ public class App {
         MenuService menuService = new MenuService();
         //menuService.service();
 
-        ProductRepository pr = new ProductRepositoryImpl();
+      /*  ProductRepository pr = new ProductRepositoryImpl();
         List p = pr.findProductsWithBiggestPriceInCategory();
         p.stream().forEach(p1 -> System.out.println(p1.toString()));
 
@@ -24,8 +28,10 @@ public class App {
 
         List p3 = pr.findAllProductsWithGivenGuarantees(new HashSet<>(Arrays.asList(EGuarantee.SERVICE, EGuarantee.EXCHANGE)));
         p3.forEach(s -> System.out.println(s));
-
-
+*/
+        CustomerOrderRepository cs = new CustomerOrderRepositoryImpl();
+        List s5 = cs.findOrdersBetweenDatesAndGivenPrice(LocalDateTime.of(2019, 8, 25, 12, 12, 12), LocalDateTime.of(2019, 8, 30, 12, 12, 30), BigDecimal.valueOf(25));
+        System.out.println(s5);
 
 
     }
