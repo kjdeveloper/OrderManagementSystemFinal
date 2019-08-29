@@ -2,6 +2,7 @@ package com.app.repository.impl;
 
 import com.app.exceptions.MyException;
 import com.app.model.CustomerOrder;
+import com.app.model.Product;
 import com.app.repository.CustomerOrderRepository;
 import com.app.repository.generic.AbstractGenericRepository;
 import com.app.repository.generic.DbConnection;
@@ -10,34 +11,23 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<CustomerOrder> implements CustomerOrderRepository {
 
 
     @Override
-    public List<CustomerOrder> findOrdersBetweenDatesAndGivenPrice(LocalDateTime dateFrom, LocalDateTime dateTo, BigDecimal price) {
-
-        if (dateFrom == null) {
-            throw new MyException("START DATE CAN NOT BE NULL");
-        }
-        if (dateTo == null) {
-            throw new MyException("FINISH DATE CAN NOT BE NULL");
-        }
-        if (dateFrom.compareTo(dateTo) >= 0) {
-            throw new MyException("START DATE CAN NOT BE AFTER FINISH DATE");
-        }
-        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new MyException("PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO");
-        }
+    public List<CustomerOrder> findOrdersBetweenDatesAndGivenPrice(LocalDate dateFrom, LocalDate dateTo, BigDecimal price) {
 
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
-        Timestamp dateFromDb = Timestamp.valueOf(dateFrom);
-        Timestamp dateToDb = Timestamp.valueOf(dateTo);
+        Date dateFromDb = Date.valueOf(dateFrom);
+        Date dateToDb = Date.valueOf(dateTo);
 
         List<CustomerOrder> customerOrders = null;
         EntityManager entityManager = null;
@@ -63,7 +53,7 @@ public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<Custo
             if (tx != null) {
                 tx.rollback();
             }
-            e.printStackTrace();
+
             throw new MyException("CUSTOMER ORDER EXCEPTION ");
         } finally {
             if (entityManager != null) {
@@ -72,5 +62,46 @@ public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<Custo
         }
 
         return customerOrders;
+    }
+
+    @Override
+    public List<CustomerOrder> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName) {
+
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        List<CustomerOrder> products = null;
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            products = entityManager
+                    .createQuery("SELECT cs " +
+                            "FROM CustomerOrder cs " +
+                            "WHERE cs.customer.name = :customerName " +
+                            "AND cs.customer.surname = :customerSurname " +
+                            "AND cs.customer.country.name = :countryName " +
+                            "GROUP BY cs.product.producer", CustomerOrder.class)
+                    .setParameter("customerName", customerName)
+                    .setParameter("customerSurname", customerSurname)
+                    .setParameter("countryName", countryName)
+                    .getResultList();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new MyException("CUSTOMER ORDER EXCEPTION ");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+
+        return products;
     }
 }

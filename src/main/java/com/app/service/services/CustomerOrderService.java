@@ -21,6 +21,7 @@ import com.app.validation.impl.CustomerOrderValidator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class CustomerOrderService {
                 .findByName(productDto.getName())
                 .orElseThrow(() -> new MyException("PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
 
-        if (stockRepository.countProduct(product.getId()) < customerOrderDto.getQuantity()){
+        if (stockRepository.countProduct(product.getId()) < customerOrderDto.getQuantity()) {
             throw new MyException("Unfortunately, we do not have " + product.getName() + " in an equal amount " + customerOrderDto.getQuantity());
         }
 
@@ -73,7 +74,7 @@ public class CustomerOrderService {
     }
 
     private BigDecimal productPriceAfterDiscount(CustomerOrder customerOrder) {
-        if (customerOrder == null){
+        if (customerOrder == null) {
             throw new MyException("CUSTOMER ORDER IS NULL");
         }
 
@@ -99,23 +100,28 @@ public class CustomerOrderService {
             throw new MyException("PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO");
         }
 
-        return customerOrderRepository.findAll()
+        return customerOrderRepository.findOrdersBetweenDatesAndGivenPrice(dateFrom, dateTo, price)
                 .stream()
-                .filter(date -> dateFrom.compareTo(date.getDate().toLocalDateTime().toLocalDate()) >= 0 && dateTo.compareTo(date.getDate().toLocalDateTime().toLocalDate()) <= 0)
-                .filter(customOrd -> productPriceAfterDiscount(customOrd).compareTo(price) > 0)
                 .map(Mappers::fromCustomerOrderToCustomerOrderDto)
                 .collect(Collectors.toList());
 
     }
 
-    public Map<Producer, List<Product>> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName) {
-        return customerOrderRepository.findAll()
+    public List<ProductDto> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName) {
+        if (customerName == null) {
+            throw new MyException("CUSTOMER NAME CAN NOT BE NULL");
+        }
+        if (customerSurname == null) {
+            throw new MyException("CUSTOMER SURNAME CAN NOT BE NULL");
+        }
+        if (countryName == null) {
+            throw new MyException("COUNTRY NAME CAN NOT BE NULL");
+        }
+        return customerOrderRepository.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName)
                 .stream()
-                .filter(customer -> customer.getCustomer().getName().equals(customerName) &&
-                        customer.getCustomer().getSurname().equals(customerSurname) &&
-                        customer.getCustomer().getCountry().getName().equals(countryName))
                 .map(CustomerOrder::getProduct)
-                .collect(Collectors.groupingBy(Product::getProducer, Collectors.toList()));
+                .map(Mappers::fromProductToProductDto)
+                .collect(Collectors.toList());
     }
 
 }

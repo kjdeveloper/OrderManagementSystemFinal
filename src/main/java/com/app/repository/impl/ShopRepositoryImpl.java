@@ -48,7 +48,7 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
     }
 
     @Override
-    public boolean isExistByShopAndCountry(ShopDto shopDTO) {
+    public boolean isExistByShopAndCountry(String shopName, String countryName) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
         boolean exist = false;
@@ -62,8 +62,8 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
 
             exist = entityManager
                     .createQuery("select s from Shop s where s.name = :name AND s.country.name = :countryName", Shop.class)
-                    .setParameter("name", shopDTO.getName())
-                    .setParameter("countryName", shopDTO.getCountryDto().getName())
+                    .setParameter("name", shopName)
+                    .setParameter("countryName", countryName)
                     .getResultList()
                     .stream()
                     .findFirst()

@@ -97,7 +97,7 @@ public class MenuService {
                                             ", category: " + p.getCategoryDto().getName() +
                                             ", producer: " + p.getProducerDto().getName() +
                                             ", from " + p.getProducerDto().getCountryDto().getName() +
-                                    " ordered " + customerOrderService.customerOrdersWithSpecificProduct(p.getName()) + " times"
+                                    " ordered " + customerOrderService.customerOrdersWithSpecificProduct(p.getName()).size() + " times"
                             ));
                     break;
                 case 8:
@@ -131,8 +131,8 @@ public class MenuService {
                     System.out.println(producers);
                     break;
                 case 12:
-                    LocalDate dateFrom = LocalDate.parse(userDataService.getString("Please, enter a date from which to start filtering: (FORMAT: YYYY-mm-dd)"));
-                    LocalDate dateTo = LocalDate.parse(userDataService.getString("Please, enter a date from which to finish filtering: (FORMAT: YYYY-mm-dd)"));
+                    LocalDate dateFrom = LocalDate.parse(userDataService.getString("Please, enter start date: (FORMAT: YYYY-mm-dd)"));
+                    LocalDate dateTo = LocalDate.parse(userDataService.getString("Please, enter end date: (FORMAT: YYYY-mm-dd)"));
                     BigDecimal price = userDataService.getBigDecimal("Please, enter the price at which you want to filter orders: ");
                     List<CustomerOrderDto> listOfOrders = option12(dateFrom, dateTo, price);
                     System.out.println(listOfOrders);
@@ -141,8 +141,8 @@ public class MenuService {
                     String customerName = userDataService.getString("Please, enter a customer name: ");
                     String customerSurname = userDataService.getString("Please, enter a customer surname: ");
                     String countryName = userDataService.getString("Please, enter a country name: ");
-                    Map<Producer, List<Product>> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
-                    mapOfProductWithGivenCustomerGroupedByProducer.forEach((k, v) -> System.out.println(k + " =>  " + v));
+                    List<ProductDto> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
+                    mapOfProductWithGivenCustomerGroupedByProducer.forEach(p -> System.out.println(p));
                     break;
                 case 14:
                     Map<CountryDto, List<String>> map = option14();
@@ -304,7 +304,7 @@ public class MenuService {
         return customerOrderService.findOrdersBetweenDatesAndGivenPrice(dateFrom, dateTo, price);
     }
 
-    private Map<Producer, List<Product>> option13(String customerName, String customerSurname, String countryName) {
+    private List<ProductDto> option13(String customerName, String customerSurname, String countryName) {
         return customerOrderService.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 

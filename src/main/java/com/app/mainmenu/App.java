@@ -17,7 +17,7 @@ public class App {
     public static void main(String[] args) {
 
         MenuService menuService = new MenuService();
-        //menuService.service();
+        menuService.service();
 
       /*  ProductRepository pr = new ProductRepositoryImpl();
         List p = pr.findProductsWithBiggestPriceInCategory();
@@ -28,10 +28,10 @@ public class App {
 
         List p3 = pr.findAllProductsWithGivenGuarantees(new HashSet<>(Arrays.asList(EGuarantee.SERVICE, EGuarantee.EXCHANGE)));
         p3.forEach(s -> System.out.println(s));
-*/
+
         CustomerOrderRepository cs = new CustomerOrderRepositoryImpl();
         List s5 = cs.findOrdersBetweenDatesAndGivenPrice(LocalDateTime.of(2019, 8, 25, 12, 12, 12), LocalDateTime.of(2019, 8, 30, 12, 12, 30), BigDecimal.valueOf(25));
-        System.out.println(s5);
+        System.out.println(s5);*/
 
 
     }

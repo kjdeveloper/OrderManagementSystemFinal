@@ -124,7 +124,6 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            e.printStackTrace();
             throw new MyException("PRODUCT WITH BIGGEST PRICE EXCEPTION");
         } finally {
             if (entityManager != null) {
@@ -166,7 +165,6 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            e.printStackTrace();
             throw new MyException("PRODUCT WITH SPECIFIED CUSTOMER EXCEPTION");
         } finally {
             if (entityManager != null) {
@@ -201,7 +199,6 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            e.printStackTrace();
             throw new MyException("PRODUCT WITH GUARANTEES EXCEPTION");
         } finally {
             if (entityManager != null) {

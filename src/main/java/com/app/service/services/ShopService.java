@@ -24,7 +24,7 @@ public class ShopService {
     public ShopDto addShop(final ShopDto shopDTO) {
         shopValidator.validateShop(shopDTO);
 
-        final boolean exist = shopRepository.isExistByShopAndCountry(shopDTO);
+        final boolean exist = shopRepository.isExistByShopAndCountry(shopDTO.getName(), shopDTO.getCountryDto().getName());
         if (exist) {
             throw new MyException("SHOP WITH GIVEN NAME AND COUNTRY IS ALREADY EXIST");
         }

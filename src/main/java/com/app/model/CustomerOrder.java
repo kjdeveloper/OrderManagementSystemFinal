@@ -28,7 +28,7 @@ public class CustomerOrder {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "payments",
             joinColumns = @JoinColumn(name = "payments_id")

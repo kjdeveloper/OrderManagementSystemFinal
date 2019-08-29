@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface ShopRepository extends GenericRepository<Shop> {
     Optional<Shop> findByName(String shopName);
 
-    boolean isExistByShopAndCountry(ShopDto shopDTO);
+    boolean isExistByShopAndCountry(String shopName, String countryName);
 
 }
