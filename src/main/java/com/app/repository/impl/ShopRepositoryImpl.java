@@ -1,6 +1,5 @@
 package com.app.repository.impl;
 
-import com.app.dto.ShopDto;
 import com.app.exceptions.MyException;
 import com.app.model.Shop;
 import com.app.repository.ShopRepository;
@@ -10,6 +9,7 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 import java.util.Optional;
 
 public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implements ShopRepository {
@@ -85,5 +85,40 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Shop> findAllShopsWithProductsWithCountryDifferentThanShopCountry() {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        List<Shop> shops = null;
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            shops = entityManager
+                    .createQuery("select s, st " +
+                            "from Shop s " +
+                            "LEFT JOIN s.stocks st", Shop.class)
+                    .getResultList();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+            throw new MyException("SHOP FIND ALL WITH DIFFERENT COUNTRY EXCEPTION ");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+
+        return shops;
     }
 }

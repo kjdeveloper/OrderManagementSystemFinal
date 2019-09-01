@@ -4,6 +4,7 @@ import com.app.dto.ShopDto;
 import com.app.model.Shop;
 import com.app.repository.generic.GenericRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ShopRepository extends GenericRepository<Shop> {
@@ -11,4 +12,5 @@ public interface ShopRepository extends GenericRepository<Shop> {
 
     boolean isExistByShopAndCountry(String shopName, String countryName);
 
+    List<Shop> findAllShopsWithProductsWithCountryDifferentThanShopCountry();
 }
