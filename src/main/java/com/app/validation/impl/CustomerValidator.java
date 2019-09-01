@@ -7,7 +7,7 @@ public class CustomerValidator {
 
     public void validateCustomer(final CustomerDto customerDto) {
         if (customerDto == null) {
-            throw new MyException("CUSTOMER CANNOT BE NULL");
+            throw new MyException("CUSTOMER CAN NOT BE NULL");
         }
         if (!isNameValid(customerDto)) {
             throw new MyException("INVALID CUSTOMER NAME");
@@ -16,7 +16,7 @@ public class CustomerValidator {
             throw new MyException("INVALID CUSTOMER SURNAME");
         }
         if (!isAgeValid(customerDto)) {
-            throw new MyException("CUSTOMER AGE CANNOT BE BELOW 18.");
+            throw new MyException("CUSTOMER AGE CAN NOT BE BELOW 18.");
         }
     }
 

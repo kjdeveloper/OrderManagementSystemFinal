@@ -10,7 +10,7 @@ public class StockValidator{
             throw new MyException("STOCK DTO IS NULL");
         }
         if (isQuantityValid(stockDto)){
-            throw new MyException("QUANTITY CANNOT LESS THAN ZERO");
+            throw new MyException("QUANTITY CAN NOT LESS THAN ZERO");
         }
     }
 

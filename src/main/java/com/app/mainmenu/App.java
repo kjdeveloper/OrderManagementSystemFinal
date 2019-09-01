@@ -7,10 +7,11 @@ import com.app.model.enums.EGuarantee;
 import com.app.repository.CustomerOrderRepository;
 import com.app.repository.ProductRepository;
 import com.app.repository.ShopRepository;
-import com.app.repository.converters.CustomerConverter;
+import com.app.repository.generic.DbConnection;
 import com.app.repository.impl.CustomerOrderRepositoryImpl;
 import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.repository.impl.ShopRepositoryImpl;
+import com.app.service.services.ErrorService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,9 +21,20 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) {
+        ErrorService errorService = new ErrorService();
 
         MenuService menuService = new MenuService();
-        //menuService.service();
+        try {
+            menuService.service();
+        }catch (Exception e){
+            e.printStackTrace();
+            errorService.addError(e.";"+e.getMessage());
+        }
+
+
+
+
+
 
       /*  ProductRepository pr = new ProductRepositoryImpl();
         List p = pr.findProductsWithBiggestPriceInCategory();

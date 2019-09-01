@@ -9,7 +9,7 @@ public class ShopValidator {
 
     public void validateShop(ShopDto shopDto){
         if (isNullOrEmpty(shopDto.getName())){
-            throw new MyException("SHOP CANNOT BE NULL OR EMPTY");
+            throw new MyException("SHOP CAN NOT BE NULL OR EMPTY");
         }
         if (!isNameValid(shopDto)){
             throw new MyException("INVALID SHOP NAME");

@@ -13,6 +13,7 @@ import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ShopValidator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShopService {
 
@@ -48,6 +49,9 @@ public class ShopService {
     }
 
     public List<ShopDto> findAllShopsWithProductsWithCountryDifferentThanShopCountry() {
-        return null;
+        return shopRepository.findAllShopsWithProductsWithCountryDifferentThanShopCountry()
+                .stream()
+                .map(Mappers::fromShopToShopDto)
+                .collect(Collectors.toList());
     }
 }

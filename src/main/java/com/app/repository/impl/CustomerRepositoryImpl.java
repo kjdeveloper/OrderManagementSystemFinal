@@ -10,6 +10,7 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 import java.util.Optional;
 
 public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> implements CustomerRepository {
@@ -121,4 +122,38 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
         }
         return false;
     }
+
+    @Override
+    public List<Customer> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        List<Customer> customers = null;
+
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            customers = entityManager
+                    .createQuery("select c from Customer c where c.name = :name AND c.surname = :surname AND c.country.name = :country", Customer.class)
+                    .getResultList();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new MyException("CUSTOMER FIND BY NAME AND SURNAME AND COUNTRY EXCEPTION");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return customers;
+    }
+
+
 }

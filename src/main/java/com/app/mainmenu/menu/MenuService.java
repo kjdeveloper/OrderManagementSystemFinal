@@ -1,9 +1,9 @@
 package com.app.mainmenu.menu;
 
 import com.app.dto.*;
-import com.app.model.*;
 import com.app.model.enums.EGuarantee;
 import com.app.model.enums.EPayment;
+import com.app.repository.converters.*;
 import com.app.repository.generic.DbConnection;
 import com.app.service.services.*;
 
@@ -23,6 +23,15 @@ public class MenuService {
     private final ProducerService producerService = new ProducerService();
     private final ProductService productService = new ProductService();
     private final StockService stockService = new StockService();
+
+    private final CategoryDtoConverter categoryDtoConverter = new CategoryDtoConverter();
+    private final CustomerDtoConverter customerDtoConverter = new CustomerDtoConverter();
+    private final CustomerOrderDtoConverter customerOrderDtoConverter = new CustomerOrderDtoConverter();
+    private final ProducerDtoConverter producerDtoConverter = new ProducerDtoConverter();
+    private final ProductDtoConverter productDtoConverter = new ProductDtoConverter();
+    private final ShopDtoConverter shopDtoConverter = new ShopDtoConverter();
+    private final StockDtoConverter stockDtoConverter = new StockDtoConverter();
+    private final TradeDtoConverter tradeDtoConverter = new TradeDtoConverter();
 
     public MenuService() {
     }
@@ -58,15 +67,15 @@ public class MenuService {
             switch (action) {
                 case 1:
                     CustomerDto customerDto = option1();
-                    System.out.println(customerDto + " ADDED.");
+                    System.out.println(customerDtoConverter.toJson(customerDto) + "\n ADDED.");
                     break;
                 case 2:
                     ShopDto shopDto = option2();
-                    System.out.println(shopDto + " ADDED.");
+                    System.out.println(shopDtoConverter.toJson(shopDto) + "\n ADDED.");
                     break;
                 case 3:
                     ProducerDto producerDto = option3();
-                    System.out.println(producerDto + " ADDED.");
+                    System.out.println(producerDtoConverter.toJson(producerDto) + "\n ADDED.");
                     break;
                 case 4:
                     Set<EGuarantee> eGuarantees = new HashSet<>(Arrays.asList(
@@ -74,11 +83,11 @@ public class MenuService {
                             EGuarantee.SERVICE
                     ));
                     ProductDto productDtoAdded = option4(eGuarantees);
-                    System.out.println(productDtoAdded + " ADDED.");
+                    System.out.println(productDtoConverter.toJson(productDtoAdded) + "\n ADDED.");
                     break;
                 case 5:
                     StockDto stockDto = option5();
-                    System.out.println(stockDto + " ADDED.");
+                    System.out.println(stockDtoConverter.toJson(stockDto) + "\n ADDED.");
                     break;
                 case 6:
                     Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
@@ -87,8 +96,10 @@ public class MenuService {
                     double discount = 0.75;
 
                     CustomerOrderDto customerOrderDto = option6(ePayments, discount);
-                    System.out.println(customerOrderDto);
+                    System.out.println(customerOrderDtoConverter.toJson(customerOrderDto));
                     break;
+
+                    //============================DOWNLOAD DATA METHODS===============================
                 case 7:
                     List<ProductDto> biggestPriceInEachCategory = option7();
                     biggestPriceInEachCategory.forEach( p ->
@@ -106,6 +117,9 @@ public class MenuService {
                     int ageTo = userDataService.getInt("Please, enter a maximum age for the customers you want to see: ");
                     List<ProductDto> products = option8(country, ageFrom, ageTo);
 
+                    for (ProductDto productDto : products) {
+                        System.out.println(productDtoConverter.toJson(productDto));
+                    }
                     products.forEach(productDto -> System.out.println(productDto.getName() +
                             ", price: " + productDto.getPrice() +
                             ", category: " + productDto.getCategoryDto().getName() +
@@ -127,7 +141,7 @@ public class MenuService {
                 case 11:
                     String tradeName = userDataService.getString("Please, enter a trade name; ");
                     Long quantity = (long) userDataService.getInt("Please, enter a quantity: ");
-                    Set<ProducerDto> producers = option11(tradeName, quantity);
+                    List<ProducerDto> producers = option11(tradeName, quantity);
                     System.out.println(producers);
                     break;
                 case 12:
@@ -296,7 +310,7 @@ public class MenuService {
         return shopService.findAllShopsWithProductsWithCountryDifferentThanShopCountry();
     }
 
-    private Set<ProducerDto> option11(String tradeName, Long quantity) {
+    private List<ProducerDto> option11(String tradeName, Long quantity) {
         return producerService.findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(tradeName, quantity);
     }
 

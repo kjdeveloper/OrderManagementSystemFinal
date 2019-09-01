@@ -4,9 +4,13 @@ import com.app.dto.ProducerDto;
 import com.app.model.Producer;
 import com.app.repository.generic.GenericRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProducerRepository extends GenericRepository<Producer> {
     Optional<Producer> findByName(String producerName);
+
     boolean isExistByNameAndTradeAndCountry(ProducerDto producerDto);
+
+    List<Producer> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity);
 }

@@ -10,7 +10,9 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> implements ProducerRepository {
     @Override
@@ -86,5 +88,37 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Producer> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        List<Producer> producers = null;
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            producers = entityManager
+                    .createQuery("select p from Producer p where p.name = :name AND p.trade.name = :tradeName AND p.country.name = :countryName", Producer.class)
+                    .getResultList();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new MyException("PRODUCER FIND BY NAME EXCEPTION ");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+
+        return producers;
     }
 }

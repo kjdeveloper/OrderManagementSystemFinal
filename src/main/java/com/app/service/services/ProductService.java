@@ -5,25 +5,20 @@ import com.app.dto.ProducerDto;
 import com.app.dto.ProductDto;
 import com.app.exceptions.MyException;
 import com.app.model.Category;
-import com.app.model.CustomerOrder;
 import com.app.model.Producer;
 import com.app.model.Product;
 import com.app.model.enums.EGuarantee;
 import com.app.repository.CategoryRepository;
-import com.app.repository.CustomerOrderRepository;
 import com.app.repository.ProducerRepository;
 import com.app.repository.ProductRepository;
 import com.app.repository.impl.CategoryRepositoryImpl;
-import com.app.repository.impl.CustomerOrderRepositoryImpl;
 import com.app.repository.impl.ProducerRepositoryImpl;
 import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CategoryValidator;
 import com.app.validation.impl.ProductValidator;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,8 +27,6 @@ public class ProductService {
     private final ProductRepository productRepository = new ProductRepositoryImpl();
     private final CategoryRepository categoryRepository = new CategoryRepositoryImpl();
     private final ProducerRepository producerRepository = new ProducerRepositoryImpl();
-
-    private CustomerOrderRepository customerOrderRepository = new CustomerOrderRepositoryImpl();
 
     private final ProductValidator productValidator = new ProductValidator();
     private final CategoryValidator categoryValidator = new CategoryValidator();

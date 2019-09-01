@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class ErrorDto {
 
     private Long id;
-    private Timestamp date;
+    private LocalDateTime date;
     private String message;
 
 }

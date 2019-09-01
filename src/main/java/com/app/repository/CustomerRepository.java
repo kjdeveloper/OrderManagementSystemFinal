@@ -4,6 +4,7 @@ import com.app.dto.CustomerDto;
 import com.app.model.Customer;
 import com.app.repository.generic.GenericRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRepository extends GenericRepository<Customer> {
@@ -12,4 +13,6 @@ public interface CustomerRepository extends GenericRepository<Customer> {
     Optional<Customer> findBySurname(String surname);
 
     boolean isExistByNameAndSurnameAndCountry(CustomerDto customerDTO);
+
+    List<Customer> findCustomersWhoOrderedProductWithSameCountryAsTheir();
 }

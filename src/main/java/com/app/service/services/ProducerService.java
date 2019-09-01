@@ -15,7 +15,7 @@ import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ProducerValidator;
 import com.app.validation.impl.TradeValidator;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProducerService {
@@ -62,11 +62,10 @@ public class ProducerService {
         return Mappers.fromProducerToProducerDto(producer);
     }
 
-    public Set<ProducerDto> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
-        return producerRepository.findAll()
+    public List<ProducerDto> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
+        return producerRepository.findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(tradeName, quantity)
                 .stream()
-                .filter(producer -> producer.getTrade().getName().equals(tradeName))
                 .map(Mappers::fromProducerToProducerDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

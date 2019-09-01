@@ -192,7 +192,7 @@ public interface Mappers {
     static ErrorDto fromErrorToErrorDto(Error error) {
         return error == null ? null : ErrorDto.builder()
                 .id(error.getId())
-                .date(error.getDate())
+                .date(error.getDate().toLocalDateTime())
                 .message(error.getMessage())
                 .build();
     }
@@ -200,7 +200,7 @@ public interface Mappers {
     static Error fromErrorDtoToError(ErrorDto errorDto) {
         return errorDto == null ? null : Error.builder()
                 .id(errorDto.getId())
-                .date(errorDto.getDate())
+                .date(Timestamp.valueOf(errorDto.getDate()))
                 .message(errorDto.getMessage())
                 .build();
 
