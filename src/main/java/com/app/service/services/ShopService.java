@@ -1,6 +1,7 @@
 package com.app.service.services;
 
 import com.app.dto.ShopDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Country;
 import com.app.model.Shop;
@@ -27,7 +28,7 @@ public class ShopService {
 
         final boolean exist = shopRepository.isExistByShopAndCountry(shopDTO.getName(), shopDTO.getCountryDto().getName());
         if (exist) {
-            throw new MyException("SHOP WITH GIVEN NAME AND COUNTRY IS ALREADY EXIST");
+            throw new MyException(ExceptionCode.SHOP, "SHOP WITH GIVEN NAME AND COUNTRY IS ALREADY EXIST");
         }
 
         Country country = countryRepository.findByName(shopDTO.getCountryDto().getName()).orElse(null);
@@ -35,7 +36,7 @@ public class ShopService {
         if (country == null) {
             countryValidator.validateCountry(shopDTO.getCountryDto());
             country = Mappers.fromCountryDtoToCountry(shopDTO.getCountryDto());
-            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CANNOT ADD COUNTRY WITH SHOP"));
+            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CANNOT ADD COUNTRY WITH SHOP"));
         }
 
         Shop shop = shopRepository.findByName(shopDTO.getName()).orElse(null);

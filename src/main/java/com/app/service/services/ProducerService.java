@@ -2,6 +2,7 @@ package com.app.service.services;
 
 import com.app.dto.ProducerDto;
 import com.app.dto.TradeDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.*;
 import com.app.repository.CountryRepository;
@@ -33,7 +34,7 @@ public class ProducerService {
         final boolean exist = producerRepository.isExistByNameAndTradeAndCountry(producerDTO);
 
         if (exist) {
-            throw new MyException("PRODUCER WITH GIVEN NAME, TRADE AND COUNTRY EXIST");
+            throw new MyException(ExceptionCode.PRODUCER, "PRODUCER WITH GIVEN NAME, TRADE AND COUNTRY EXIST");
         }
 
         TradeDto tradeDto = producerDTO.getTradeDto();
@@ -45,12 +46,12 @@ public class ProducerService {
         if (country == null){
             countryValidator.validateCountry(producerDTO.getCountryDto());
             country = Mappers.fromCountryDtoToCountry(producerDTO.getCountryDto());
-            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CAN NOT ADD COUNTRY"));
+            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CAN NOT ADD COUNTRY"));
         }
         if (trade == null){
             tradeValidator.validateTrade(producerDTO.getTradeDto());
             trade = Mappers.fromTradeDtoToTrade(producerDTO.getTradeDto());
-            trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException("CAN NOT ADD TRADE"));
+            trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException(ExceptionCode.TRADE, "CAN NOT ADD TRADE"));
         }
         if (producer == null){
             producer = Mappers.fromProducerDtoToProducer(producerDTO);

@@ -1,6 +1,7 @@
 package com.app.repository.impl;
 
 import com.app.dto.TradeDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Trade;
 import com.app.repository.TradeRepository;
@@ -38,7 +39,7 @@ public class TradeRepositoryImpl extends AbstractGenericRepository<Trade> implem
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("TRADE FIND BY NAME EXCEPTION");
+            throw new MyException(ExceptionCode.TRADE, "TRADE FIND BY NAME EXCEPTION");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

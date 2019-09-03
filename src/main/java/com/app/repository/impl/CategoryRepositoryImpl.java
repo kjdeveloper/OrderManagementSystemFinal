@@ -1,6 +1,7 @@
 package com.app.repository.impl;
 
 import com.app.dto.CategoryDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Category;
 import com.app.repository.CategoryRepository;
@@ -38,7 +39,7 @@ public class CategoryRepositoryImpl extends AbstractGenericRepository<Category> 
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("CATEGORY FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.CATEGORY, "CATEGORY FIND BY NAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

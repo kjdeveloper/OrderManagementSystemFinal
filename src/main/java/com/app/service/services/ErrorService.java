@@ -3,6 +3,7 @@ package com.app.service.services;
 import com.app.dto.ErrorDto;
 import com.app.exceptions.Error;
 import com.app.repository.ErrorRepository;
+import com.app.repository.generic.DbConnection;
 import com.app.repository.impl.ErrorRepositoryImpl;
 import com.app.service.mapper.Mappers;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 public class ErrorService {
 
     private final ErrorRepository errorRepository = new ErrorRepositoryImpl();
+    private final DbConnection dbConnection = DbConnection.getInstance();
 
     public void addError(String message){
 
@@ -21,5 +23,6 @@ public class ErrorService {
 
         Error error = Mappers.fromErrorDtoToError(errorDto);
         errorRepository.addOrUpdate(error);
+        dbConnection.close();
     }
 }

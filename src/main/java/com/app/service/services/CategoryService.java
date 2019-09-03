@@ -1,6 +1,7 @@
 package com.app.service.services;
 
 import com.app.dto.CategoryDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Category;
 import com.app.repository.CategoryRepository;
@@ -21,10 +22,10 @@ public class CategoryService {
         if (category == null){
             category = Mappers.fromCategoryDtoToCategory(categoryDTO);
         }else{
-            throw new MyException("CATEGORY WITH GIVEN NAME EXIST");
+            throw new MyException(ExceptionCode.CATEGORY, "CATEGORY WITH GIVEN NAME EXIST");
         }
 
-        categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException("CAN NOT ADD CATEGORY IN CATEGORY SERVICE"));
+        categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException(ExceptionCode.CATEGORY, "CAN NOT ADD CATEGORY IN CATEGORY SERVICE"));
         return Mappers.fromCategoryToCategoryDto(category);
     }
 

@@ -1,6 +1,7 @@
 package com.app.service.services;
 
 import com.app.dto.CountryDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Country;
 import com.app.repository.CountryRepository;
@@ -20,10 +21,10 @@ public class CountryService {
         if (country == null){
             country = Mappers.fromCountryDtoToCountry(countryDTO);
         }else{
-            throw new MyException("COUNTRY WITH GIVEN NAME EXIST");
+            throw new MyException(ExceptionCode.COUNTRY, "COUNTRY WITH GIVEN NAME EXIST");
         }
 
-        countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CAN NOT AD COUNTRY IN COUNTRY SERVICE"));
+        countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CAN NOT AD COUNTRY IN COUNTRY SERVICE"));
         return Mappers.fromCountryToCountryDto(country);
     }
 

@@ -1,6 +1,7 @@
 package com.app.repository.impl;
 
 import com.app.dto.CustomerDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Customer;
 import com.app.repository.CustomerRepository;
@@ -39,7 +40,7 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("CUSTOMER FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER FIND BY NAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -73,7 +74,7 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("CUSTOMER FIND BY SURNAME EXCEPTION ");
+            throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER FIND BY SURNAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -111,7 +112,7 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("CUSTOMER FIND BY NAME AND SURNAME AND COUNTRY EXCEPTION");
+            throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER FIND BY NAME AND SURNAME AND COUNTRY EXCEPTION");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -138,7 +139,7 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
             tx.begin();
 
             customers = entityManager
-                    .createQuery("select c from Customer c where c.name = :name AND c.surname = :surname AND c.country.name = :country", Customer.class)
+                    .createQuery("SELECT c FROM Customer c ", Customer.class)
                     .getResultList();
 
             tx.commit();
@@ -146,7 +147,7 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("CUSTOMER FIND BY NAME AND SURNAME AND COUNTRY EXCEPTION");
+            throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER FIND BY NAME AND SURNAME AND COUNTRY EXCEPTION");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

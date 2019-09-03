@@ -1,6 +1,7 @@
 package com.app.repository.impl;
 
 import com.app.dto.ProductDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.CustomerOrder;
 import com.app.model.Product;
@@ -23,7 +24,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
     @Override
     public Optional<Product> findByName(String productName) {
         if (productName == null){
-            throw new MyException("PRODUCT NAME CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT NAME CAN NOT BE NULL");
         }
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
@@ -47,7 +48,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCT FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT FIND BY NAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -60,7 +61,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
     @Override
     public boolean isExistByNameAndCategoryAndProducer(ProductDto productDTO) {
         if (productDTO == null){
-            throw new MyException("PRODUCT CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT CAN NOT BE NULL");
         }
 
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
@@ -89,7 +90,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCT FIND BY METHOD = IS EXIST BY NAME AND CATEGORY AND PRODUCER EXCEPTION ");
+            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT FIND BY METHOD = IS EXIST BY NAME AND CATEGORY AND PRODUCER EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -124,7 +125,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCT WITH BIGGEST PRICE EXCEPTION");
+            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT WITH BIGGEST PRICE EXCEPTION");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -165,7 +166,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCT WITH SPECIFIED CUSTOMER EXCEPTION");
+            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT WITH SPECIFIED CUSTOMER EXCEPTION");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -199,7 +200,7 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCT WITH GUARANTEES EXCEPTION");
+            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT WITH GUARANTEES EXCEPTION");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

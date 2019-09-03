@@ -1,5 +1,6 @@
 package com.app.repository.converters;
 
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,7 +23,7 @@ public abstract class JsonConverter<T> {
             }
             jsonObject = gson.toJson(element);
         } catch (Exception e) {
-            throw new MyException("TO JSON EXCEPTION");
+            throw new MyException(ExceptionCode.TO_JSON_EXCEPTION, "TO JSON EXCEPTION");
         }
         return jsonObject;
     }
@@ -30,10 +31,9 @@ public abstract class JsonConverter<T> {
     public Optional<T> fromJson(final String element) {
         Optional<T> object = null;
         try {
-
             object = Optional.of(gson.fromJson(element, type));
         } catch (Exception e){
-            throw new MyException("FROM JSON EXCEPTION");
+            throw new MyException(ExceptionCode.FROM_JSON_EXCEPTION, "FROM JSON EXCEPTION");
         }
         return object;
     }

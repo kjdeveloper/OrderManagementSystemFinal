@@ -1,6 +1,7 @@
 package com.app.repository.impl;
 
 import com.app.dto.ProducerDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Producer;
 import com.app.repository.ProducerRepository;
@@ -40,7 +41,7 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCER FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.PRODUCER, "PRODUCER FIND BY NAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -78,7 +79,7 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCER FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.PRODUCER, "PRODUCER FIND BY NAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -88,6 +89,42 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Optional<Producer> findByNameAndCountry(ProducerDto producerDto) {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        Optional<Producer> producer = null;
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            producer = entityManager
+                    .createQuery("select p from Producer p where p.name = :name AND p.country.name = :countryName", Producer.class)
+                    .setParameter("name", producerDto.getName())
+                    .setParameter("countryName", producerDto.getCountryDto().getName())
+                    .getResultList()
+                    .stream()
+                    .findFirst();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new MyException(ExceptionCode.PRODUCER, "PRODUCER FIND BY NAME AND COUNTRY EXCEPTION ");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+
+        return producer;
     }
 
     @Override
@@ -104,7 +141,7 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
             tx.begin();
 
             producers = entityManager
-                    .createQuery("select p from Producer p where p.name = :name AND p.trade.name = :tradeName AND p.country.name = :countryName", Producer.class)
+                    .createQuery("", Producer.class)
                     .getResultList();
 
             tx.commit();
@@ -112,7 +149,7 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("PRODUCER FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.PRODUCER, "PRODUCER WITH GIVEN BRAND AND BIGGER QUANTITY EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

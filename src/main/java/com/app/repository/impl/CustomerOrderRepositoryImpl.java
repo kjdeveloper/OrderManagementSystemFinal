@@ -1,5 +1,6 @@
 package com.app.repository.impl;
 
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.CustomerOrder;
 import com.app.model.Product;
@@ -54,7 +55,7 @@ public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<Custo
                 tx.rollback();
             }
 
-            throw new MyException("CUSTOMER ORDER EXCEPTION ");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -95,7 +96,7 @@ public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<Custo
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("CUSTOMER ORDER EXCEPTION ");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

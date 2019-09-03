@@ -1,6 +1,7 @@
 package com.app.repository.impl;
 
 import com.app.exceptions.Error;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.repository.ErrorRepository;
 import com.app.repository.generic.AbstractGenericRepository;
@@ -36,7 +37,7 @@ public class ErrorRepositoryImpl extends AbstractGenericRepository<Error> implem
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("ERRORS EXCEPTION");
+            throw new MyException(ExceptionCode.ERROR, "ERRORS EXCEPTION");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

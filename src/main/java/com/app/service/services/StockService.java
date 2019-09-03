@@ -2,6 +2,7 @@ package com.app.service.services;
 
 import com.app.dto.ProductDto;
 import com.app.dto.StockDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Product;
 import com.app.model.Shop;
@@ -24,23 +25,23 @@ public class StockService {
 
     public StockDto addProductToStock(String productName, String categoryName, String shopName, String countryName, int quantity) {
         if (productName == null) {
-            throw new MyException("PRODUCT NAME IS NULL");
+            throw new MyException(ExceptionCode.STOCK, "PRODUCT NAME IS NULL");
         }
         if (categoryName == null) {
-            throw new MyException("CATEGORY NAME IS NULL");
+            throw new MyException(ExceptionCode.STOCK, "CATEGORY NAME IS NULL");
         }
         if (shopName == null) {
-            throw new MyException("SHOP NAME IS NULL");
+            throw new MyException(ExceptionCode.STOCK, "SHOP NAME IS NULL");
         }
         if (countryName == null) {
-            throw new MyException("COUNTRY NAME IS NULL");
+            throw new MyException(ExceptionCode.STOCK, "COUNTRY NAME IS NULL");
         }
         if (quantity <= 0) {
-            throw new MyException("QUANTITY IS LESS OR EQUAL 0");
+            throw new MyException(ExceptionCode.STOCK, "QUANTITY IS LESS OR EQUAL 0");
         }
 
         Product product = productRepository.findByName(productName)
-                .orElseThrow(() -> new MyException("PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
+                .orElseThrow(() -> new MyException(ExceptionCode.PRODUCT, "PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
 
         /*próbowałem juz zmapowac z jednaj na drugą ale nie pomaga
         ProductDto productDto = Mappers.fromProductToProductDto(product);
@@ -48,7 +49,7 @@ public class StockService {
        */
 
         Shop shop = shopRepository.findByName(shopName)
-                .orElseThrow(() -> new MyException("SHOP WAS NOT FOUND. PLEASE ADD SHOP FIRST"));
+                .orElseThrow(() -> new MyException(ExceptionCode.SHOP, "SHOP WAS NOT FOUND. PLEASE ADD SHOP FIRST"));
 
         Stock stock = stockRepository.findStockByProductAndShop(productName, shopName)
                 .orElse(null);

@@ -1,5 +1,6 @@
 package com.app.repository.generic;
 
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 
 import javax.persistence.EntityManager;
@@ -38,7 +39,7 @@ public abstract class AbstractGenericRepository<T> implements GenericRepository<
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException(entityClass.getCanonicalName() + ": ADD OR UPDATE EXCEPTION ");
+            throw new MyException(ExceptionCode.ADD_OR_UPDATE_EXCEPTION, entityClass.getCanonicalName() + ": ADD OR UPDATE EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -64,7 +65,7 @@ public abstract class AbstractGenericRepository<T> implements GenericRepository<
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException(entityClass.getCanonicalName() + ": FIND BY ID EXCEPTION ");
+            throw new MyException(ExceptionCode.FIND_BY_ID_EXCEPTION, entityClass.getCanonicalName() + ": FIND BY ID EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -94,7 +95,7 @@ public abstract class AbstractGenericRepository<T> implements GenericRepository<
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException(entityClass.getCanonicalName() + ": FIND ALL EXCEPTION ");
+            throw new MyException(ExceptionCode.FIND_ALL_EXCEPTION, entityClass.getCanonicalName() + ": FIND ALL EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -123,7 +124,7 @@ public abstract class AbstractGenericRepository<T> implements GenericRepository<
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException(entityClass.getCanonicalName() + ": ADD OR UPDATE EXCEPTION ");
+            throw new MyException(ExceptionCode.DELETE_EXCEPTION, entityClass.getCanonicalName() + ": DELETE EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -156,7 +157,7 @@ public abstract class AbstractGenericRepository<T> implements GenericRepository<
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException(entityClass.getCanonicalName() + ": REMOVE ALL EXCEPTION ");
+            throw new MyException(ExceptionCode.REMOVE_ALL_EXCEPTION, entityClass.getCanonicalName() + ": REMOVE ALL EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

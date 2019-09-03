@@ -1,6 +1,7 @@
 package com.app.validation.impl;
 
 import com.app.dto.CategoryDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 
 import java.util.Map;
@@ -11,10 +12,10 @@ public class CategoryValidator {
 
     public void validateCategory(CategoryDto categoryDto){
         if (isNullOrEmpty(categoryDto.getName())){
-            throw new MyException("CATEGORY CAN NOT BE NULL OR EMPTY");
+            throw new MyException(ExceptionCode.CATEGORY, "CATEGORY CAN NOT BE NULL OR EMPTY");
         }
         if (!isNameValid(categoryDto)){
-            throw new MyException("INVALID CATEGORY NAME");
+            throw new MyException(ExceptionCode.CATEGORY, "INVALID CATEGORY NAME");
         }
     }
 

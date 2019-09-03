@@ -1,14 +1,14 @@
 package com.app.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class MyException extends RuntimeException {
 
-    private String message;
+    private ExceptionMessage exceptionMessage;
 
-    public MyException(String message) {
-        this.message = message;
+    public MyException(ExceptionCode exceptionCode, String message) {
+        this.exceptionMessage = new ExceptionMessage(exceptionCode, message);
     }
 
-    public String getMessage() {
-        return message;
-    }
 }

@@ -3,6 +3,7 @@ package com.app.service.services;
 import com.app.dto.CustomerDto;
 import com.app.dto.CustomerOrderDto;
 import com.app.dto.ProductDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Customer;
 import com.app.model.CustomerOrder;
@@ -46,16 +47,16 @@ public class CustomerOrderService {
                 .findByName(customerDto.getName())
                 .orElseGet(() -> customerRepository
                         .findBySurname(customerDto.getSurname())
-                        .orElseThrow(() -> new MyException("CUSTOMER WAS NOT FOUND. PLEASE ADD CUSTOMER FIRST")));
+                        .orElseThrow(() -> new MyException(ExceptionCode.CUSTOMER, "CUSTOMER WAS NOT FOUND. PLEASE ADD CUSTOMER FIRST")));
 
         ProductDto productDto = customerOrderDto.getProductDto();
 
         Product product = productRepository
                 .findByName(productDto.getName())
-                .orElseThrow(() -> new MyException("PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
+                .orElseThrow(() -> new MyException(ExceptionCode.PRODUCT, "PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
 
         if (stockRepository.countProduct(product.getId()) < customerOrderDto.getQuantity()) {
-            throw new MyException("Unfortunately, we do not have " + product.getName() + " in an equal amount " + customerOrderDto.getQuantity());
+            throw new MyException(ExceptionCode.PRODUCT, "Unfortunately, we do not have " + product.getName() + " in an equal amount " + customerOrderDto.getQuantity());
         }
 
         customerOrder.setCustomer(customer);
@@ -75,7 +76,7 @@ public class CustomerOrderService {
 
     private BigDecimal productPriceAfterDiscount(CustomerOrder customerOrder) {
         if (customerOrder == null) {
-            throw new MyException("CUSTOMER ORDER IS NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER IS NULL");
         }
 
         BigDecimal price = customerOrder.getProduct().getPrice();
@@ -88,16 +89,16 @@ public class CustomerOrderService {
 
     public List<CustomerOrderDto> findOrdersBetweenDatesAndGivenPrice(LocalDate dateFrom, LocalDate dateTo, BigDecimal price) {
         if (dateFrom == null) {
-            throw new MyException("START DATE CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CAN NOT BE NULL");
         }
         if (dateTo == null) {
-            throw new MyException("FINISH DATE CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "FINISH DATE CAN NOT BE NULL");
         }
         if (dateFrom.compareTo(dateTo) >= 0) {
-            throw new MyException("START DATE CAN NOT BE AFTER FINISH DATE");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CAN NOT BE AFTER FINISH DATE");
         }
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new MyException("PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO");
         }
 
         return customerOrderRepository.findOrdersBetweenDatesAndGivenPrice(dateFrom, dateTo, price)
@@ -109,13 +110,13 @@ public class CustomerOrderService {
 
     public List<ProductDto> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName) {
         if (customerName == null) {
-            throw new MyException("CUSTOMER NAME CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER NAME CAN NOT BE NULL");
         }
         if (customerSurname == null) {
-            throw new MyException("CUSTOMER SURNAME CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER SURNAME CAN NOT BE NULL");
         }
         if (countryName == null) {
-            throw new MyException("COUNTRY NAME CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "COUNTRY NAME CAN NOT BE NULL");
         }
         return customerOrderRepository.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName)
                 .stream()

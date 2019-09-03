@@ -1,22 +1,23 @@
 package com.app.validation.impl;
 
 import com.app.dto.CustomerDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 
 public class CustomerValidator {
 
     public void validateCustomer(final CustomerDto customerDto) {
         if (customerDto == null) {
-            throw new MyException("CUSTOMER CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER CAN NOT BE NULL");
         }
         if (!isNameValid(customerDto)) {
-            throw new MyException("INVALID CUSTOMER NAME");
+            throw new MyException(ExceptionCode.CUSTOMER, "INVALID CUSTOMER NAME");
         }
         if (!isSurnameValid(customerDto)) {
-            throw new MyException("INVALID CUSTOMER SURNAME");
+            throw new MyException(ExceptionCode.CUSTOMER, "INVALID CUSTOMER SURNAME");
         }
         if (!isAgeValid(customerDto)) {
-            throw new MyException("CUSTOMER AGE CAN NOT BE BELOW 18.");
+            throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER AGE CAN NOT BE BELOW 18.");
         }
     }
 

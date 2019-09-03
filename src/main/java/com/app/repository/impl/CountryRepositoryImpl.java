@@ -1,6 +1,7 @@
 package com.app.repository.impl;
 
 import com.app.dto.CountryDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Country;
 import com.app.repository.CountryRepository;
@@ -38,7 +39,7 @@ public class CountryRepositoryImpl extends AbstractGenericRepository<Country> im
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("COUNTRY FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.COUNTRY, "COUNTRY FIND BY NAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

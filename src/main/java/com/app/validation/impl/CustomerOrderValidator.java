@@ -1,6 +1,7 @@
 package com.app.validation.impl;
 
 import com.app.dto.CustomerOrderDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 
 import java.time.LocalDate;
@@ -10,13 +11,13 @@ public class CustomerOrderValidator {
 
     public void validateCustomerOrder(CustomerOrderDto customerOrderDto){
         if (customerOrderDto == null){
-            throw new MyException("CUSTOMER ORDER CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER CAN NOT BE NULL");
         }
         if (!isDateValid(customerOrderDto.getDate())){
-            throw new MyException("DATE IS NOT VALID");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "DATE IS NOT VALID");
         }
         if (!isDiscountValid(customerOrderDto.getDiscount())){
-            throw new MyException("DISCOUNT VALUE IS NOT VALID");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "DISCOUNT VALUE IS NOT VALID");
         }
     }
 

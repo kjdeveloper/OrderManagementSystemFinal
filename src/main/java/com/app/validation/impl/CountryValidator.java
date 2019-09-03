@@ -1,6 +1,7 @@
 package com.app.validation.impl;
 
 import com.app.dto.CountryDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 
 import java.util.Map;
@@ -11,10 +12,10 @@ public class CountryValidator{
 
     public void validateCountry(final CountryDto countryDto){
         if (isNullOrEmpty(countryDto.getName())){
-            throw new MyException("COUNTRY CAN NOT BE NULL OR EMPTY");
+            throw new MyException(ExceptionCode.COUNTRY, "COUNTRY CAN NOT BE NULL OR EMPTY");
         }
         if (!isNameValid(countryDto)){
-            throw new MyException("INVALID COUNTRY");
+            throw new MyException(ExceptionCode.COUNTRY, "INVALID COUNTRY");
         }
     }
 

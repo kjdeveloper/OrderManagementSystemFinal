@@ -1,5 +1,6 @@
 package com.app.service.services;
 
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ public class UserDataService {
         System.out.println(message);
         String text = sc.nextLine();
         if (!text.matches("\\d+")) {
-            throw new MyException("INVALID OPTION NUMBER");
+            throw new MyException(ExceptionCode.USER_DATA_SERVICE, "INVALID OPTION NUMBER");
         }
         return Integer.parseInt(text);
     }
@@ -22,7 +23,7 @@ public class UserDataService {
         System.out.println(message);
         String text = sc.nextLine();
         if (!text.matches("\\d+")){
-            throw new MyException("INVALID BIGDECIMAL PRICE");
+            throw new MyException(ExceptionCode.USER_DATA_SERVICE, "INVALID BIGDECIMAL PRICE");
         }
         return new BigDecimal(text.replaceAll(",", ""));
     }

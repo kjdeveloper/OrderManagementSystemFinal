@@ -1,5 +1,6 @@
 package com.app.repository.impl;
 
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Shop;
 import com.app.repository.ShopRepository;
@@ -37,7 +38,7 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("SHOP FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.SHOP, "SHOP FIND BY NAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -74,7 +75,7 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("SHOP FIND BY NAME EXCEPTION ");
+            throw new MyException(ExceptionCode.SHOP, "SHOP FIND BY NAME EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -112,7 +113,7 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
                 tx.rollback();
             }
             e.printStackTrace();
-            throw new MyException("SHOP FIND ALL WITH DIFFERENT COUNTRY EXCEPTION ");
+            throw new MyException(ExceptionCode.SHOP, "SHOP FIND ALL WITH DIFFERENT COUNTRY EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

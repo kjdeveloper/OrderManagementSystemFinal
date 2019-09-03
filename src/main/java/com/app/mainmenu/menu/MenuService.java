@@ -1,6 +1,7 @@
 package com.app.mainmenu.menu;
 
 import com.app.dto.*;
+import com.app.exceptions.MyException;
 import com.app.model.enums.EGuarantee;
 import com.app.model.enums.EPayment;
 import com.app.repository.converters.*;
@@ -23,6 +24,7 @@ public class MenuService {
     private final ProducerService producerService = new ProducerService();
     private final ProductService productService = new ProductService();
     private final StockService stockService = new StockService();
+    private final ErrorService errorService = new ErrorService();
 
     private final CategoryDtoConverter categoryDtoConverter = new CategoryDtoConverter();
     private final CustomerDtoConverter customerDtoConverter = new CustomerDtoConverter();
@@ -62,110 +64,114 @@ public class MenuService {
     public void service() {
         int action;
         do {
-            menu();
-            action = userDataService.getInt("Choose option: ");
-            switch (action) {
-                case 1:
-                    CustomerDto customerDto = option1();
-                    System.out.println(customerDtoConverter.toJson(customerDto) + "\n ADDED.");
-                    break;
-                case 2:
-                    ShopDto shopDto = option2();
-                    System.out.println(shopDtoConverter.toJson(shopDto) + "\n ADDED.");
-                    break;
-                case 3:
-                    ProducerDto producerDto = option3();
-                    System.out.println(producerDtoConverter.toJson(producerDto) + "\n ADDED.");
-                    break;
-                case 4:
-                    Set<EGuarantee> eGuarantees = new HashSet<>(Arrays.asList(
-                            EGuarantee.EXCHANGE,
-                            EGuarantee.SERVICE
-                    ));
-                    ProductDto productDtoAdded = option4(eGuarantees);
-                    System.out.println(productDtoConverter.toJson(productDtoAdded) + "\n ADDED.");
-                    break;
-                case 5:
-                    StockDto stockDto = option5();
-                    System.out.println(stockDtoConverter.toJson(stockDto) + "\n ADDED.");
-                    break;
-                case 6:
-                    Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
-                            EPayment.CASH, EPayment.CARD
-                    ));
-                    double discount = 0.75;
+            try {
+                menu();
+                action = userDataService.getInt("Choose option: ");
+                switch (action) {
+                    case 1:
+                        CustomerDto customerDto = option1();
+                        System.out.println(customerDtoConverter.toJson(customerDto) + "\n ADDED.");
+                        break;
+                    case 2:
+                        ShopDto shopDto = option2();
+                        System.out.println(shopDtoConverter.toJson(shopDto) + "\n ADDED.");
+                        break;
+                    case 3:
+                        ProducerDto producerDto = option3();
+                        System.out.println(producerDtoConverter.toJson(producerDto) + "\n ADDED.");
+                        break;
+                    case 4:
+                        Set<EGuarantee> eGuarantees = new HashSet<>(Arrays.asList(
+                                EGuarantee.EXCHANGE,
+                                EGuarantee.SERVICE
+                        ));
+                        ProductDto productDtoAdded = option4(eGuarantees);
+                        System.out.println(productDtoConverter.toJson(productDtoAdded) + "\n ADDED.");
+                        break;
+                    case 5:
+                        StockDto stockDto = option5();
+                        System.out.println(stockDtoConverter.toJson(stockDto) + "\n ADDED.");
+                        break;
+                    case 6:
+                        Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
+                                EPayment.CASH, EPayment.CARD
+                        ));
+                        double discount = 0.75;
 
-                    CustomerOrderDto customerOrderDto = option6(ePayments, discount);
-                    System.out.println(customerOrderDtoConverter.toJson(customerOrderDto));
-                    break;
+                        CustomerOrderDto customerOrderDto = option6(ePayments, discount);
+                        System.out.println(customerOrderDtoConverter.toJson(customerOrderDto));
+                        break;
 
                     //============================DOWNLOAD DATA METHODS===============================
-                case 7:
-                    List<ProductDto> biggestPriceInEachCategory = option7();
-                    biggestPriceInEachCategory.forEach( p ->
-                            System.out.println( p.getName() +
-                                            ", price: " + p.getPrice() +
-                                            ", category: " + p.getCategoryDto().getName() +
-                                            ", producer: " + p.getProducerDto().getName() +
-                                            ", from " + p.getProducerDto().getCountryDto().getName() +
-                                    " ordered " + customerOrderService.customerOrdersWithSpecificProduct(p.getName()).size() + " times"
-                            ));
-                    break;
-                case 8:
-                    String country = userDataService.getString("Please, enter a name of country: ");
-                    int ageFrom = userDataService.getInt("Please, enter a minimum age for the customers you want to see: ");
-                    int ageTo = userDataService.getInt("Please, enter a maximum age for the customers you want to see: ");
-                    List<ProductDto> products = option8(country, ageFrom, ageTo);
+                    case 7:
+                        List<ProductDto> biggestPriceInEachCategory = option7();
+                        biggestPriceInEachCategory.forEach(p ->
+                                System.out.println(p.getName() +
+                                        ", price: " + p.getPrice() +
+                                        ", category: " + p.getCategoryDto().getName() +
+                                        ", producer: " + p.getProducerDto().getName() +
+                                        ", from " + p.getProducerDto().getCountryDto().getName() +
+                                        " ordered " + customerOrderService.customerOrdersWithSpecificProduct(p.getName()).size() + " times"
+                                ));
+                        break;
+                    case 8:
+                        String country = userDataService.getString("Please, enter a name of country: ");
+                        int ageFrom = userDataService.getInt("Please, enter a minimum age for the customers you want to see: ");
+                        int ageTo = userDataService.getInt("Please, enter a maximum age for the customers you want to see: ");
+                        List<ProductDto> products = option8(country, ageFrom, ageTo);
 
-                    for (ProductDto productDto : products) {
-                        System.out.println(productDtoConverter.toJson(productDto));
-                    }
-                    products.forEach(productDto -> System.out.println(productDto.getName() +
-                            ", price: " + productDto.getPrice() +
-                            ", category: " + productDto.getCategoryDto().getName() +
-                            ", producer: " + productDto.getProducerDto().getName() +
-                            ", from: " + productDto.getProducerDto().getCountryDto().getName()));
-                    break;
-                case 9:
-                    Set<EGuarantee> eGuaranteesForProductWithSameComponents = new HashSet<>(Arrays.asList(
-                            EGuarantee.EXCHANGE,
-                            EGuarantee.SERVICE
-                    ));
+                        for (ProductDto productDto : products) {
+                            System.out.println(productDtoConverter.toJson(productDto));
+                        }
+                        products.forEach(productDto -> System.out.println(productDto.getName() +
+                                ", price: " + productDto.getPrice() +
+                                ", category: " + productDto.getCategoryDto().getName() +
+                                ", producer: " + productDto.getProducerDto().getName() +
+                                ", from: " + productDto.getProducerDto().getCountryDto().getName()));
+                        break;
+                    case 9:
+                        Set<EGuarantee> eGuaranteesForProductWithSameComponents = new HashSet<>(Arrays.asList(
+                                EGuarantee.EXCHANGE,
+                                EGuarantee.SERVICE
+                        ));
 
-                    Set<ProductDto> productWithSameGuaranteeComponents = option9(eGuaranteesForProductWithSameComponents);
-                    System.out.println(productWithSameGuaranteeComponents);
-                    break;
-                case 10:
-                    List<ShopDto> shops = option10();
-                    break;
-                case 11:
-                    String tradeName = userDataService.getString("Please, enter a trade name; ");
-                    Long quantity = (long) userDataService.getInt("Please, enter a quantity: ");
-                    List<ProducerDto> producers = option11(tradeName, quantity);
-                    System.out.println(producers);
-                    break;
-                case 12:
-                    LocalDate dateFrom = LocalDate.parse(userDataService.getString("Please, enter start date: (FORMAT: YYYY-mm-dd)"));
-                    LocalDate dateTo = LocalDate.parse(userDataService.getString("Please, enter end date: (FORMAT: YYYY-mm-dd)"));
-                    BigDecimal price = userDataService.getBigDecimal("Please, enter the price at which you want to filter orders: ");
-                    List<CustomerOrderDto> listOfOrders = option12(dateFrom, dateTo, price);
-                    System.out.println(listOfOrders);
-                    break;
-                case 13:
-                    String customerName = userDataService.getString("Please, enter a customer name: ");
-                    String customerSurname = userDataService.getString("Please, enter a customer surname: ");
-                    String countryName = userDataService.getString("Please, enter a country name: ");
-                    List<ProductDto> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
-                    mapOfProductWithGivenCustomerGroupedByProducer.forEach(p -> System.out.println(p));
-                    break;
-                case 14:
-                    Map<CountryDto, List<String>> map = option14();
-                    System.out.println(map);
-                    break;
-                case 0:
-                    dbConnection.close();
-                    System.out.println("Bye Bye");
-                    return;
+                        Set<ProductDto> productWithSameGuaranteeComponents = option9(eGuaranteesForProductWithSameComponents);
+                        System.out.println(productWithSameGuaranteeComponents);
+                        break;
+                    case 10:
+                        List<ShopDto> shops = option10();
+                        break;
+                    case 11:
+                        String tradeName = userDataService.getString("Please, enter a trade name; ");
+                        Long quantity = (long) userDataService.getInt("Please, enter a quantity: ");
+                        List<ProducerDto> producers = option11(tradeName, quantity);
+                        System.out.println(producers);
+                        break;
+                    case 12:
+                        LocalDate dateFrom = LocalDate.parse(userDataService.getString("Please, enter start date: (FORMAT: YYYY-mm-dd)"));
+                        LocalDate dateTo = LocalDate.parse(userDataService.getString("Please, enter end date: (FORMAT: YYYY-mm-dd)"));
+                        BigDecimal price = userDataService.getBigDecimal("Please, enter the price at which you want to filter orders: ");
+                        List<CustomerOrderDto> listOfOrders = option12(dateFrom, dateTo, price);
+                        System.out.println(listOfOrders);
+                        break;
+                    case 13:
+                        String customerName = userDataService.getString("Please, enter a customer name: ");
+                        String customerSurname = userDataService.getString("Please, enter a customer surname: ");
+                        String countryName = userDataService.getString("Please, enter a country name: ");
+                        List<ProductDto> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
+                        mapOfProductWithGivenCustomerGroupedByProducer.forEach(p -> System.out.println(p));
+                        break;
+                    case 14:
+                        Map<CountryDto, List<String>> map = option14();
+                        System.out.println(map);
+                        break;
+                    case 0:
+                        dbConnection.close();
+                        System.out.println("Bye Bye");
+                        return;
+                }
+            } catch (MyException me) {
+                errorService.addError(me.getExceptionMessage().getExceptionCode().toString()+";" + me.getExceptionMessage().getMessage());
             }
         } while (true);
     }

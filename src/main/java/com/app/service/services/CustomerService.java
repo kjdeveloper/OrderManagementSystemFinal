@@ -2,6 +2,7 @@ package com.app.service.services;
 
 import com.app.dto.CountryDto;
 import com.app.dto.CustomerDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Country;
 import com.app.model.Customer;
@@ -29,7 +30,7 @@ public class CustomerService {
         final boolean exist = customerRepository.isExistByNameAndSurnameAndCountry(customerDto);
 
         if (exist) {
-            throw new MyException("CUSTOMER WITH GIVEN NAME, SURNAME AND COUNTRY IS ALREADY EXIST");
+            throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER WITH GIVEN NAME, SURNAME AND COUNTRY IS ALREADY EXIST");
         }
 
         Country country = countryRepository.findByName(customerDto.getCountryDto().getName()).orElse(null);
@@ -37,7 +38,7 @@ public class CustomerService {
         if (country == null) {
             countryValidator.validateCountry(customerDto.getCountryDto());
             country = Mappers.fromCountryDtoToCountry(customerDto.getCountryDto());
-            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException("CAN NOT ADD COUNTRY IN CUSTOMER SERVICE"));
+            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CAN NOT ADD COUNTRY IN CUSTOMER SERVICE"));
         }
 
         Customer customer = Mappers.fromCustomerDtoToCustomer(customerDto);

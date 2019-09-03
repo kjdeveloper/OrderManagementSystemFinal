@@ -1,6 +1,6 @@
 package com.app.repository.impl;
 
-import com.app.dto.StockDto;
+import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Stock;
 import com.app.repository.StockRepository;
@@ -41,7 +41,7 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException("STOCK FIND BY PRODUCT AND SHOP EXCEPTION ");
+            throw new MyException(ExceptionCode.STOCK, "STOCK FIND BY PRODUCT AND SHOP EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -74,7 +74,7 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
                 tx.rollback();
             }
             e.printStackTrace();
-            throw new MyException("SUM PRODUCT EXCEPTION ");
+            throw new MyException(ExceptionCode.STOCK, "SUM PRODUCT EXCEPTION ");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

@@ -2,6 +2,7 @@ package com.app.mainmenu;
 
 import com.app.dto.CountryDto;
 import com.app.dto.CustomerDto;
+import com.app.exceptions.MyException;
 import com.app.mainmenu.menu.MenuService;
 import com.app.model.enums.EGuarantee;
 import com.app.repository.CustomerOrderRepository;
@@ -21,18 +22,9 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) {
-        ErrorService errorService = new ErrorService();
 
         MenuService menuService = new MenuService();
-        try {
-            menuService.service();
-        }catch (Exception e){
-            e.printStackTrace();
-            errorService.addError(e.";"+e.getMessage());
-        }
-
-
-
+        menuService.service();
 
 
 

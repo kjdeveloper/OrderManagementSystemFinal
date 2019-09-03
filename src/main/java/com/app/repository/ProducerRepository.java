@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface ProducerRepository extends GenericRepository<Producer> {
     Optional<Producer> findByName(String producerName);
 
+    Optional<Producer> findByNameAndCountry(ProducerDto producerDto);
+
     boolean isExistByNameAndTradeAndCountry(ProducerDto producerDto);
 
     List<Producer> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity);
