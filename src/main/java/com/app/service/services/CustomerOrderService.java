@@ -2,12 +2,12 @@ package com.app.service.services;
 
 import com.app.dto.CustomerDto;
 import com.app.dto.CustomerOrderDto;
+import com.app.dto.ProducerDto;
 import com.app.dto.ProductDto;
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Customer;
 import com.app.model.CustomerOrder;
-import com.app.model.Producer;
 import com.app.model.Product;
 import com.app.repository.CustomerOrderRepository;
 import com.app.repository.CustomerRepository;
@@ -21,8 +21,8 @@ import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CustomerOrderValidator;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -74,16 +74,16 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
-    private BigDecimal productPriceAfterDiscount(CustomerOrder customerOrder) {
+    public BigDecimal productPriceAfterDiscount(CustomerOrder customerOrder) {
         if (customerOrder == null) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER IS NULL");
         }
 
         BigDecimal price = customerOrder.getProduct().getPrice();
-        BigDecimal discount = BigDecimal.valueOf(customerOrder.getDiscount());
+        BigDecimal discountPrice = price.multiply(BigDecimal.valueOf(customerOrder.getDiscount()));
         BigDecimal quantity = BigDecimal.valueOf(customerOrder.getQuantity());
 
-        return price.multiply(quantity).multiply(discount);
+        return price.subtract(discountPrice).multiply(quantity);
     }
 
 
@@ -101,14 +101,19 @@ public class CustomerOrderService {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO");
         }
 
-        return customerOrderRepository.findOrdersBetweenDatesAndGivenPrice(dateFrom, dateTo, price)
+        Date dateFromDb = Date.valueOf(dateFrom);
+        Date dateToDb = Date.valueOf(dateTo);
+
+        return customerOrderRepository.findAll()
                 .stream()
+                .filter(order -> order.getDate().compareTo(dateFromDb) > 0 && order.getDate().compareTo(dateToDb) < 0)
+                .filter(order1 -> productPriceAfterDiscount(order1).compareTo(price) > 0)
                 .map(Mappers::fromCustomerOrderToCustomerOrderDto)
                 .collect(Collectors.toList());
 
     }
 
-    public List<ProductDto> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName) {
+    public Map<ProducerDto, List<ProductDto>> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName) {
         if (customerName == null) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER NAME CAN NOT BE NULL");
         }
@@ -122,7 +127,7 @@ public class CustomerOrderService {
                 .stream()
                 .map(CustomerOrder::getProduct)
                 .map(Mappers::fromProductToProductDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(ProductDto::getProducerDto));
     }
 
 }

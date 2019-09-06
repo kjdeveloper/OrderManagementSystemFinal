@@ -1,6 +1,5 @@
 package com.app.repository;
 
-import com.app.dto.ShopDto;
 import com.app.model.Shop;
 import com.app.repository.generic.GenericRepository;
 

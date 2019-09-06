@@ -2,6 +2,7 @@ package com.app.mainmenu.menu;
 
 import com.app.dto.*;
 import com.app.exceptions.MyException;
+import com.app.model.Category;
 import com.app.model.enums.EGuarantee;
 import com.app.model.enums.EPayment;
 import com.app.repository.converters.*;
@@ -70,15 +71,17 @@ public class MenuService {
                 switch (action) {
                     case 1:
                         CustomerDto customerDto = option1();
-                        System.out.println(customerDtoConverter.toJson(customerDto) + "\n ADDED.");
+                        String jsonCustomerDto = customerDtoConverter.toJsonView(customerDto);
+                        customerDtoConverter.fromJson(jsonCustomerDto).ifPresent(p -> System.out.println(p.getName() +
+                                " " + p.getSurname()));
                         break;
                     case 2:
                         ShopDto shopDto = option2();
-                        System.out.println(shopDtoConverter.toJson(shopDto) + "\n ADDED.");
+                        System.out.println(shopDtoConverter.toJsonView(shopDto) + "\n ADDED.");
                         break;
                     case 3:
                         ProducerDto producerDto = option3();
-                        System.out.println(producerDtoConverter.toJson(producerDto) + "\n ADDED.");
+                        System.out.println(producerDtoConverter.toJsonView(producerDto) + "\n ADDED.");
                         break;
                     case 4:
                         Set<EGuarantee> eGuarantees = new HashSet<>(Arrays.asList(
@@ -86,11 +89,11 @@ public class MenuService {
                                 EGuarantee.SERVICE
                         ));
                         ProductDto productDtoAdded = option4(eGuarantees);
-                        System.out.println(productDtoConverter.toJson(productDtoAdded) + "\n ADDED.");
+                        System.out.println(productDtoConverter.toJsonView(productDtoAdded) + "\n ADDED.");
                         break;
                     case 5:
                         StockDto stockDto = option5();
-                        System.out.println(stockDtoConverter.toJson(stockDto) + "\n ADDED.");
+                        System.out.println(stockDtoConverter.toJsonView(stockDto) + "\n ADDED.");
                         break;
                     case 6:
                         Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
@@ -99,20 +102,14 @@ public class MenuService {
                         double discount = 0.75;
 
                         CustomerOrderDto customerOrderDto = option6(ePayments, discount);
-                        System.out.println(customerOrderDtoConverter.toJson(customerOrderDto));
+                        System.out.println(customerOrderDtoConverter.toJsonView(customerOrderDto));
                         break;
 
                     //============================DOWNLOAD DATA METHODS===============================
                     case 7:
-                        List<ProductDto> biggestPriceInEachCategory = option7();
-                        biggestPriceInEachCategory.forEach(p ->
-                                System.out.println(p.getName() +
-                                        ", price: " + p.getPrice() +
-                                        ", category: " + p.getCategoryDto().getName() +
-                                        ", producer: " + p.getProducerDto().getName() +
-                                        ", from " + p.getProducerDto().getCountryDto().getName() +
-                                        " ordered " + customerOrderService.customerOrdersWithSpecificProduct(p.getName()).size() + " times"
-                                ));
+                        LinkedHashMap<Category, Optional<ProductDto>> biggestPriceInEachCategory = option7();
+                        biggestPriceInEachCategory.forEach((k,v) -> System.out.println(k + " => " + v));
+
                         break;
                     case 8:
                         String country = userDataService.getString("Please, enter a name of country: ");
@@ -121,7 +118,7 @@ public class MenuService {
                         List<ProductDto> products = option8(country, ageFrom, ageTo);
 
                         for (ProductDto productDto : products) {
-                            System.out.println(productDtoConverter.toJson(productDto));
+                            System.out.println(productDtoConverter.toJsonView(productDto));
                         }
                         products.forEach(productDto -> System.out.println(productDto.getName() +
                                 ", price: " + productDto.getPrice() +
@@ -135,8 +132,10 @@ public class MenuService {
                                 EGuarantee.SERVICE
                         ));
 
-                        Set<ProductDto> productWithSameGuaranteeComponents = option9(eGuaranteesForProductWithSameComponents);
-                        System.out.println(productWithSameGuaranteeComponents);
+                        List<ProductDto> productWithSameGuaranteeComponents = option9(eGuaranteesForProductWithSameComponents);
+                        for (ProductDto product: productWithSameGuaranteeComponents) {
+                            System.out.println(product);
+                        };
                         break;
                     case 10:
                         List<ShopDto> shops = option10();
@@ -152,14 +151,14 @@ public class MenuService {
                         LocalDate dateTo = LocalDate.parse(userDataService.getString("Please, enter end date: (FORMAT: YYYY-mm-dd)"));
                         BigDecimal price = userDataService.getBigDecimal("Please, enter the price at which you want to filter orders: ");
                         List<CustomerOrderDto> listOfOrders = option12(dateFrom, dateTo, price);
-                        System.out.println(listOfOrders);
+                        listOfOrders.forEach(System.out::println);
                         break;
                     case 13:
                         String customerName = userDataService.getString("Please, enter a customer name: ");
                         String customerSurname = userDataService.getString("Please, enter a customer surname: ");
                         String countryName = userDataService.getString("Please, enter a country name: ");
-                        List<ProductDto> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
-                        mapOfProductWithGivenCustomerGroupedByProducer.forEach(p -> System.out.println(p));
+                        Map<ProducerDto, List<ProductDto>> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
+                        mapOfProductWithGivenCustomerGroupedByProducer.forEach((k,v) -> System.out.println(k + " => " + v));
                         break;
                     case 14:
                         Map<CountryDto, List<String>> map = option14();
@@ -300,7 +299,7 @@ public class MenuService {
     }
 
 
-    private List<ProductDto> option7() {
+    private LinkedHashMap<Category, Optional<ProductDto>> option7() {
         return productService.findProductsWithBiggestPriceInCategory();
     }
 
@@ -308,7 +307,7 @@ public class MenuService {
         return productService.findAllProductsFromSpecificCountryBetweenCustomerAges(country, ageTo, ageFrom);
     }
 
-    private Set<ProductDto> option9(Set<EGuarantee> eGuarantees) {
+    private List<ProductDto> option9(Set<EGuarantee> eGuarantees) {
         return productService.findAllProductsWithGivenGuarantees(eGuarantees);
     }
 
@@ -324,7 +323,7 @@ public class MenuService {
         return customerOrderService.findOrdersBetweenDatesAndGivenPrice(dateFrom, dateTo, price);
     }
 
-    private List<ProductDto> option13(String customerName, String customerSurname, String countryName) {
+    private Map<ProducerDto, List<ProductDto>> option13(String customerName, String customerSurname, String countryName) {
         return customerOrderService.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 

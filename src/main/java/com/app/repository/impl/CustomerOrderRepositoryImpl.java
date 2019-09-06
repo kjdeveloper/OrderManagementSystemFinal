@@ -21,50 +21,6 @@ import java.util.stream.Collectors;
 
 public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<CustomerOrder> implements CustomerOrderRepository {
 
-
-    @Override
-    public List<CustomerOrder> findOrdersBetweenDatesAndGivenPrice(LocalDate dateFrom, LocalDate dateTo, BigDecimal price) {
-
-        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
-        Date dateFromDb = Date.valueOf(dateFrom);
-        Date dateToDb = Date.valueOf(dateTo);
-
-        List<CustomerOrder> customerOrders = null;
-        EntityManager entityManager = null;
-        EntityTransaction tx = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            tx = entityManager.getTransaction();
-
-            tx.begin();
-
-            customerOrders = entityManager
-                    .createQuery("SELECT cs " +
-                            "FROM CustomerOrder  cs " +
-                            "WHERE cs.date BETWEEN :dateFrom AND :dateTo " +
-                            "AND (cs.product.price - (cs.product.price * cs.discount)) > :price", CustomerOrder.class)
-                    .setParameter("dateFrom", dateFromDb)
-                    .setParameter("dateTo", dateToDb)
-                    .setParameter("price", price.doubleValue())
-                    .getResultList();
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER EXCEPTION ");
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-
-        return customerOrders;
-    }
-
     @Override
     public List<CustomerOrder> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName) {
 

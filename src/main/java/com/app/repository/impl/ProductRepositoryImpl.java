@@ -101,41 +101,6 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
     }
 
     @Override
-    public List<Product> findProductsWithBiggestPriceInCategory() {
-        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
-        List<Product> products = null;
-        EntityManager entityManager = null;
-        EntityTransaction tx = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            tx = entityManager.getTransaction();
-
-            tx.begin();
-
-            products = entityManager
-                    .createQuery("SELECT p " +
-                            "FROM Product p " +
-                            "GROUP BY p.category.name " +
-                            "ORDER BY p.price DESC", Product.class)
-                    .getResultList();
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT WITH BIGGEST PRICE EXCEPTION");
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-
-        return products;
-    }
-
-    @Override
     public List<Product> findAllProductsFromSpecificCountryBetweenCustomerAges(String countryName, int ageFrom, int ageTo) {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
         List<Product> products = null;
@@ -174,41 +139,4 @@ public class ProductRepositoryImpl extends AbstractGenericRepository<Product> im
         }
         return products;
     }
-
-    @Override
-    public List<Product> findAllProductsWithGivenGuarantees(Set<EGuarantee> eGuarantees) {
-        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
-        List<Product> products = null;
-        EntityManager entityManager = null;
-        EntityTransaction tx = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            tx = entityManager.getTransaction();
-
-            tx.begin();
-
-            products = entityManager
-                    .createQuery("SELECT p.eGuarantees " +
-                            "FROM Product p " +
-                            "WHERE :eGuarantees MEMBER OF p.eGuarantees", Product.class)
-                    .setParameter("eGuarantees", eGuarantees)
-                    .getResultList();
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT WITH GUARANTEES EXCEPTION");
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-
-        return products;
-    }
-
-
 }

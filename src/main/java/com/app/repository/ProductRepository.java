@@ -16,9 +16,6 @@ public interface ProductRepository extends GenericRepository<Product> {
 
     boolean isExistByNameAndCategoryAndProducer(ProductDto productDTO);
 
-    List<Product> findProductsWithBiggestPriceInCategory();
-
     List<Product> findAllProductsFromSpecificCountryBetweenCustomerAges(String countryName, int ageFrom, int ageTo);
 
-    List<Product> findAllProductsWithGivenGuarantees(Set<EGuarantee> eGuarantees);
 }

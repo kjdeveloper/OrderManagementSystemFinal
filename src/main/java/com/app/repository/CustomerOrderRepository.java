@@ -12,7 +12,5 @@ import java.util.List;
 
 public interface CustomerOrderRepository extends GenericRepository<CustomerOrder> {
 
-    List<CustomerOrder> findOrdersBetweenDatesAndGivenPrice(LocalDate dateFrom, LocalDate dateTo, BigDecimal price);
-
     List<CustomerOrder> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName);
 }

@@ -22,8 +22,7 @@ import com.app.validation.impl.CategoryValidator;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ProductValidator;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProductService {
@@ -77,11 +76,22 @@ public class ProductService {
         return Mappers.fromProductToProductDto(product);
     }
 
-    public List<ProductDto> findProductsWithBiggestPriceInCategory() {
-        return productRepository.findProductsWithBiggestPriceInCategory()
+    public LinkedHashMap<Category, Optional<ProductDto>> findProductsWithBiggestPriceInCategory() {
+        return productRepository.findAll()
                 .stream()
-                .map(Mappers::fromProductToProductDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(Product::getCategory, Collectors.toList()))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        products -> products
+                                .getValue()
+                                .stream()
+                                .map(Mappers::fromProductToProductDto)
+                                .max(Comparator.comparing(ProductDto::getPrice)),
+                        (k, v) -> k,
+                        LinkedHashMap::new
+                ));
     }
 
     public List<ProductDto> findAllProductsFromSpecificCountryBetweenCustomerAges(String country, int ageFrom, int ageTo) {
@@ -102,14 +112,15 @@ public class ProductService {
 
     }
 
-    public Set<ProductDto> findAllProductsWithGivenGuarantees(Set<EGuarantee> eGuarantees) {
+    public List<ProductDto> findAllProductsWithGivenGuarantees(Set<EGuarantee> eGuarantees) {
         if (eGuarantees == null) {
             throw new MyException(ExceptionCode.EGUARANTEES, "GUARANTEES CAN NOT BE NULL");
         }
 
-        return productRepository.findAllProductsWithGivenGuarantees(eGuarantees)
+        return productRepository.findAll()
                 .stream()
+                .filter(prGuarantees -> prGuarantees.getEGuarantees().containsAll(eGuarantees))
                 .map(Mappers::fromProductToProductDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }
