@@ -64,9 +64,18 @@ public class ProducerService {
     }
 
     public List<ProducerDto> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
+        return producerRepository.findAll()
+                .stream()
+                .filter(pro -> pro.getTrade().getName().equals(tradeName) &&
+                        pro.getProducts().size() > quantity)
+                .map(Mappers::fromProducerToProducerDto)
+                .collect(Collectors.toList());
+    }
+
+    /*public List<ProducerDto> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
         return producerRepository.findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(tradeName, quantity)
                 .stream()
                 .map(Mappers::fromProducerToProducerDto)
                 .collect(Collectors.toList());
-    }
+    }*/
 }

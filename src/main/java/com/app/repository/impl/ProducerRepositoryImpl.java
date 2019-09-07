@@ -141,7 +141,12 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
             tx.begin();
 
             producers = entityManager
-                    .createQuery("", Producer.class)
+                    .createQuery("SELECT p " +
+                            "FROM Producer p " +
+                            "WHERE p.trade.name = :tradeName " +
+                            "AND size(p.products) > :quantity", Producer.class)
+                    .setParameter("tradeName", tradeName)
+                    .setParameter("quantity", quantity)
                     .getResultList();
 
             tx.commit();

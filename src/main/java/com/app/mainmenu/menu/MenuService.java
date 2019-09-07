@@ -161,7 +161,7 @@ public class MenuService {
                         mapOfProductWithGivenCustomerGroupedByProducer.forEach((k,v) -> System.out.println(k + " => " + v));
                         break;
                     case 14:
-                        Map<CountryDto, List<String>> map = option14();
+                        List<CustomerOrderDto> map = option14();
                         System.out.println(map);
                         break;
                     case 0:
@@ -327,7 +327,7 @@ public class MenuService {
         return customerOrderService.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 
-    private Map<CountryDto, List<String>> option14() {
+    private List<CustomerOrderDto> option14() {
         return customerService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
 
