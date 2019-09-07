@@ -86,12 +86,12 @@ public class CustomerService {
                 .collect(Collectors.teeing)
               }*/
 
-    /*public List<CustomerOrderDto> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
+    public List<CustomerOrderDto> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
 
         return customerOrderRepository.findAll()
                 .stream()
                 .filter(custOrd -> custOrd.getCustomer().getCountry().getName().equals(custOrd.getProduct().getProducer().getCountry().getName()))
                 .map(Mappers::fromCustomerOrderToCustomerOrderDto)
                 .collect(Collectors.toList());
-    }*/
+    }
 }

@@ -164,6 +164,9 @@ public class MenuService {
                         List<CustomerOrderDto> map = option14();
                         System.out.println(map);
                         break;
+                    case 15:
+                        option15();
+                        break;
                     case 0:
                         dbConnection.close();
                         System.out.println("Bye Bye");
@@ -331,4 +334,14 @@ public class MenuService {
         return customerService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
 
+    private void option15(){
+        String table = errorService.getTheMostErrorCausedTable();
+        String message = errorService.getTheMostErrorMessage();
+        String date = errorService.getTheMostErrorDate();
+
+        System.out.println("\nTable " + table + " generated the most errors." +
+                "\n" + message + " is the message of the error that appeared most often." +
+                "\n" + date + " is the date for which the most errors occurred.");
+
+    }
 }

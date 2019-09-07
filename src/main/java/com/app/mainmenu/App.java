@@ -13,6 +13,7 @@ import com.app.repository.impl.CustomerOrderRepositoryImpl;
 import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.repository.impl.ShopRepositoryImpl;
 import com.app.service.services.CustomerOrderService;
+import com.app.service.services.ErrorService;
 import com.app.service.services.ProductService;
 
 import java.math.BigDecimal;
