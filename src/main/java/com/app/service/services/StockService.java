@@ -54,9 +54,7 @@ public class StockService {
         Stock stock = stockRepository.findStockByProductAndShop(productName, shopName)
                 .orElse(null);
         product.setEGuarantees(new HashSet<>());
-        //gdzie tu w stworzyc obiekt StockDto -> czy jest potrzebny
-        //lazily initialize eguarantees...
-        //dodaje prawidłowo
+
         if (stock == null){
             stock = Stock.builder()
                     .product(product)

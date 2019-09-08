@@ -9,6 +9,7 @@ import com.app.exceptions.MyException;
 import com.app.model.Customer;
 import com.app.model.CustomerOrder;
 import com.app.model.Product;
+import com.app.model.Stock;
 import com.app.repository.CustomerOrderRepository;
 import com.app.repository.CustomerRepository;
 import com.app.repository.ProductRepository;

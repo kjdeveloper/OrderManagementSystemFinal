@@ -27,14 +27,16 @@ public class MenuService {
     private final StockService stockService = new StockService();
     private final ErrorService errorService = new ErrorService();
 
-    private final CategoryDtoConverter categoryDtoConverter = new CategoryDtoConverter();
     private final CustomerDtoConverter customerDtoConverter = new CustomerDtoConverter();
     private final CustomerOrderDtoConverter customerOrderDtoConverter = new CustomerOrderDtoConverter();
     private final ProducerDtoConverter producerDtoConverter = new ProducerDtoConverter();
     private final ProductDtoConverter productDtoConverter = new ProductDtoConverter();
     private final ShopDtoConverter shopDtoConverter = new ShopDtoConverter();
     private final StockDtoConverter stockDtoConverter = new StockDtoConverter();
-    private final TradeDtoConverter tradeDtoConverter = new TradeDtoConverter();
+    private final ProductsDtoConverter productsDtoConverter = new ProductsDtoConverter();
+    private final ShopsDtoConverter shopsDtoConverter = new ShopsDtoConverter();
+    private final ProducersDtoConverter producersDtoConverter = new ProducersDtoConverter();
+    private final CustomerOrdersDtoConverter customerOrdersDtoConverter = new CustomerOrdersDtoConverter();
 
     public MenuService() {
     }
@@ -71,17 +73,15 @@ public class MenuService {
                 switch (action) {
                     case 1:
                         CustomerDto customerDto = option1();
-                        String jsonCustomerDto = customerDtoConverter.toJsonView(customerDto);
-                        customerDtoConverter.fromJson(jsonCustomerDto).ifPresent(p -> System.out.println(p.getName() +
-                                " " + p.getSurname()));
+                        System.out.println(customerDtoConverter.toJsonView(customerDto) + "\nADDED.");
                         break;
                     case 2:
                         ShopDto shopDto = option2();
-                        System.out.println(shopDtoConverter.toJsonView(shopDto) + "\n ADDED.");
+                        System.out.println(shopDtoConverter.toJsonView(shopDto) + "\nADDED.");
                         break;
                     case 3:
                         ProducerDto producerDto = option3();
-                        System.out.println(producerDtoConverter.toJsonView(producerDto) + "\n ADDED.");
+                        System.out.println(producerDtoConverter.toJsonView(producerDto) + "\nADDED.");
                         break;
                     case 4:
                         Set<EGuarantee> eGuarantees = new HashSet<>(Arrays.asList(
@@ -89,11 +89,11 @@ public class MenuService {
                                 EGuarantee.SERVICE
                         ));
                         ProductDto productDtoAdded = option4(eGuarantees);
-                        System.out.println(productDtoConverter.toJsonView(productDtoAdded) + "\n ADDED.");
+                        System.out.println(productDtoConverter.toJsonView(productDtoAdded) + "\nADDED.");
                         break;
                     case 5:
                         StockDto stockDto = option5();
-                        System.out.println(stockDtoConverter.toJsonView(stockDto) + "\n ADDED.");
+                        System.out.println(stockDtoConverter.toJsonView(stockDto) + "\nADDED.");
                         break;
                     case 6:
                         Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
@@ -102,13 +102,13 @@ public class MenuService {
                         double discount = 0.75;
 
                         CustomerOrderDto customerOrderDto = option6(ePayments, discount);
-                        System.out.println(customerOrderDtoConverter.toJsonView(customerOrderDto));
+                        System.out.println(customerOrderDtoConverter.toJsonView(customerOrderDto) + "\nADDED.");
                         break;
 
                     //============================DOWNLOAD DATA METHODS===============================
                     case 7:
                         LinkedHashMap<Category, Optional<ProductDto>> biggestPriceInEachCategory = option7();
-                        biggestPriceInEachCategory.forEach((k,v) -> System.out.println(k + " => " + v));
+                        biggestPriceInEachCategory.forEach((k,v) -> System.out.println(k + " => " + productDtoConverter.toJsonView(v.get())));
 
                         break;
                     case 8:
@@ -117,14 +117,8 @@ public class MenuService {
                         int ageTo = userDataService.getInt("Please, enter a maximum age for the customers you want to see: ");
                         List<ProductDto> products = option8(country, ageFrom, ageTo);
 
-                        for (ProductDto productDto : products) {
-                            System.out.println(productDtoConverter.toJsonView(productDto));
-                        }
-                        products.forEach(productDto -> System.out.println(productDto.getName() +
-                                ", price: " + productDto.getPrice() +
-                                ", category: " + productDto.getCategoryDto().getName() +
-                                ", producer: " + productDto.getProducerDto().getName() +
-                                ", from: " + productDto.getProducerDto().getCountryDto().getName()));
+                        System.out.println(productsDtoConverter.toJsonView(products));
+
                         break;
                     case 9:
                         Set<EGuarantee> eGuaranteesForProductWithSameComponents = new HashSet<>(Arrays.asList(
@@ -133,36 +127,35 @@ public class MenuService {
                         ));
 
                         List<ProductDto> productWithSameGuaranteeComponents = option9(eGuaranteesForProductWithSameComponents);
-                        for (ProductDto product: productWithSameGuaranteeComponents) {
-                            System.out.println(product);
-                        };
+                            System.out.println(productsDtoConverter.toJsonView(productWithSameGuaranteeComponents));
                         break;
                     case 10:
                         List<ShopDto> shops = option10();
+                        System.out.println(shopsDtoConverter.toJsonView(shops));
                         break;
                     case 11:
                         String tradeName = userDataService.getString("Please, enter a trade name; ");
                         Long quantity = (long) userDataService.getInt("Please, enter a quantity: ");
                         List<ProducerDto> producers = option11(tradeName, quantity);
-                        System.out.println(producers);
+                        System.out.println(producersDtoConverter.toJsonView(producers));
                         break;
                     case 12:
                         LocalDate dateFrom = LocalDate.parse(userDataService.getString("Please, enter start date: (FORMAT: YYYY-mm-dd)"));
                         LocalDate dateTo = LocalDate.parse(userDataService.getString("Please, enter end date: (FORMAT: YYYY-mm-dd)"));
                         BigDecimal price = userDataService.getBigDecimal("Please, enter the price at which you want to filter orders: ");
                         List<CustomerOrderDto> listOfOrders = option12(dateFrom, dateTo, price);
-                        listOfOrders.forEach(System.out::println);
+                        System.out.println(customerOrdersDtoConverter.toJsonView(listOfOrders));
                         break;
                     case 13:
                         String customerName = userDataService.getString("Please, enter a customer name: ");
                         String customerSurname = userDataService.getString("Please, enter a customer surname: ");
                         String countryName = userDataService.getString("Please, enter a country name: ");
                         Map<ProducerDto, List<ProductDto>> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
-                        mapOfProductWithGivenCustomerGroupedByProducer.forEach((k,v) -> System.out.println(k + " => " + v));
+                        mapOfProductWithGivenCustomerGroupedByProducer.forEach((k,v) -> System.out.println(producerDtoConverter.toJsonView(k) + " => " + productsDtoConverter.toJsonView(v)));
                         break;
                     case 14:
-                        List<CustomerOrderDto> map = option14();
-                        System.out.println(map);
+                        List<CustomerOrderDto> customerOrderDtoList = option14();
+                        System.out.println(customerOrdersDtoConverter.toJsonView(customerOrderDtoList));
                         break;
                     case 15:
                         option15();
