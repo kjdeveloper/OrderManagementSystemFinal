@@ -6,7 +6,6 @@ import com.app.exceptions.MyException;
 
 import java.math.BigDecimal;
 
-import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
 
 public class ProductValidator {
 

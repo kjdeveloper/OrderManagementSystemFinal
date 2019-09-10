@@ -6,12 +6,11 @@ import com.app.exceptions.MyException;
 
 import java.util.Map;
 
-import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
 
 public class CountryValidator{
 
     public void validateCountry(final CountryDto countryDto){
-        if (isNullOrEmpty(countryDto.getName())){
+        if (countryDto == null){
             throw new MyException(ExceptionCode.COUNTRY, "COUNTRY CAN NOT BE NULL OR EMPTY");
         }
         if (!isNameValid(countryDto)){

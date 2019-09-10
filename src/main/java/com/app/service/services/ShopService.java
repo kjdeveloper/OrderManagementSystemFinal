@@ -1,18 +1,23 @@
 package com.app.service.services;
 
+import com.app.dto.CountryDto;
+import com.app.dto.ProductDto;
 import com.app.dto.ShopDto;
+import com.app.dto.StockDto;
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
-import com.app.model.Country;
-import com.app.model.Shop;
+import com.app.model.*;
 import com.app.repository.CountryRepository;
 import com.app.repository.ShopRepository;
+import com.app.repository.StockRepository;
 import com.app.repository.impl.CountryRepositoryImpl;
 import com.app.repository.impl.ShopRepositoryImpl;
+import com.app.repository.impl.StockRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ShopValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +27,7 @@ public class ShopService {
     private final ShopValidator shopValidator = new ShopValidator();
     private final CountryValidator countryValidator = new CountryValidator();
     private final CountryRepository countryRepository = new CountryRepositoryImpl();
+    private final StockRepository stockRepository = new StockRepositoryImpl();
 
     public ShopDto addShop(final ShopDto shopDTO) {
         shopValidator.validateShop(shopDTO);
@@ -49,10 +55,15 @@ public class ShopService {
         return Mappers.fromShopToShopDto(shop);
     }
 
+
+/*
     public List<ShopDto> findAllShopsWithProductsWithCountryDifferentThanShopCountry() {
-        return shopRepository.findAllShopsWithProductsWithCountryDifferentThanShopCountry()
+                stock
+        return shopRepository.findAll()
                 .stream()
                 .map(Mappers::fromShopToShopDto)
+                .flatMap(s -> new ArrayList<>(getAllProductsFromStocks(s.getId())))
+                .map(ProductDto::getName)
                 .collect(Collectors.toList());
-    }
+    }*/
 }

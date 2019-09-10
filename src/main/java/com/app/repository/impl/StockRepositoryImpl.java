@@ -10,6 +10,7 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 import java.util.Optional;
 
 public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implements StockRepository {
@@ -82,4 +83,5 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
         }
         return counter;
     }
+
 }

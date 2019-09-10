@@ -4,12 +4,10 @@ import com.app.dto.ProducerDto;
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 
-import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
-
 public class ProducerValidator {
 
     public void validateProducer(final ProducerDto producerDto){
-        if (isNullOrEmpty(producerDto.getName())){
+        if (producerDto == null){
             throw new MyException(ExceptionCode.PRODUCER, "FIELDS CAN NOT BE NULL OR EMPTY");
         }
         if (!isNameValid(producerDto)){

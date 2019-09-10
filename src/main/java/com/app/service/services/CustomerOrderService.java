@@ -56,9 +56,12 @@ public class CustomerOrderService {
                 .findByName(productDto.getName())
                 .orElseThrow(() -> new MyException(ExceptionCode.PRODUCT, "PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
 
-        if (stockRepository.countProduct(product.getId()) < customerOrderDto.getQuantity()) {
+        int countProduct = stockRepository.countProduct(product.getId());
+
+        if (countProduct < customerOrderDto.getQuantity()) {
             throw new MyException(ExceptionCode.PRODUCT, "Unfortunately, we do not have " + product.getName() + " in an equal amount " + customerOrderDto.getQuantity());
         }
+
 
         customerOrder.setCustomer(customer);
         customerOrder.setProduct(product);
@@ -66,16 +69,7 @@ public class CustomerOrderService {
         return Mappers.fromCustomerOrderToCustomerOrderDto(customerOrder);
     }
 
-
-    public List<Product> customerOrdersWithSpecificProduct(String product) {
-        return customerOrderRepository.findAll()
-                .stream()
-                .map(CustomerOrder::getProduct)
-                .filter(pro -> pro.getName().equals(product))
-                .collect(Collectors.toList());
-    }
-
-    public BigDecimal productPriceAfterDiscount(CustomerOrder customerOrder) {
+    private BigDecimal productPriceAfterDiscount(CustomerOrder customerOrder) {
         if (customerOrder == null) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER IS NULL");
         }

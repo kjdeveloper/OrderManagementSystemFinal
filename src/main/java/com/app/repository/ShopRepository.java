@@ -11,5 +11,4 @@ public interface ShopRepository extends GenericRepository<Shop> {
 
     boolean isExistByShopAndCountry(String shopName, String countryName);
 
-    List<Shop> findAllShopsWithProductsWithCountryDifferentThanShopCountry();
 }

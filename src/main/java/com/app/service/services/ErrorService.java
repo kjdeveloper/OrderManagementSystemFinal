@@ -60,7 +60,7 @@ public class ErrorService {
                 .map(Mappers::fromErrorToErrorDto)
                 .collect(Collectors.groupingBy(error -> error.getDate()
                         .toString()
-                        .split("T")[0], Collectors.counting()))
+                        .split("[A-Z]")[0], Collectors.counting()))
                 .entrySet()
                 .stream()
                 .max(Map.Entry.comparingByValue())

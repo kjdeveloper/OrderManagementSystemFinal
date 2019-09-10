@@ -76,14 +76,14 @@ public class ProductService {
         return Mappers.fromProductToProductDto(product);
     }
 
-    public LinkedHashMap<Category, Optional<ProductDto>> findProductsWithBiggestPriceInCategory() {
+    public LinkedHashMap<CategoryDto, Optional<ProductDto>> findProductsWithBiggestPriceInCategory() {
         return productRepository.findAll()
                 .stream()
                 .collect(Collectors.groupingBy(Product::getCategory, Collectors.toList()))
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
-                        Map.Entry::getKey,
+                        k -> Mappers.fromCategoryToCategoryDto(k.getKey()),
                         products -> products
                                 .getValue()
                                 .stream()

@@ -1,6 +1,5 @@
 package com.app.service.services;
 
-import com.app.dto.ProductDto;
 import com.app.dto.StockDto;
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
@@ -43,16 +42,12 @@ public class StockService {
         Product product = productRepository.findByName(productName)
                 .orElseThrow(() -> new MyException(ExceptionCode.PRODUCT, "PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
 
-        /*próbowałem juz zmapowac z jednaj na drugą ale nie pomaga
-        ProductDto productDto = Mappers.fromProductToProductDto(product);
-        product = Mappers.fromProductDtoToProduct(productDto);
-       */
-
         Shop shop = shopRepository.findByName(shopName)
                 .orElseThrow(() -> new MyException(ExceptionCode.SHOP, "SHOP WAS NOT FOUND. PLEASE ADD SHOP FIRST"));
 
         Stock stock = stockRepository.findStockByProductAndShop(productName, shopName)
                 .orElse(null);
+
         product.setEGuarantees(new HashSet<>());
 
         if (stock == null){

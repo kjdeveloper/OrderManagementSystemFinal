@@ -6,12 +6,11 @@ import com.app.exceptions.MyException;
 
 import java.util.Map;
 
-import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
 
 public class CategoryValidator {
 
     public void validateCategory(CategoryDto categoryDto){
-        if (isNullOrEmpty(categoryDto.getName())){
+        if (categoryDto == null){
             throw new MyException(ExceptionCode.CATEGORY, "CATEGORY CAN NOT BE NULL OR EMPTY");
         }
         if (!isNameValid(categoryDto)){

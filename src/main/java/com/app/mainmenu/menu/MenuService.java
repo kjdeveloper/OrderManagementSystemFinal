@@ -2,7 +2,6 @@ package com.app.mainmenu.menu;
 
 import com.app.dto.*;
 import com.app.exceptions.MyException;
-import com.app.model.Category;
 import com.app.model.enums.EGuarantee;
 import com.app.model.enums.EPayment;
 import com.app.repository.converters.*;
@@ -37,6 +36,8 @@ public class MenuService {
     private final ShopsDtoConverter shopsDtoConverter = new ShopsDtoConverter();
     private final ProducersDtoConverter producersDtoConverter = new ProducersDtoConverter();
     private final CustomerOrdersDtoConverter customerOrdersDtoConverter = new CustomerOrdersDtoConverter();
+    private final CategoryDtoConverter categoryDtoConverter = new CategoryDtoConverter();
+    private final CustomersDtoConverter customersDtoConverter = new CustomersDtoConverter();
 
     public MenuService() {
     }
@@ -107,8 +108,8 @@ public class MenuService {
 
                     //============================DOWNLOAD DATA METHODS===============================
                     case 7:
-                        LinkedHashMap<Category, Optional<ProductDto>> biggestPriceInEachCategory = option7();
-                        biggestPriceInEachCategory.forEach((k,v) -> System.out.println(k + " => " + productDtoConverter.toJsonView(v.get())));
+                        LinkedHashMap<CategoryDto, Optional<ProductDto>> biggestPriceInEachCategory = option7();
+                        biggestPriceInEachCategory.forEach((k,v) -> System.out.println(categoryDtoConverter.toJsonView(k) + " => " + productDtoConverter.toJsonView(v.get())));
 
                         break;
                     case 8:
@@ -154,8 +155,8 @@ public class MenuService {
                         mapOfProductWithGivenCustomerGroupedByProducer.forEach((k,v) -> System.out.println(producerDtoConverter.toJsonView(k) + " => " + productsDtoConverter.toJsonView(v)));
                         break;
                     case 14:
-                        List<CustomerOrderDto> customerOrderDtoList = option14();
-                        System.out.println(customerOrdersDtoConverter.toJsonView(customerOrderDtoList));
+                        Set<CustomerDto> customerDtoList = option14();
+                        System.out.println(customersDtoConverter.toJsonView(customerDtoList));
                         break;
                     case 15:
                         option15();
@@ -295,7 +296,7 @@ public class MenuService {
     }
 
 
-    private LinkedHashMap<Category, Optional<ProductDto>> option7() {
+    private LinkedHashMap<CategoryDto, Optional<ProductDto>> option7() {
         return productService.findProductsWithBiggestPriceInCategory();
     }
 
@@ -308,7 +309,7 @@ public class MenuService {
     }
 
     private List<ShopDto> option10() {
-        return shopService.findAllShopsWithProductsWithCountryDifferentThanShopCountry();
+        return new ArrayList<>();
     }
 
     private List<ProducerDto> option11(String tradeName, Long quantity) {
@@ -323,7 +324,7 @@ public class MenuService {
         return customerOrderService.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 
-    private List<CustomerOrderDto> option14() {
+    private Set<CustomerDto> option14() {
         return customerService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
 

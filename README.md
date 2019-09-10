@@ -6,7 +6,7 @@ The project was made in order to gain practice in technologies learned during th
 The program was written in Java language version 8. To make everything work properly, You need to import the project from my profile on github.
 
 <h3>Used technologies:</h3>
-<p>•	Java8
+<p>•	Java12
 <p>•	Maven
 <p>•	Junit5
 <p>•	Gson

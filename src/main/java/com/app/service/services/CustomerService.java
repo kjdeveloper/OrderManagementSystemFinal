@@ -51,47 +51,16 @@ public class CustomerService {
         return Mappers.fromCustomerToCustomerDto(customer);
     }
 
-
-    /*
-            people
-                    .stream()
-                    .collect(
-            Collectors.teeing(
-            Collectors.filtering(PersonService::doesLikeProgramming, Collectors.toList()),
-            Collectors.filtering(PersonService::isAdult, Collectors.toList()),
-    PersonService::mergePeople
-                        )).forEach(System.out::println);*/
-
-    private List<CustomerDto> findCustomersWhoOrderedProductWithSameCountryAsTheir1(){
-        return customerOrderRepository.findAll()
-                .stream()
-                .filter(custOrd -> custOrd.getCustomer().getCountry().getName().equals(custOrd.getProduct().getProducer().getCountry().getName()))
-                .map(Mappers::fromCustomerOrderToCustomerOrderDto)
-                .map(CustomerOrderDto::getCustomerDto)
-                .collect(Collectors.toList());
+    private int getQuantityOfProductWithDifferentCountry(CustomerDto customerDto){
+        return 0;
     }
 
-    private List<CustomerDto> findCustomersWhoOrderedProductWithDifferentCountryAsTheir1(){
+    public Set<CustomerDto> findCustomersWhoOrderedProductWithSameCountryAsTheir(){
         return customerOrderRepository.findAll()
                 .stream()
-                .filter(custOrd -> !custOrd.getCustomer().getCountry().getName().equals(custOrd.getProduct().getProducer().getCountry().getName()))
                 .map(Mappers::fromCustomerOrderToCustomerOrderDto)
+                .filter(custOrd -> custOrd.getCustomerDto().getCountryDto().getName().equals(custOrd.getProductDto().getProducerDto().getCountryDto().getName()))
                 .map(CustomerOrderDto::getCustomerDto)
-                .collect(Collectors.toList());
-    }
-
-/*    private List<CustomerDto> findCustomersWhoOrderedProductWithSameCountryAsTheir(){
-        return customerOrderRepository.findAll()
-                .stream()
-                .collect(Collectors.teeing)
-              }*/
-
-    public List<CustomerOrderDto> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
-
-        return customerOrderRepository.findAll()
-                .stream()
-                .filter(custOrd -> custOrd.getCustomer().getCountry().getName().equals(custOrd.getProduct().getProducer().getCountry().getName()))
-                .map(Mappers::fromCustomerOrderToCustomerOrderDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

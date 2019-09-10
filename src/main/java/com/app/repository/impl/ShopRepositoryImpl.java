@@ -87,39 +87,4 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
         }
         return false;
     }
-
-    @Override
-    public List<Shop> findAllShopsWithProductsWithCountryDifferentThanShopCountry() {
-        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
-        List<Shop> shops = null;
-        EntityManager entityManager = null;
-        EntityTransaction tx = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            tx = entityManager.getTransaction();
-
-            tx.begin();
-
-            shops = entityManager
-                    .createQuery("select s, st " +
-                            "from Shop s " +
-                            "LEFT JOIN s.stocks st", Shop.class)
-                    .getResultList();
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-            throw new MyException(ExceptionCode.SHOP, "SHOP FIND ALL WITH DIFFERENT COUNTRY EXCEPTION ");
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-
-        return shops;
-    }
 }
