@@ -18,6 +18,8 @@ public interface StockRepository extends GenericRepository<Stock> {
 
     List<Producer> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity);
 
-    List<Stock> findShopWithSpecificProduct(Long productId);
+    List<Shop> findShopWithDifferentCountryThanProductInShop();
+
+    List<Stock> findStocksWithSpecificProduct(Long productId);
 
 }

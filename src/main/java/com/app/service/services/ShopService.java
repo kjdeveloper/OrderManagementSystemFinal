@@ -55,15 +55,10 @@ public class ShopService {
         return Mappers.fromShopToShopDto(shop);
     }
 
-
-/*
     public List<ShopDto> findAllShopsWithProductsWithCountryDifferentThanShopCountry() {
-                stock
-        return shopRepository.findAll()
+        return stockRepository.findShopWithDifferentCountryThanProductInShop()
                 .stream()
                 .map(Mappers::fromShopToShopDto)
-                .flatMap(s -> new ArrayList<>(getAllProductsFromStocks(s.getId())))
-                .map(ProductDto::getName)
                 .collect(Collectors.toList());
-    }*/
+    }
 }

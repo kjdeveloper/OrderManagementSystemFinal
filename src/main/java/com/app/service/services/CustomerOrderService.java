@@ -20,7 +20,6 @@ import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.repository.impl.StockRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CustomerOrderValidator;
-import jdk.swing.interop.SwingInterOpUtils;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -28,6 +27,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CustomerOrderService {
@@ -65,7 +65,7 @@ public class CustomerOrderService {
             throw new MyException(ExceptionCode.PRODUCT, "UNFORTUNATELY, WE DO NOT HAVE " + product.getName() + " IN AN EQUAL AMOUNT " + customerOrderDto.getQuantity());
         }
 
-        List<Stock> stocksWithSpecificProductId = stockRepository.findShopWithSpecificProduct(product.getId())
+        List<Stock> stocksWithSpecificProductId = stockRepository.findStocksWithSpecificProduct(product.getId())
                 .stream()
                 .sorted(Comparator.comparing(Stock::getQuantity).reversed())
                 .collect(Collectors.toList());
@@ -104,26 +104,26 @@ public class CustomerOrderService {
     }
 
 
-    public List<CustomerOrderDto> findOrdersBetweenDatesAndGivenPrice(LocalDate dateFrom, LocalDate dateTo, BigDecimal price) {
-        if (dateFrom == null) {
+    public List<CustomerOrderDto> findOrdersBetweenDatesAndGivenPrice(LocalDate customerDateFrom, LocalDate customerDateTo, BigDecimal price) {
+        if (customerDateFrom == null) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CAN NOT BE NULL");
         }
-        if (dateTo == null) {
+        if (customerDateTo == null) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "FINISH DATE CAN NOT BE NULL");
         }
-        if (dateFrom.compareTo(dateTo) > 0) {
+        if (customerDateFrom.compareTo(customerDateTo) > 0) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CAN NOT BE AFTER FINISH DATE");
         }
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO");
         }
 
-        Date dateFromDb = Date.valueOf(dateFrom);
-        Date dateToDb = Date.valueOf(dateTo);
+        Date dateFrom = Date.valueOf(customerDateFrom);
+        Date dateTo = Date.valueOf(customerDateTo);
 
         return customerOrderRepository.findAll()
                 .stream()
-                .filter(order -> order.getDate().compareTo(dateFromDb) >= 0 && order.getDate().compareTo(dateToDb) <= 0)
+                .filter(order -> dateFrom.compareTo(order.getDate()) <= 0 && dateTo.compareTo(order.getDate()) >= 0)
                 .peek(s -> System.out.println(s))
                 .filter(order1 -> productPriceAfterDiscount(order1).compareTo(price) > 0)
                 .map(Mappers::fromCustomerOrderToCustomerOrderDto)
@@ -148,11 +148,11 @@ public class CustomerOrderService {
                 .collect(Collectors.groupingBy(ProductDto::getProducerDto));
     }
 
-    public List<CustomerDto> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
+    public Set<CustomerDto> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
         return customerOrderRepository.findCustomersWhoOrderedProductWithSameCountryAsTheir()
                 .stream()
                 .map(Mappers::fromCustomerToCustomerDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
 }

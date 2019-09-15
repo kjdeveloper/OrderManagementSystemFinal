@@ -153,7 +153,7 @@ public class MenuService {
                         mapOfProductWithGivenCustomerGroupedByProducer.forEach((k,v) -> System.out.println(producerDtoConverter.toJsonView(k) + " => " + productsDtoConverter.toJsonView(v)));
                         break;
                     case 14:
-                        List<CustomerDto> customerDtoList = option14();
+                        Set<CustomerDto> customerDtoList = option14();
                         System.out.println(customersDtoConverter.toJsonView(customerDtoList));
                         break;
                     case 15:
@@ -165,6 +165,8 @@ public class MenuService {
                         return;
                 }
             } catch (MyException me) {
+                System.out.println("====================================================");
+                System.out.println(me.getExceptionMessage());
                 errorService.addError(me.getExceptionMessage().getExceptionCode().toString()+";" + me.getExceptionMessage().getMessage());
             }
         } while (true);
@@ -307,7 +309,7 @@ public class MenuService {
     }
 
     private List<ShopDto> option10() {
-        return new ArrayList<>();
+        return shopService.findAllShopsWithProductsWithCountryDifferentThanShopCountry();
     }
 
     private List<ProducerDto> option11(String tradeName, Long quantity) {
@@ -322,7 +324,7 @@ public class MenuService {
         return customerOrderService.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 
-    private List<CustomerDto> option14() {
+    private Set<CustomerDto> option14() {
         return customerOrderService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
 

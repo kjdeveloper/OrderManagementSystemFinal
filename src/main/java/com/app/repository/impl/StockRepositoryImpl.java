@@ -124,10 +124,10 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
     }
 
     @Override
-    public List<Stock> findShopWithSpecificProduct(Long productId) {
+    public List<Shop> findShopWithDifferentCountryThanProductInShop() {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
-        List<Stock> shops = null;
+        List<Shop> shops = null;
         EntityManager entityManager = null;
         EntityTransaction tx = null;
         try {
@@ -137,6 +137,37 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
             tx.begin();
 
             shops = entityManager
+                    .createQuery("select s.shop from Stock s WHERE s.product.producer.country <> s.shop.country")
+                    .getResultList();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new MyException(ExceptionCode.STOCK, "STOCK FIND BY PRODUCT AND SHOP EXCEPTION ");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return shops;
+    }
+
+    @Override
+    public List<Stock> findStocksWithSpecificProduct(Long productId) {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        List<Stock> stocks = null;
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            stocks = entityManager
                     .createQuery("select s from Stock s WHERE s.product.id =:productId")
                     .setParameter("productId", productId)
                     .getResultList();
@@ -152,6 +183,6 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
                 entityManager.close();
             }
         }
-        return shops;
+        return stocks;
     }
 }
