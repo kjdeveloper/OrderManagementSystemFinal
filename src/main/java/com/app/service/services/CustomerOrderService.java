@@ -20,10 +20,12 @@ import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.repository.impl.StockRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CustomerOrderValidator;
+import jdk.swing.interop.SwingInterOpUtils;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,12 +59,32 @@ public class CustomerOrderService {
                 .orElseThrow(() -> new MyException(ExceptionCode.PRODUCT, "PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
 
         int countProduct = stockRepository.countProduct(product.getId());
+        System.out.println(countProduct);
 
         if (countProduct < customerOrderDto.getQuantity()) {
-            throw new MyException(ExceptionCode.PRODUCT, "Unfortunately, we do not have " + product.getName() + " in an equal amount " + customerOrderDto.getQuantity());
+            throw new MyException(ExceptionCode.PRODUCT, "UNFORTUNATELY, WE DO NOT HAVE " + product.getName() + " IN AN EQUAL AMOUNT " + customerOrderDto.getQuantity());
         }
 
+        List<Stock> stocksWithSpecificProductId = stockRepository.findShopWithSpecificProduct(product.getId())
+                .stream()
+                .sorted(Comparator.comparing(Stock::getQuantity).reversed())
+                .collect(Collectors.toList());
 
+        int givenValueOfProductToBuy = customerOrderDto.getQuantity();
+
+        if (stocksWithSpecificProductId.get(0).getQuantity() - givenValueOfProductToBuy < 0) {
+            Stock stock1 = stocksWithSpecificProductId.get(0);
+            int quantityFromAnotherShop = givenValueOfProductToBuy - stocksWithSpecificProductId.get(0).getQuantity();
+            Stock stock2 = stocksWithSpecificProductId.get(1);
+            stock1.setQuantity(0);
+            stockRepository.addOrUpdate(stock1);
+            stock2.setQuantity(stock2.getQuantity() - quantityFromAnotherShop);
+            stockRepository.addOrUpdate(stock2);
+        } else {
+            Stock stock1 = stocksWithSpecificProductId.get(0);
+            stock1.setQuantity(stock1.getQuantity() - givenValueOfProductToBuy);
+            stockRepository.addOrUpdate(stock1);
+        }
         customerOrder.setCustomer(customer);
         customerOrder.setProduct(product);
         customerOrderRepository.addOrUpdate(customerOrder);
@@ -89,7 +111,7 @@ public class CustomerOrderService {
         if (dateTo == null) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "FINISH DATE CAN NOT BE NULL");
         }
-        if (dateFrom.compareTo(dateTo) >= 0) {
+        if (dateFrom.compareTo(dateTo) > 0) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CAN NOT BE AFTER FINISH DATE");
         }
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
@@ -101,7 +123,8 @@ public class CustomerOrderService {
 
         return customerOrderRepository.findAll()
                 .stream()
-                .filter(order -> order.getDate().compareTo(dateFromDb) > 0 && order.getDate().compareTo(dateToDb) < 0)
+                .filter(order -> order.getDate().compareTo(dateFromDb) >= 0 && order.getDate().compareTo(dateToDb) <= 0)
+                .peek(s -> System.out.println(s))
                 .filter(order1 -> productPriceAfterDiscount(order1).compareTo(price) > 0)
                 .map(Mappers::fromCustomerOrderToCustomerOrderDto)
                 .collect(Collectors.toList());
@@ -123,6 +146,13 @@ public class CustomerOrderService {
                 .map(CustomerOrder::getProduct)
                 .map(Mappers::fromProductToProductDto)
                 .collect(Collectors.groupingBy(ProductDto::getProducerDto));
+    }
+
+    public List<CustomerDto> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
+        return customerOrderRepository.findCustomersWhoOrderedProductWithSameCountryAsTheir()
+                .stream()
+                .map(Mappers::fromCustomerToCustomerDto)
+                .collect(Collectors.toList());
     }
 
 }

@@ -2,6 +2,8 @@ package com.app.repository.impl;
 
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
+import com.app.model.Producer;
+import com.app.model.Shop;
 import com.app.model.Stock;
 import com.app.repository.StockRepository;
 import com.app.repository.generic.AbstractGenericRepository;
@@ -10,8 +12,10 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implements StockRepository {
 
@@ -84,4 +88,70 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
         return counter;
     }
 
+    @Override
+    public List<Producer> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        List producers = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            producers = entityManager
+                    .createQuery("SELECT producer, SUM(stock.quantity) AS q " +
+                            "FROM Stock stock JOIN stock.product product JOIN product.producer producer JOIN producer.trade trade " +
+                            "GROUP BY (producer) HAVING q > :value AND trade.name =:tradeValue")
+                    .setParameter("value", quantity)
+                    .setParameter("tradeValue", tradeName)
+                    .getResultList();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+            throw new MyException(ExceptionCode.STOCK, "PRODUCER WITH GIVEN BRAND AND BIGGER QUANTITY PRODUCED THAN GIVEN EXCEPTION");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return producers;
+    }
+
+    @Override
+    public List<Stock> findShopWithSpecificProduct(Long productId) {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        List<Stock> shops = null;
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            shops = entityManager
+                    .createQuery("select s from Stock s WHERE s.product.id =:productId")
+                    .setParameter("productId", productId)
+                    .getResultList();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new MyException(ExceptionCode.STOCK, "STOCK FIND BY PRODUCT AND SHOP EXCEPTION ");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return shops;
+    }
 }

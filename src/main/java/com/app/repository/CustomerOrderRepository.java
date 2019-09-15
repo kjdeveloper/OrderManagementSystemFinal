@@ -13,4 +13,6 @@ import java.util.List;
 public interface CustomerOrderRepository extends GenericRepository<CustomerOrder> {
 
     List<CustomerOrder> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName);
+
+    List<Customer> findCustomersWhoOrderedProductWithSameCountryAsTheir();
 }

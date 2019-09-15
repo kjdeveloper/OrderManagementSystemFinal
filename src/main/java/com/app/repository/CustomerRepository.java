@@ -13,6 +13,4 @@ public interface CustomerRepository extends GenericRepository<Customer> {
     Optional<Customer> findBySurname(String surname);
 
     boolean isExistByNameAndSurnameAndCountry(CustomerDto customerDTO);
-
-    List<Customer> findCustomersWhoOrderedProductWithSameCountryAsTheir();
 }

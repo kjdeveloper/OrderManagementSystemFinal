@@ -123,38 +123,4 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
         }
         return false;
     }
-
-    @Override
-    public List<Customer> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
-        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
-        List<Customer> customers = null;
-
-        EntityManager entityManager = null;
-        EntityTransaction tx = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            tx = entityManager.getTransaction();
-
-            tx.begin();
-
-            customers = entityManager
-                    .createQuery("SELECT c FROM Customer c ", Customer.class)
-                    .getResultList();
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER FIND BY NAME AND SURNAME AND COUNTRY EXCEPTION");
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-        return customers;
-    }
-
-
 }

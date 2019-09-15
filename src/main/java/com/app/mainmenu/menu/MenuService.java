@@ -98,10 +98,9 @@ public class MenuService {
                         break;
                     case 6:
                         Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
-                                EPayment.CASH, EPayment.CARD
+                                EPayment.CASH, EPayment.CARD, EPayment.MONEY_TRANSFER
                         ));
-                        double discount = 0.75;
-
+                        double discount = 0.6;
                         CustomerOrderDto customerOrderDto = option6(ePayments, discount);
                         System.out.println(customerOrderDtoConverter.toJsonView(customerOrderDto) + "\nADDED.");
                         break;
@@ -123,8 +122,7 @@ public class MenuService {
                         break;
                     case 9:
                         Set<EGuarantee> eGuaranteesForProductWithSameComponents = new HashSet<>(Arrays.asList(
-                                EGuarantee.EXCHANGE,
-                                EGuarantee.SERVICE
+                                EGuarantee.EXCHANGE, EGuarantee.SERVICE
                         ));
 
                         List<ProductDto> productWithSameGuaranteeComponents = option9(eGuaranteesForProductWithSameComponents);
@@ -155,7 +153,7 @@ public class MenuService {
                         mapOfProductWithGivenCustomerGroupedByProducer.forEach((k,v) -> System.out.println(producerDtoConverter.toJsonView(k) + " => " + productsDtoConverter.toJsonView(v)));
                         break;
                     case 14:
-                        Set<CustomerDto> customerDtoList = option14();
+                        List<CustomerDto> customerDtoList = option14();
                         System.out.println(customersDtoConverter.toJsonView(customerDtoList));
                         break;
                     case 15:
@@ -324,8 +322,8 @@ public class MenuService {
         return customerOrderService.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName);
     }
 
-    private Set<CustomerDto> option14() {
-        return customerService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
+    private List<CustomerDto> option14() {
+        return customerOrderService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
 
     private void option15(){

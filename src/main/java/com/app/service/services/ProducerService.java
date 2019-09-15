@@ -7,9 +7,11 @@ import com.app.exceptions.MyException;
 import com.app.model.*;
 import com.app.repository.CountryRepository;
 import com.app.repository.ProducerRepository;
+import com.app.repository.StockRepository;
 import com.app.repository.TradeRepository;
 import com.app.repository.impl.CountryRepositoryImpl;
 import com.app.repository.impl.ProducerRepositoryImpl;
+import com.app.repository.impl.StockRepositoryImpl;
 import com.app.repository.impl.TradeRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
@@ -21,12 +23,13 @@ import java.util.stream.Collectors;
 
 public class ProducerService {
 
-    private ProducerRepository producerRepository = new ProducerRepositoryImpl();
-    private ProducerValidator producerValidator = new ProducerValidator();
-    private TradeValidator tradeValidator = new TradeValidator();
-    private CountryValidator countryValidator = new CountryValidator();
-    private CountryRepository countryRepository = new CountryRepositoryImpl();
-    private TradeRepository tradeRepository = new TradeRepositoryImpl();
+    private final ProducerRepository producerRepository = new ProducerRepositoryImpl();
+    private final ProducerValidator producerValidator = new ProducerValidator();
+    private final TradeValidator tradeValidator = new TradeValidator();
+    private final CountryValidator countryValidator = new CountryValidator();
+    private final CountryRepository countryRepository = new CountryRepositoryImpl();
+    private final TradeRepository tradeRepository = new TradeRepositoryImpl();
+    private final StockRepository stockRepository = new StockRepositoryImpl();
 
     public ProducerDto addProducer(ProducerDto producerDTO) {
         producerValidator.validateProducer(producerDTO);
@@ -64,18 +67,9 @@ public class ProducerService {
     }
 
     public List<ProducerDto> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
-        return producerRepository.findAll()
+        return stockRepository.findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(tradeName, quantity)
                 .stream()
-                .filter(pro -> pro.getTrade().getName().equals(tradeName) &&
-                        pro.getProducts().size() > quantity)
                 .map(Mappers::fromProducerToProducerDto)
                 .collect(Collectors.toList());
     }
-
-    /*public List<ProducerDto> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
-        return producerRepository.findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(tradeName, quantity)
-                .stream()
-                .map(Mappers::fromProducerToProducerDto)
-                .collect(Collectors.toList());
-    }*/
 }

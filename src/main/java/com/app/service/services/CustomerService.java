@@ -50,17 +50,4 @@ public class CustomerService {
 
         return Mappers.fromCustomerToCustomerDto(customer);
     }
-
-    private int getQuantityOfProductWithDifferentCountry(CustomerDto customerDto){
-        return 0;
-    }
-
-    public Set<CustomerDto> findCustomersWhoOrderedProductWithSameCountryAsTheir(){
-        return customerOrderRepository.findAll()
-                .stream()
-                .map(Mappers::fromCustomerOrderToCustomerOrderDto)
-                .filter(custOrd -> custOrd.getCustomerDto().getCountryDto().getName().equals(custOrd.getProductDto().getProducerDto().getCountryDto().getName()))
-                .map(CustomerOrderDto::getCustomerDto)
-                .collect(Collectors.toSet());
-    }
 }

@@ -126,41 +126,4 @@ public class ProducerRepositoryImpl extends AbstractGenericRepository<Producer> 
 
         return producer;
     }
-
-    @Override
-    public List<Producer> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity) {
-        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
-
-        List<Producer> producers = null;
-        EntityManager entityManager = null;
-        EntityTransaction tx = null;
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            tx = entityManager.getTransaction();
-
-            tx.begin();
-
-            producers = entityManager
-                    .createQuery("SELECT p " +
-                            "FROM Producer p " +
-                            "WHERE p.trade.name = :tradeName " +
-                            "AND size(p.products) > :quantity", Producer.class)
-                    .setParameter("tradeName", tradeName)
-                    .setParameter("quantity", quantity)
-                    .getResultList();
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            throw new MyException(ExceptionCode.PRODUCER, "PRODUCER WITH GIVEN BRAND AND BIGGER QUANTITY EXCEPTION ");
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-
-        return producers;
-    }
 }

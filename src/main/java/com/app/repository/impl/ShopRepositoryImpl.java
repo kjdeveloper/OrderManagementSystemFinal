@@ -87,4 +87,6 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
         }
         return false;
     }
+
+
 }

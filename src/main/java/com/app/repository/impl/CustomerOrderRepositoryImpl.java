@@ -2,6 +2,7 @@ package com.app.repository.impl;
 
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
+import com.app.model.Customer;
 import com.app.model.CustomerOrder;
 import com.app.model.Product;
 import com.app.repository.CustomerOrderRepository;
@@ -60,5 +61,39 @@ public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<Custo
         }
 
         return products;
+    }
+
+    @Override
+    public List<Customer> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
+
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+
+        List customers = null;
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            customers = entityManager
+                    .createQuery("SELECT customer FROM CustomerOrder customerOrder JOIN customerOrder.customer customer JOIN customer.country customerCountry " +
+                            "JOIN customerOrder.product product JOIN product.producer producer JOIN producer.country producerCountry WHERE customerCountry.id = producerCountry.id")
+                    .getResultList();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER EXCEPTION ");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+
+        return customers;
     }
 }

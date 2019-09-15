@@ -13,6 +13,4 @@ public interface ProducerRepository extends GenericRepository<Producer> {
     Optional<Producer> findByNameAndCountry(ProducerDto producerDto);
 
     boolean isExistByNameAndTradeAndCountry(ProducerDto producerDto);
-
-    List<Producer> findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(String tradeName, Long quantity);
 }
