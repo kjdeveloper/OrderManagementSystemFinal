@@ -1,5 +1,7 @@
 package com.app.repository;
 
+import com.app.dto.CountryDto;
+import com.app.dto.CustomerDto;
 import com.app.model.Customer;
 import com.app.model.CustomerOrder;
 import com.app.model.Product;
@@ -15,4 +17,6 @@ public interface CustomerOrderRepository extends GenericRepository<CustomerOrder
     List<CustomerOrder> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName);
 
     List<Customer> findCustomersWhoOrderedProductWithSameCountryAsTheir();
+
+    int findQuantityOfProductsOrderedWithDifferentCountryThanCustomer(Long id);
 }

@@ -14,7 +14,7 @@ public class UserDataService {
         System.out.println(message);
         String text = sc.nextLine();
         if (!text.matches("\\d+")) {
-            throw new MyException(ExceptionCode.USER_DATA_SERVICE, "INVALID OPTION NUMBER");
+            throw new MyException(ExceptionCode.USER_DATA_SERVICE, "INVALID NUMBER");
         }
         return Integer.parseInt(text);
     }
@@ -23,7 +23,7 @@ public class UserDataService {
         System.out.println(message);
         String text = sc.nextLine();
         if (!text.matches("\\d+")){
-            throw new MyException(ExceptionCode.USER_DATA_SERVICE, "INVALID BIGDECIMAL PRICE");
+            throw new MyException(ExceptionCode.USER_DATA_SERVICE, "INVALID BIG DECIMAL PRICE");
         }
         return new BigDecimal(text.replaceAll(",", ""));
     }

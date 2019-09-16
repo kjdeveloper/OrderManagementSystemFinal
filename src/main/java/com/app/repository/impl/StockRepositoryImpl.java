@@ -12,6 +12,7 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +94,7 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
         EntityManager entityManager = null;
         EntityTransaction tx = null;
-        List producers = null;
+        List<Producer> producers = null;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             tx = entityManager.getTransaction();
@@ -101,11 +102,12 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
             tx.begin();
 
             producers = entityManager
-                    .createQuery("SELECT producer, SUM(stock.quantity) AS q " +
-                            "FROM Stock stock JOIN stock.product product JOIN product.producer producer JOIN producer.trade trade " +
-                            "GROUP BY (producer) HAVING q > :value AND trade.name =:tradeValue")
-                    .setParameter("value", quantity)
+                    .createQuery("SELECT producer " +
+                            "FROM Stock stock JOIN stock.product product JOIN product.producer producer JOIN producer.trade trade WHERE trade.name =: tradeValue " +
+                            "GROUP BY (producer.id) " +
+                            "HAVING SUM( stock.quantity ) > :quantity ", Producer.class)
                     .setParameter("tradeValue", tradeName)
+                    .setParameter("quantity", quantity)
                     .getResultList();
 
             tx.commit();

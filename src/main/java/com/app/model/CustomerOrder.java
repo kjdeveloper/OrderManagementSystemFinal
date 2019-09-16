@@ -4,7 +4,7 @@ import com.app.model.enums.EPayment;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +19,7 @@ public class CustomerOrder {
     @Id
     @GeneratedValue
     private Long id;
-    private Timestamp date;
+    private LocalDateTime date;
     @Column(columnDefinition = "DECIMAL(2,1)")
     private Double discount;
     private int quantity;

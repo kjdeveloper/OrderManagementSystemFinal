@@ -45,24 +45,25 @@ public class MenuService {
     private void menu() {
         System.out.println("\nMENU");
         System.out.println("\n=========== Adding methods ==============");
-        System.out.println("1. Add new customer");
-        System.out.println("2. Add new shop");
-        System.out.println("3. Add new producer");
-        System.out.println("4. Add new product");
-        System.out.println("5. Add new position in stock");
-        System.out.println("6. Add new customer order");
+        System.out.println("1. Add new customer.");
+        System.out.println("2. Add new shop.");
+        System.out.println("3. Add new producer.");
+        System.out.println("4. Add new product.");
+        System.out.println("5. Add new position in stock.");
+        System.out.println("6. Add new customer order.");
         System.out.println("\n=========== Downloads methods ===========");
-        System.out.println("7. Get products with biggest price in each category");
-        System.out.println("8. Get products with the same country as given and age range");
-        System.out.println("9. Get products with same guarantees as given ");
-        System.out.println("10. Get shops with products from different country than shop");
-        System.out.println("11. Get producers with given trade name and more products produced than specified by the user");
-        System.out.println("12. Get orders from a specified period of time and total price greater than that given by the user");
-        System.out.println("13. Get products by customer name, surname and country. Grouped by producers");
-        System.out.println("14. Get customers which ordered at least one product produced in the same country as the customer. " +
-                "additionally display all the product from different country than customer country");
+        System.out.println("7. Get products with biggest price in each category.");
+        System.out.println("8. Get products with the same country as given and age range.");
+        System.out.println("9. Get products with same guarantees as given.");
+        System.out.println("10. Get shops with products from different country than shop.");
+        System.out.println("11. Get producers with given trade name and more products produced than specified by the user.");
+        System.out.println("12. Get orders from a specified period of time and total price greater than that given by the user.");
+        System.out.println("13. Get products by customer name, surname and country. Grouped by producers.");
+        System.out.println("14. Get customers which ordered at least one product produced in the same country as the customer " +
+                "additionally display all the product from different country than customer country.");
+        System.out.println("15. Error statistics.");
         System.out.println("=========================================");
-        System.out.println("0. EXIT");
+        System.out.println("0. EXIT.");
     }
 
     public void service() {
@@ -135,7 +136,7 @@ public class MenuService {
                     case 11:
                         String tradeName = userDataService.getString("Please, enter a trade name; ");
                         Long quantity = (long) userDataService.getInt("Please, enter a quantity: ");
-                        List<ProducerDto> producers = option11(tradeName, quantity);
+                        Set<ProducerDto> producers = option11(tradeName, quantity);
                         System.out.println(producersDtoConverter.toJsonView(producers));
                         break;
                     case 12:
@@ -154,7 +155,10 @@ public class MenuService {
                         break;
                     case 14:
                         Set<CustomerDto> customerDtoList = option14();
-                        System.out.println(customersDtoConverter.toJsonView(customerDtoList));
+
+                        for (CustomerDto c: customerDtoList) {
+                            System.out.println( c + " => " + customerOrderService.getProductQuantityWithDifferentCountry(c.getId()));
+                        }
                         break;
                     case 15:
                         option15();
@@ -166,7 +170,7 @@ public class MenuService {
                 }
             } catch (MyException me) {
                 System.out.println("====================================================");
-                System.out.println(me.getExceptionMessage());
+                System.out.println(me.getExceptionMessage().getMessage());
                 errorService.addError(me.getExceptionMessage().getExceptionCode().toString()+";" + me.getExceptionMessage().getMessage());
             }
         } while (true);
@@ -312,7 +316,7 @@ public class MenuService {
         return shopService.findAllShopsWithProductsWithCountryDifferentThanShopCountry();
     }
 
-    private List<ProducerDto> option11(String tradeName, Long quantity) {
+    private Set<ProducerDto> option11(String tradeName, Long quantity) {
         return producerService.findProducerWithGivenBrandAndTheBiggerQuantityProducedThanGiven(tradeName, quantity);
     }
 

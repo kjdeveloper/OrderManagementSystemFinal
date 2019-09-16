@@ -3,8 +3,8 @@ package com.app.repository.converters;
 import com.app.dto.ShopDto;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Collection;
 
 @NoArgsConstructor
-public class ShopsDtoConverter extends JsonConverter<List<ShopDto>> {
+public class ShopsDtoConverter extends JsonConverter<Collection<ShopDto>> {
 }

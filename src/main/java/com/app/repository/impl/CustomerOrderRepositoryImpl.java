@@ -1,10 +1,10 @@
 package com.app.repository.impl;
 
+import com.app.dto.CustomerDto;
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Customer;
 import com.app.model.CustomerOrder;
-import com.app.model.Product;
 import com.app.repository.CustomerOrderRepository;
 import com.app.repository.generic.AbstractGenericRepository;
 import com.app.repository.generic.DbConnection;
@@ -12,13 +12,7 @@ import com.app.repository.generic.DbConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<CustomerOrder> implements CustomerOrderRepository {
 
@@ -93,7 +87,39 @@ public class CustomerOrderRepositoryImpl extends AbstractGenericRepository<Custo
                 entityManager.close();
             }
         }
-
         return customers;
+    }
+
+    @Override
+    public int findQuantityOfProductsOrderedWithDifferentCountryThanCustomer(Long id) {
+        EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
+        EntityManager entityManager = null;
+        EntityTransaction tx = null;
+        int counter = 0;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            tx = entityManager.getTransaction();
+
+            tx.begin();
+
+            counter = entityManager
+                    .createQuery("select sum(co.quantity) from CustomerOrder co join co.product.producer.country prod_country join co.customer.country cust_country where co.customer.id = :id and prod_country.id != cust_country.id", Long.class)
+                    .setParameter("id", id)
+                    .getSingleResult()
+                    .intValue();
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "SUM PRODUCT EXCEPTION IN CUSTOMER ORDER");
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return counter;
     }
 }

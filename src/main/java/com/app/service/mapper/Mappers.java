@@ -70,7 +70,7 @@ public interface Mappers {
     static CustomerOrderDto fromCustomerOrderToCustomerOrderDto(CustomerOrder customerOrder) {
         return customerOrder == null ? null : CustomerOrderDto.builder()
                 .id(customerOrder.getId())
-                .date((customerOrder.getDate().toLocalDateTime()))
+                .date(customerOrder.getDate())
                 .discount(customerOrder.getDiscount())
                 .quantity(customerOrder.getQuantity())
                 .customerDto(customerOrder.getCustomer() == null ? null : fromCustomerToCustomerDto(customerOrder.getCustomer()))
@@ -82,7 +82,7 @@ public interface Mappers {
     static CustomerOrder fromCustomerOrderDtoToCustomerOrder(CustomerOrderDto customerOrderDTO) {
         return customerOrderDTO == null ? null : CustomerOrder.builder()
                 .id(customerOrderDTO.getId())
-                .date(Timestamp.valueOf(customerOrderDTO.getDate()))
+                .date(customerOrderDTO.getDate())
                 .discount(customerOrderDTO.getDiscount())
                 .quantity(customerOrderDTO.getQuantity())
                 .customer(customerOrderDTO.getCustomerDto() == null ? null : fromCustomerDtoToCustomer(customerOrderDTO.getCustomerDto()))

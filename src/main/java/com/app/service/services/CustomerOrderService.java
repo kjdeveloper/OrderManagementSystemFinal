@@ -24,6 +24,7 @@ import com.app.validation.impl.CustomerOrderValidator;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -118,12 +119,9 @@ public class CustomerOrderService {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO");
         }
 
-        Date dateFrom = Date.valueOf(customerDateFrom);
-        Date dateTo = Date.valueOf(customerDateTo);
-
         return customerOrderRepository.findAll()
                 .stream()
-                .filter(order -> dateFrom.compareTo(order.getDate()) <= 0 && dateTo.compareTo(order.getDate()) >= 0)
+                .filter(order -> LocalDate.of(order.getDate().getYear(), order.getDate().getMonth(), order.getDate().getDayOfMonth()).compareTo(customerDateFrom)  >= 0 && LocalDate.of(order.getDate().getYear(), order.getDate().getMonth(), order.getDate().getDayOfMonth()).compareTo(customerDateTo) <= 0)
                 .peek(s -> System.out.println(s))
                 .filter(order1 -> productPriceAfterDiscount(order1).compareTo(price) > 0)
                 .map(Mappers::fromCustomerOrderToCustomerOrderDto)
@@ -149,10 +147,13 @@ public class CustomerOrderService {
     }
 
     public Set<CustomerDto> findCustomersWhoOrderedProductWithSameCountryAsTheir() {
-        return customerOrderRepository.findCustomersWhoOrderedProductWithSameCountryAsTheir()
+        return  customerOrderRepository.findCustomersWhoOrderedProductWithSameCountryAsTheir()
                 .stream()
                 .map(Mappers::fromCustomerToCustomerDto)
                 .collect(Collectors.toSet());
+    }
+    public int getProductQuantityWithDifferentCountry(Long id){
+        return customerOrderRepository.findQuantityOfProductsOrderedWithDifferentCountryThanCustomer(id);
     }
 
 }
