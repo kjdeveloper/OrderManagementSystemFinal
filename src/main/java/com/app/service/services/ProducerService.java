@@ -35,17 +35,17 @@ public class ProducerService {
     public ProducerDto addProducer(ProducerDto producerDTO) {
         producerValidator.validateProducer(producerDTO);
 
-        final boolean exist = producerRepository.isExistByNameAndTradeAndCountry(producerDTO);
+        final var exist = producerRepository.isExistByNameAndTradeAndCountry(producerDTO);
 
         if (exist) {
             throw new MyException(ExceptionCode.PRODUCER, "PRODUCER WITH GIVEN NAME, TRADE AND COUNTRY EXIST");
         }
 
-        TradeDto tradeDto = producerDTO.getTradeDto();
+        var tradeDto = producerDTO.getTradeDto();
 
-        Producer producer = producerRepository.findByName(producerDTO.getName()).orElse(null);
-        Country country = countryRepository.findByName(producerDTO.getCountryDto().getName()).orElse(null);
-        Trade trade = tradeRepository.findByName(tradeDto.getName()).orElse(null);
+        var producer = producerRepository.findByName(producerDTO.getName()).orElse(null);
+        var country = countryRepository.findByName(producerDTO.getCountryDto().getName()).orElse(null);
+        var trade = tradeRepository.findByName(tradeDto.getName()).orElse(null);
 
         if (country == null){
             countryValidator.validateCountry(producerDTO.getCountryDto());

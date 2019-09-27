@@ -17,7 +17,7 @@ public class CategoryService {
     public CategoryDto addCategory(CategoryDto categoryDTO) {
         categoryValidator.validateCategory(categoryDTO);
 
-        Category category = categoryRepository.findByName(categoryDTO.getName()).orElse(null);
+        var category = categoryRepository.findByName(categoryDTO.getName()).orElse(null);
 
         if (category == null){
             category = Mappers.fromCategoryDtoToCategory(categoryDTO);

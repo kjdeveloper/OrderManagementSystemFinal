@@ -74,15 +74,15 @@ public class MenuService {
                 action = userDataService.getInt("Choose option: ");
                 switch (action) {
                     case 1:
-                        CustomerDto customerDto = option1();
+                        var customerDto = option1();
                         System.out.println(customerDtoConverter.toJsonView(customerDto) + "\nADDED.");
                         break;
                     case 2:
-                        ShopDto shopDto = option2();
+                        var shopDto = option2();
                         System.out.println(shopDtoConverter.toJsonView(shopDto) + "\nADDED.");
                         break;
                     case 3:
-                        ProducerDto producerDto = option3();
+                        var producerDto = option3();
                         System.out.println(producerDtoConverter.toJsonView(producerDto) + "\nADDED.");
                         break;
                     case 4:
@@ -90,32 +90,31 @@ public class MenuService {
                                 EGuarantee.EXCHANGE,
                                 EGuarantee.SERVICE
                         ));
-                        ProductDto productDtoAdded = option4(eGuarantees);
+                        var productDtoAdded = option4(eGuarantees);
                         System.out.println(productDtoConverter.toJsonView(productDtoAdded) + "\nADDED.");
                         break;
                     case 5:
-                        StockDto stockDto = option5();
+                        var stockDto = option5();
                         System.out.println(stockDtoConverter.toJsonView(stockDto) + "\nADDED.");
                         break;
                     case 6:
                         Set<EPayment> ePayments = new HashSet<>(Arrays.asList(
                                 EPayment.CASH, EPayment.CARD, EPayment.MONEY_TRANSFER
                         ));
-                        double discount = 0.6;
-                        CustomerOrderDto customerOrderDto = option6(ePayments, discount);
+                        var discount = 0.6;
+                        var customerOrderDto = option6(ePayments, discount);
                         System.out.println(customerOrderDtoConverter.toJsonView(customerOrderDto) + "\nADDED.");
                         break;
 
                     //============================DOWNLOAD DATA METHODS===============================
                     case 7:
                         LinkedHashMap<CategoryDto, Optional<ProductDto>> biggestPriceInEachCategory = option7();
-                        biggestPriceInEachCategory.forEach((k,v) -> System.out.println(categoryDtoConverter.toJsonView(k) + " => " + productDtoConverter.toJsonView(v.get())));
-
+                        biggestPriceInEachCategory.forEach((k, v) -> System.out.println(categoryDtoConverter.toJsonView(k) + " => " + productDtoConverter.toJsonView(v.get())));
                         break;
                     case 8:
-                        String country = userDataService.getString("Please, enter a name of country: ");
-                        int ageFrom = userDataService.getInt("Please, enter a minimum age for the customers you want to see: ");
-                        int ageTo = userDataService.getInt("Please, enter a maximum age for the customers you want to see: ");
+                        var country = userDataService.getString("Please, enter a name of country: ");
+                        var ageFrom = userDataService.getInt("Please, enter a minimum age for the customers you want to see: ");
+                        var ageTo = userDataService.getInt("Please, enter a maximum age for the customers you want to see: ");
                         List<ProductDto> products = option8(country, ageFrom, ageTo);
 
                         System.out.println(productsDtoConverter.toJsonView(products));
@@ -127,37 +126,37 @@ public class MenuService {
                         ));
 
                         List<ProductDto> productWithSameGuaranteeComponents = option9(eGuaranteesForProductWithSameComponents);
-                            System.out.println(productsDtoConverter.toJsonView(productWithSameGuaranteeComponents));
+                        System.out.println(productsDtoConverter.toJsonView(productWithSameGuaranteeComponents));
                         break;
                     case 10:
                         List<ShopDto> shops = option10();
                         System.out.println(shopsDtoConverter.toJsonView(shops));
                         break;
                     case 11:
-                        String tradeName = userDataService.getString("Please, enter a trade name; ");
-                        Long quantity = (long) userDataService.getInt("Please, enter a quantity: ");
+                        var tradeName = userDataService.getString("Please, enter a trade name; ");
+                        var quantity = (long) userDataService.getInt("Please, enter a quantity: ");
                         Set<ProducerDto> producers = option11(tradeName, quantity);
                         System.out.println(producersDtoConverter.toJsonView(producers));
                         break;
                     case 12:
-                        LocalDate dateFrom = LocalDate.parse(userDataService.getString("Please, enter start date: (FORMAT: YYYY-mm-dd)"));
-                        LocalDate dateTo = LocalDate.parse(userDataService.getString("Please, enter end date: (FORMAT: YYYY-mm-dd)"));
-                        BigDecimal price = userDataService.getBigDecimal("Please, enter the price at which you want to filter orders: ");
+                        var dateFrom = LocalDate.parse(userDataService.getString("Please, enter start date: (FORMAT: YYYY-mm-dd)"));
+                        var dateTo = LocalDate.parse(userDataService.getString("Please, enter end date: (FORMAT: YYYY-mm-dd)"));
+                        var price = userDataService.getBigDecimal("Please, enter the price at which you want to filter orders: ");
                         List<CustomerOrderDto> listOfOrders = option12(dateFrom, dateTo, price);
                         System.out.println(customerOrdersDtoConverter.toJsonView(listOfOrders));
                         break;
                     case 13:
-                        String customerName = userDataService.getString("Please, enter a customer name: ");
-                        String customerSurname = userDataService.getString("Please, enter a customer surname: ");
-                        String countryName = userDataService.getString("Please, enter a country name: ");
+                        var customerName = userDataService.getString("Please, enter a customer name: ");
+                        var customerSurname = userDataService.getString("Please, enter a customer surname: ");
+                        var countryName = userDataService.getString("Please, enter a country name: ");
                         Map<ProducerDto, List<ProductDto>> mapOfProductWithGivenCustomerGroupedByProducer = option13(customerName, customerSurname, countryName);
-                        mapOfProductWithGivenCustomerGroupedByProducer.forEach((k,v) -> System.out.println(producerDtoConverter.toJsonView(k) + " => " + productsDtoConverter.toJsonView(v)));
+                        mapOfProductWithGivenCustomerGroupedByProducer.forEach((k, v) -> System.out.println(producerDtoConverter.toJsonView(k) + " => " + productsDtoConverter.toJsonView(v)));
                         break;
                     case 14:
                         Set<CustomerDto> customerDtoList = option14();
 
-                        for (CustomerDto c: customerDtoList) {
-                            System.out.println( c + " => " + customerOrderService.getProductQuantityWithDifferentCountry(c.getId()));
+                        for (CustomerDto c : customerDtoList) {
+                            System.out.println(c + " => " + customerOrderService.getProductQuantityWithDifferentCountry(c.getId()));
                         }
                         break;
                     case 15:
@@ -169,20 +168,18 @@ public class MenuService {
                         return;
                 }
             } catch (MyException me) {
-                System.out.println("====================================================");
-                System.out.println(me.getExceptionMessage().getMessage());
-                errorService.addError(me.getExceptionMessage().getExceptionCode().toString()+";" + me.getExceptionMessage().getMessage());
+                errorService.addError(me.getExceptionMessage().getExceptionCode().toString() + ";" + me.getExceptionMessage().getMessage());
             }
         } while (true);
     }
 
     private CustomerDto option1() {
-        String name = userDataService.getString("Please enter a name of customer: ");
-        String surname = userDataService.getString("Please enter a surname of customer: ");
-        int age = userDataService.getInt("Please enter the age of the customer: ");
-        String country = userDataService.getString("Please enter the customer's country: ");
+        var name = userDataService.getString("Please enter a name of customer: ");
+        var surname = userDataService.getString("Please enter a surname of customer: ");
+        var age = userDataService.getInt("Please enter the age of the customer: ");
+        var country = userDataService.getString("Please enter the customer's country: ");
 
-        CustomerDto customerDto = CustomerDto.builder()
+        var customerDto = CustomerDto.builder()
                 .name(name)
                 .surname(surname)
                 .age(age)
@@ -193,14 +190,14 @@ public class MenuService {
     }
 
     private ShopDto option2() {
-        String name = userDataService.getString("Please enter a name of shop: ");
-        String country = userDataService.getString("Please enter a shop country: ");
+        var name = userDataService.getString("Please enter a name of shop: ");
+        var country = userDataService.getString("Please enter a shop country: ");
 
-        CountryDto countryDto = CountryDto.builder()
+        var countryDto = CountryDto.builder()
                 .name(country)
                 .build();
 
-        ShopDto shopDto = ShopDto.builder()
+        var shopDto = ShopDto.builder()
                 .name(name)
                 .countryDto(countryDto)
                 .build();
@@ -209,19 +206,19 @@ public class MenuService {
     }
 
     private ProducerDto option3() {
-        String name = userDataService.getString("Please enter a name of producer: ");
-        String country = userDataService.getString("Please enter a producer's country: ");
-        String trade = userDataService.getString("Please enter a name of trade: ");
+        var name = userDataService.getString("Please enter a name of producer: ");
+        var country = userDataService.getString("Please enter a producer's country: ");
+        var trade = userDataService.getString("Please enter a name of trade: ");
 
-        CountryDto countryDto = CountryDto.builder()
+        var countryDto = CountryDto.builder()
                 .name(country)
                 .build();
 
-        TradeDto tradeDto = TradeDto.builder()
+        var tradeDto = TradeDto.builder()
                 .name(trade)
                 .build();
 
-        ProducerDto producerDto = ProducerDto.builder()
+        var producerDto = ProducerDto.builder()
                 .name(name)
                 .tradeDto(tradeDto)
                 .countryDto(countryDto)
@@ -231,13 +228,13 @@ public class MenuService {
     }
 
     private ProductDto option4(Set<EGuarantee> eGuarantees) {
-        String name = userDataService.getString("Please enter a name of product: ");
-        String category = userDataService.getString("Please enter a product category: ");
-        BigDecimal price = userDataService.getBigDecimal("Please enter a product price: ");
-        String producerName = userDataService.getString("Please enter a name of the product producer: ");
-        String producerCountry = userDataService.getString("Please enter a producer's country: ");
+        var name = userDataService.getString("Please enter a name of product: ");
+        var category = userDataService.getString("Please enter a product category: ");
+        var price = userDataService.getBigDecimal("Please enter a product price: ");
+        var producerName = userDataService.getString("Please enter a name of the product producer: ");
+        var producerCountry = userDataService.getString("Please enter a producer's country: ");
 
-        ProductDto productDto = ProductDto.builder()
+        var productDto = ProductDto.builder()
                 .name(name)
                 .price(price)
                 .categoryDto(CategoryDto.builder()
@@ -256,27 +253,27 @@ public class MenuService {
     }
 
     private StockDto option5() {
-        String productName = userDataService.getString("Please enter a name of product: ");
-        String categoryName = userDataService.getString("Please enter a name of category: ");
-        String shopName = userDataService.getString("Please enter a shop name: ");
-        String countryName = userDataService.getString("Please enter a shop country: ");
+        var productName = userDataService.getString("Please enter a name of product: ");
+        var categoryName = userDataService.getString("Please enter a name of category: ");
+        var shopName = userDataService.getString("Please enter a shop name: ");
+        var countryName = userDataService.getString("Please enter a shop country: ");
         int quantity = userDataService.getInt("Please enter a quantity: ");
 
         return stockService.addProductToStock(productName, categoryName, shopName, countryName, quantity);
     }
 
     private CustomerOrderDto option6(Set<EPayment> ePayments, double discount) {
-        String customerName = userDataService.getString("Please enter customer name: ");
-        String customerSurname = userDataService.getString("Please enter customer surname: ");
-        String countryName = userDataService.getString("Please enter the country: ");
+        var customerName = userDataService.getString("Please enter customer name: ");
+        var customerSurname = userDataService.getString("Please enter customer surname: ");
+        var countryName = userDataService.getString("Please enter the country: ");
 
-        String productName = userDataService.getString("Please enter product name: ");
-        String categoryName = userDataService.getString("Please enter product category name: ");
+        var productName = userDataService.getString("Please enter product name: ");
+        var categoryName = userDataService.getString("Please enter product category name: ");
 
-        int quantity = userDataService.getInt("Please enter the quantity of product you want to buy: ");
-        LocalDateTime ldt = LocalDateTime.now();
+        var quantity = userDataService.getInt("Please enter the quantity of product you want to buy: ");
+        var ldt = LocalDateTime.now();
 
-        CustomerOrderDto customerOrderDto = CustomerOrderDto.builder()
+        var customerOrderDto = CustomerOrderDto.builder()
                 .date(ldt)
                 .quantity(quantity)
                 .discount(discount)
@@ -332,10 +329,10 @@ public class MenuService {
         return customerOrderService.findCustomersWhoOrderedProductWithSameCountryAsTheir();
     }
 
-    private void option15(){
-        String table = errorService.getTheMostErrorCausedTable();
-        String message = errorService.getTheMostErrorMessage();
-        String date = errorService.getTheMostErrorDate();
+    private void option15() {
+        var table = errorService.getTheMostErrorCausedTable();
+        var message = errorService.getTheMostErrorMessage();
+        var date = errorService.getTheMostErrorDate();
 
         System.out.println("\nTable " + table + " generated the most errors." +
                 "\n" + message + " is the message of the error that appeared most often." +

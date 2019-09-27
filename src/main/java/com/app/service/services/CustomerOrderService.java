@@ -104,7 +104,6 @@ public class CustomerOrderService {
         return price.subtract(discountPrice).multiply(quantity);
     }
 
-
     public List<CustomerOrderDto> findOrdersBetweenDatesAndGivenPrice(LocalDate customerDateFrom, LocalDate customerDateTo, BigDecimal price) {
         if (customerDateFrom == null) {
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CAN NOT BE NULL");
@@ -122,7 +121,6 @@ public class CustomerOrderService {
         return customerOrderRepository.findAll()
                 .stream()
                 .filter(order -> LocalDate.of(order.getDate().getYear(), order.getDate().getMonth(), order.getDate().getDayOfMonth()).compareTo(customerDateFrom)  >= 0 && LocalDate.of(order.getDate().getYear(), order.getDate().getMonth(), order.getDate().getDayOfMonth()).compareTo(customerDateTo) <= 0)
-                .peek(s -> System.out.println(s))
                 .filter(order1 -> productPriceAfterDiscount(order1).compareTo(price) > 0)
                 .map(Mappers::fromCustomerOrderToCustomerOrderDto)
                 .collect(Collectors.toList());
@@ -152,6 +150,7 @@ public class CustomerOrderService {
                 .map(Mappers::fromCustomerToCustomerDto)
                 .collect(Collectors.toSet());
     }
+
     public int getProductQuantityWithDifferentCountry(Long id){
         return customerOrderRepository.findQuantityOfProductsOrderedWithDifferentCountryThanCustomer(id);
     }

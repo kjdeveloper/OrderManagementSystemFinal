@@ -17,7 +17,7 @@ public class CountryService {
     public CountryDto addCountry(CountryDto countryDTO) {
         countryValidator.validateCountry(countryDTO);
 
-        Country country = countryRepository.findByName(countryDTO.getName()).orElse(null);
+        var country = countryRepository.findByName(countryDTO.getName()).orElse(null);
         if (country == null){
             country = Mappers.fromCountryDtoToCountry(countryDTO);
         }else{

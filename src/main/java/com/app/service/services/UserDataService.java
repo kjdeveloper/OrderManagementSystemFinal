@@ -12,7 +12,7 @@ public class UserDataService {
 
     public int getInt(String message) {
         System.out.println(message);
-        String text = sc.nextLine();
+        var text = sc.nextLine();
         if (!text.matches("\\d+")) {
             throw new MyException(ExceptionCode.USER_DATA_SERVICE, "INVALID NUMBER");
         }
@@ -21,7 +21,7 @@ public class UserDataService {
 
     public BigDecimal getBigDecimal(String message){
         System.out.println(message);
-        String text = sc.nextLine();
+        var text = sc.nextLine();
         if (!text.matches("\\d+")){
             throw new MyException(ExceptionCode.USER_DATA_SERVICE, "INVALID BIG DECIMAL PRICE");
         }
@@ -30,7 +30,7 @@ public class UserDataService {
 
     public String getString(String message){
         System.out.println(message);
-        String text = sc.nextLine();
+        var text = sc.nextLine();
         return text;
     }
 

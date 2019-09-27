@@ -39,13 +39,13 @@ public class StockService {
             throw new MyException(ExceptionCode.STOCK, "QUANTITY IS LESS OR EQUAL 0");
         }
 
-        Product product = productRepository.findByName(productName)
+        var product = productRepository.findByName(productName)
                 .orElseThrow(() -> new MyException(ExceptionCode.PRODUCT, "PRODUCT WAS NOT FOUND. PLEASE ADD PRODUCT FIRST"));
 
-        Shop shop = shopRepository.findByName(shopName)
+        var shop = shopRepository.findByName(shopName)
                 .orElseThrow(() -> new MyException(ExceptionCode.SHOP, "SHOP WAS NOT FOUND. PLEASE ADD SHOP FIRST"));
 
-        Stock stock = stockRepository.findStockByProductAndShop(productName, shopName)
+        var stock = stockRepository.findStockByProductAndShop(productName, shopName)
                 .orElse(null);
 
         product.setEGuarantees(new HashSet<>());

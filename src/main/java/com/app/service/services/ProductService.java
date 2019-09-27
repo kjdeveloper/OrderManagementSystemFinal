@@ -34,7 +34,6 @@ public class ProductService {
 
     private final ProductValidator productValidator = new ProductValidator();
     private final CategoryValidator categoryValidator = new CategoryValidator();
-    private final CountryValidator countryValidator = new CountryValidator();
 
     public ProductDto addProduct(ProductDto productDto) {
 
@@ -45,13 +44,13 @@ public class ProductService {
         if (exist) {
             throw new MyException(ExceptionCode.PRODUCT, "PRODUCT WITH GIVEN CATEGORY AND PRODUCER EXIST");
         }
-        Product product = Mappers.fromProductDtoToProduct(productDto);
+        var product = Mappers.fromProductDtoToProduct(productDto);
 
         CategoryDto categoryDto = productDto.getCategoryDto();
         if (categoryDto == null) {
             throw new MyException(ExceptionCode.CATEGORY, "CATEGORY IS NULL");
         }
-        Category category = categoryRepository
+        var category = categoryRepository
                 .findByName(categoryDto.getName())
                 .orElse(null);
 
@@ -66,7 +65,7 @@ public class ProductService {
             throw new MyException(ExceptionCode.PRODUCER, "PRODUCER IS NULL");
         }
 
-        Producer producer = producerRepository
+        var producer = producerRepository
                 .findByNameAndCountry(producerDto)
                 .orElseThrow(() -> new MyException(ExceptionCode.PRODUCER, "PRODUCER WAS NOT FOUND. PLEASE ADD PRODUCER FIRST"));
 

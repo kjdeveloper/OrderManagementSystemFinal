@@ -1,7 +1,6 @@
 package com.app.service.services;
 
 import com.app.dto.CustomerDto;
-import com.app.dto.CustomerOrderDto;
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
 import com.app.model.Country;
@@ -16,9 +15,6 @@ import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.CustomerValidator;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 public class CustomerService {
 
     private final CustomerRepository customerRepository = new CustomerRepositoryImpl();
@@ -30,13 +26,13 @@ public class CustomerService {
     public CustomerDto addCustomer(final CustomerDto customerDto) {
         customerDtoValidator.validateCustomer(customerDto);
 
-        final boolean exist = customerRepository.isExistByNameAndSurnameAndCountry(customerDto);
+        final var exist = customerRepository.isExistByNameAndSurnameAndCountry(customerDto);
 
         if (exist) {
             throw new MyException(ExceptionCode.CUSTOMER, "CUSTOMER WITH GIVEN NAME, SURNAME AND COUNTRY IS ALREADY EXIST");
         }
 
-        Country country = countryRepository.findByName(customerDto.getCountryDto().getName()).orElse(null);
+        var country = countryRepository.findByName(customerDto.getCountryDto().getName()).orElse(null);
 
         if (country == null) {
             countryValidator.validateCountry(customerDto.getCountryDto());
@@ -44,7 +40,7 @@ public class CustomerService {
             country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CAN NOT ADD COUNTRY IN CUSTOMER SERVICE"));
         }
 
-        Customer customer = Mappers.fromCustomerDtoToCustomer(customerDto);
+        var customer = Mappers.fromCustomerDtoToCustomer(customerDto);
         customer.setCountry(country);
         customerRepository.addOrUpdate(customer);
 

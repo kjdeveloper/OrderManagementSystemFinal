@@ -17,7 +17,7 @@ public class TradeService {
     public TradeDto addTrade(TradeDto tradeDTO) {
         tradeValidator.validateTrade(tradeDTO);
 
-        Trade trade = tradeRepository.findByName(tradeDTO.getName()).orElse(null);
+        var trade = tradeRepository.findByName(tradeDTO.getName()).orElse(null);
 
         if (trade == null) {
             trade = Mappers.fromTradeDtoToTrade(tradeDTO);

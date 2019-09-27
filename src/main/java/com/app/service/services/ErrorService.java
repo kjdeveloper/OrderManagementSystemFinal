@@ -18,7 +18,7 @@ public class ErrorService {
 
     public void addError(String message) {
 
-        ErrorDto errorDto = ErrorDto.builder()
+        var errorDto = ErrorDto.builder()
                 .message(message)
                 .date(LocalDateTime.now())
                 .build();
