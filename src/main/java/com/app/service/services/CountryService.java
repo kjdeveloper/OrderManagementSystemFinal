@@ -8,13 +8,15 @@ import com.app.repository.CountryRepository;
 import com.app.repository.impl.CountryRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class CountryService {
 
-    private CountryRepository countryRepository = new CountryRepositoryImpl();
-    private CountryValidator countryValidator = new CountryValidator();
+    private CountryRepository countryRepository;
 
     public CountryDto addCountry(CountryDto countryDTO) {
+        CountryValidator countryValidator = new CountryValidator();
         countryValidator.validateCountry(countryDTO);
 
         var country = countryRepository.findByName(countryDTO.getName()).orElse(null);

@@ -13,14 +13,16 @@ import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.repository.impl.ShopRepositoryImpl;
 import com.app.repository.impl.StockRepositoryImpl;
 import com.app.service.mapper.Mappers;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
 
+@RequiredArgsConstructor
 public class StockService {
 
-    private final StockRepository stockRepository = new StockRepositoryImpl();
-    private final ProductRepository productRepository = new ProductRepositoryImpl();
-    private final ShopRepository shopRepository = new ShopRepositoryImpl();
+    private final StockRepository stockRepository;
+    private final ProductRepository productRepository;
+    private final ShopRepository shopRepository;
 
     public StockDto addProductToStock(String productName, String categoryName, String shopName, String countryName, int quantity) {
         if (productName == null) {

@@ -8,13 +8,15 @@ import com.app.repository.TradeRepository;
 import com.app.repository.impl.TradeRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.TradeValidator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class TradeService {
 
-    private TradeRepository tradeRepository = new TradeRepositoryImpl();
-    private TradeValidator tradeValidator = new TradeValidator();
+    private TradeRepository tradeRepository;
 
     public TradeDto addTrade(TradeDto tradeDTO) {
+        TradeValidator tradeValidator = new TradeValidator();
         tradeValidator.validateTrade(tradeDTO);
 
         var trade = tradeRepository.findByName(tradeDTO.getName()).orElse(null);

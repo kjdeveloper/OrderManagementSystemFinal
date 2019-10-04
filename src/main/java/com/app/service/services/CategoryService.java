@@ -8,13 +8,15 @@ import com.app.repository.CategoryRepository;
 import com.app.repository.impl.CategoryRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CategoryValidator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class CategoryService {
 
-    private CategoryRepository categoryRepository = new CategoryRepositoryImpl();
-    private CategoryValidator categoryValidator = new CategoryValidator();
+    private CategoryRepository categoryRepository;
 
     public CategoryDto addCategory(CategoryDto categoryDTO) {
+        CategoryValidator categoryValidator = new CategoryValidator();
         categoryValidator.validateCategory(categoryDTO);
 
         var category = categoryRepository.findByName(categoryDTO.getName()).orElse(null);

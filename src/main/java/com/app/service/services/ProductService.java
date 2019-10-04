@@ -21,22 +21,21 @@ import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CategoryValidator;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ProductValidator;
+import lombok.RequiredArgsConstructor;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository = new ProductRepositoryImpl();
-    private final CategoryRepository categoryRepository = new CategoryRepositoryImpl();
-    private final ProducerRepository producerRepository = new ProducerRepositoryImpl();
-    private final CountryRepository countryRepository = new CountryRepositoryImpl();
-
-    private final ProductValidator productValidator = new ProductValidator();
-    private final CategoryValidator categoryValidator = new CategoryValidator();
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProducerRepository producerRepository;
 
     public ProductDto addProduct(ProductDto productDto) {
-
+        CategoryValidator categoryValidator = new CategoryValidator();
+        ProductValidator productValidator = new ProductValidator();
         productValidator.validateProduct(productDto);
 
         final boolean exist = productRepository.isExistByNameAndCategoryAndProducer(productDto);
@@ -75,7 +74,7 @@ public class ProductService {
         return Mappers.fromProductToProductDto(product);
     }
 
-    public LinkedHashMap<CategoryDto, Optional<ProductDto>> findProductsWithBiggestPriceInCategory() {
+    public Map<CategoryDto, Optional<ProductDto>> findProductsWithBiggestPriceInCategory() {
         return productRepository.findAll()
                 .stream()
                 .collect(Collectors.groupingBy(Product::getCategory, Collectors.toList()))

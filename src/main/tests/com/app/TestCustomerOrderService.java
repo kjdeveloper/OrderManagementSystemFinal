@@ -99,22 +99,16 @@ public class TestCustomerOrderService {
                 .build();
 
         Mockito.when(customerOrderRepository.findAll()).thenReturn(List.of(
-                CustomerOrder.builder().product(product1).customer(customer1).quantity(10).discount(0.2).date(LocalDateTime.of(2019,4, 12, 13, 20)).ePayments(new HashSet<>(List.of(EPayment.CARD, EPayment.CASH))).id(14L).build(),
-                CustomerOrder.builder().product(product2).customer(customer2).quantity(5).discount(0.3).date(LocalDateTime.of(2019,8, 12, 13, 20)).ePayments(new HashSet<>(List.of(EPayment.CARD, EPayment.CASH))).id(15L).build(),
-                CustomerOrder.builder().product(product3).customer(customer3).quantity(40).discount(0.4).date(LocalDateTime.of(2019,9, 23, 13, 20)).ePayments(new HashSet<>(List.of(EPayment.CARD, EPayment.CASH))).id(16L).build()
+                CustomerOrder.builder().product(product1).customer(customer1).quantity(1).discount(0.0).date(LocalDateTime.of(2019,4, 12, 13, 20)).ePayments(new HashSet<>(List.of(EPayment.CARD, EPayment.CASH))).id(14L).build(),
+                CustomerOrder.builder().product(product2).customer(customer2).quantity(1).discount(0.0).date(LocalDateTime.of(2019,8, 12, 13, 20)).ePayments(new HashSet<>(List.of(EPayment.CARD, EPayment.CASH))).id(15L).build(),
+                CustomerOrder.builder().product(product3).customer(customer3).quantity(1).discount(0.0).date(LocalDateTime.of(2019,9, 23, 13, 20)).ePayments(new HashSet<>(List.of(EPayment.CARD, EPayment.CASH))).id(16L).build()
         ));
 
         var lcdt1 = LocalDate.of(2019, 3, 12);
         var lcdt2 = LocalDate.of(2019, 9, 30);
-        var price = new BigDecimal(300);
+        var price = new BigDecimal(50);
 
-        var customerOrders = customerOrderRepository.findAll()
-                .stream()
-                .filter(order -> LocalDate.of(order.getDate().getYear(), order.getDate().getMonth(), order.getDate().getDayOfMonth()).compareTo(lcdt1)  >= 0 && LocalDate.of(order.getDate().getYear(), order.getDate().getMonth(), order.getDate().getDayOfMonth()).compareTo(lcdt2) <= 0)
-                .filter(order1 -> productPriceAfterDiscount(order1).compareTo(price) > 0)
-                .map(Mappers::fromCustomerOrderToCustomerOrderDto)
-                .collect(Collectors.toList());
-        System.out.println(customerOrders);
+        var customerOrders = customerOrderService.findOrdersBetweenDatesAndGivenPrice(lcdt1, lcdt2, price);
 
         Assertions.assertEquals(2, customerOrders.size(), "TEST 1 FAILED");
     }

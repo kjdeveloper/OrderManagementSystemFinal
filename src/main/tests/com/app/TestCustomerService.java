@@ -47,13 +47,13 @@ public class TestCustomerService {
         Assertions.assertEquals(3, customers.size(), "TEST 1 FAILED");
     }
 
-    /*   @Test
+    @Test
     @DisplayName("Add null customer exception")
     public void test2() {
 
-       *//* Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER CAN NOT BE NULL"))
+        Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER CAN NOT BE NULL"))
                 .when(customerService).addCustomer(ArgumentMatchers.isNull());
-*//*
+
         var throwable = Assertions.assertThrows(
                 MyException.class,
                 () -> customerService.addCustomer(null));
@@ -67,10 +67,9 @@ public class TestCustomerService {
         var countryDto = CountryDto.builder().name("POLAND").id(1L).build();
         var customerDto = CustomerDto.builder().name("Kamil").surname("JANK").age(31).countryDto(countryDto).build();
 
-        *//*
-        Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER NAME IS NOT VALID"))
-                .when(customerService).addCustomer(customerDto);
-*//*
+
+       /* Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "INVALID CUSTOMER NAME"))
+                .when(customerService).addCustomer(customerDto);*/
 
         var throwable = Assertions.assertThrows(
                 MyException.class,
@@ -78,16 +77,16 @@ public class TestCustomerService {
 
         Assertions.assertEquals("INVALID CUSTOMER NAME", throwable.getExceptionMessage().getMessage(), "TEST 3 FAILED");
     }
-
+/*
     @Test
-    @DisplayName("Add customer with wrogn age exception")
+    @DisplayName("Add customer with wrong age exception")
     public void test4(){
 
         var countryDto = CountryDto.builder().name("POLAND").id(1L).build();
         var customerDto = CustomerDto.builder().name("KAMIL").surname("JANK").age(12).countryDto(countryDto).build();
 
-        *//*Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER AGE CAN NOT BE BELOW 18."))
-                .when(customerService).addCustomer(customerDto);*//*
+        Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER AGE CAN NOT BE BELOW 18."))
+                .when(customerService).addCustomer(customerDto);
 
         var throwable = Assertions.assertThrows(
                 MyException.class,

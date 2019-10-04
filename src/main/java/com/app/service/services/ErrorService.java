@@ -6,14 +6,16 @@ import com.app.repository.ErrorRepository;
 import com.app.repository.generic.DbConnection;
 import com.app.repository.impl.ErrorRepositoryImpl;
 import com.app.service.mapper.Mappers;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class ErrorService {
 
-    private final ErrorRepository errorRepository = new ErrorRepositoryImpl();
+    private final ErrorRepository errorRepository;
     private final DbConnection dbConnection = DbConnection.getInstance();
 
     public void addError(String message) {

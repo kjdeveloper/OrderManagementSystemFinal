@@ -4,8 +4,10 @@ import com.app.dto.*;
 import com.app.exceptions.MyException;
 import com.app.model.enums.EGuarantee;
 import com.app.model.enums.EPayment;
+import com.app.repository.*;
 import com.app.repository.converters.*;
 import com.app.repository.generic.DbConnection;
+import com.app.repository.impl.*;
 import com.app.service.services.*;
 
 import java.math.BigDecimal;
@@ -18,13 +20,24 @@ public class MenuService {
     private final UserDataService userDataService = new UserDataService();
     private final DbConnection dbConnection = DbConnection.getInstance();
 
-    private final CustomerService customerService = new CustomerService();
-    private final CustomerOrderService customerOrderService = new CustomerOrderService();
-    private final ShopService shopService = new ShopService();
-    private final ProducerService producerService = new ProducerService();
-    private final ProductService productService = new ProductService();
-    private final StockService stockService = new StockService();
-    private final ErrorService errorService = new ErrorService();
+    private final CategoryRepository categoryRepository = new CategoryRepositoryImpl();
+    private final CountryRepository countryRepository = new CountryRepositoryImpl();
+    private final CustomerRepository customerRepository = new CustomerRepositoryImpl();
+    private final CustomerOrderRepository customerOrderRepository = new CustomerOrderRepositoryImpl();
+    private final ErrorRepository errorRepository = new ErrorRepositoryImpl();
+    private final ProducerRepository producerRepository = new ProducerRepositoryImpl();
+    private final ProductRepository productRepository = new ProductRepositoryImpl();
+    private final ShopRepository shopRepository = new ShopRepositoryImpl();
+    private final StockRepository stockRepository = new StockRepositoryImpl();
+    private final TradeRepository tradeRepository = new TradeRepositoryImpl();
+
+    private final CustomerService customerService = new CustomerService(customerRepository, countryRepository);
+    private final CustomerOrderService customerOrderService = new CustomerOrderService(customerOrderRepository, stockRepository, customerRepository, productRepository);
+    private final ShopService shopService = new ShopService(shopRepository, countryRepository, stockRepository);
+    private final ProducerService producerService = new ProducerService(producerRepository, countryRepository, tradeRepository, stockRepository);
+    private final ProductService productService = new ProductService(productRepository, categoryRepository, producerRepository);
+    private final StockService stockService = new StockService(stockRepository, productRepository, shopRepository);
+    private final ErrorService errorService = new ErrorService(errorRepository);
 
     private final CustomerDtoConverter customerDtoConverter = new CustomerDtoConverter();
     private final CustomerOrderDtoConverter customerOrderDtoConverter = new CustomerOrderDtoConverter();
@@ -37,7 +50,6 @@ public class MenuService {
     private final ProducersDtoConverter producersDtoConverter = new ProducersDtoConverter();
     private final CustomerOrdersDtoConverter customerOrdersDtoConverter = new CustomerOrdersDtoConverter();
     private final CategoryDtoConverter categoryDtoConverter = new CategoryDtoConverter();
-    private final CustomersDtoConverter customersDtoConverter = new CustomersDtoConverter();
 
     public MenuService() {
     }
@@ -108,7 +120,7 @@ public class MenuService {
 
                     //============================DOWNLOAD DATA METHODS===============================
                     case 7:
-                        LinkedHashMap<CategoryDto, Optional<ProductDto>> biggestPriceInEachCategory = option7();
+                        Map<CategoryDto, Optional<ProductDto>> biggestPriceInEachCategory = option7();
                         biggestPriceInEachCategory.forEach((k, v) -> System.out.println(categoryDtoConverter.toJsonView(k) + " => " + productDtoConverter.toJsonView(v.get())));
                         break;
                     case 8:
@@ -297,7 +309,7 @@ public class MenuService {
     }
 
 
-    private LinkedHashMap<CategoryDto, Optional<ProductDto>> option7() {
+    private Map<CategoryDto, Optional<ProductDto>> option7() {
         return productService.findProductsWithBiggestPriceInCategory();
     }
 

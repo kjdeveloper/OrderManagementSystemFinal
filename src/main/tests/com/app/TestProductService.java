@@ -1,18 +1,17 @@
 package com.app;
 
+import com.app.dto.ProductDto;
 import com.app.exceptions.MyException;
+import com.app.model.Category;
+import com.app.model.Product;
 import com.app.model.enums.EGuarantee;
 import com.app.repository.ProductRepository;
 import com.app.service.mapper.Mappers;
+import com.app.service.services.ProductService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import com.app.dto.ProductDto;
-import com.app.model.Category;
-import com.app.model.Product;
-import com.app.repository.impl.ProductRepositoryImpl;
-import com.app.service.services.ProductService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -21,8 +20,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -53,6 +52,7 @@ public class TestProductService {
 
         var category = Category.builder().id(3L).name("HOME").build();
         var category2 = Category.builder().id(4L).name("GARDEN").build();
+
         Mockito.when(productRepository.findAll()).thenReturn(List.of(
                 Product.builder().name("POTATO").category(category).price(BigDecimal.valueOf(100)).id(1L).build(),
                 Product.builder().name("ONION").category(category).price(BigDecimal.valueOf(10)).id(2L).build(),
@@ -60,21 +60,7 @@ public class TestProductService {
                 Product.builder().name("CHAIR").category(category2).price(BigDecimal.valueOf(125)).id(6L).build()
         ));
 
-        var map = productRepository.findAll()
-                .stream()
-                .collect(Collectors.groupingBy(Product::getCategory, Collectors.toList()))
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        k -> Mappers.fromCategoryToCategoryDto(k.getKey()),
-                        products -> products
-                                .getValue()
-                                .stream()
-                                .map(Mappers::fromProductToProductDto)
-                                .max(Comparator.comparing(ProductDto::getPrice)),
-                        (k, v) -> k,
-                        LinkedHashMap::new
-                ));
+        var map = productService.findProductsWithBiggestPriceInCategory();
 
         var categoryDto = Mappers.fromCategoryToCategoryDto(category);
         var categoryDto2 = Mappers.fromCategoryToCategoryDto(category2);
@@ -102,20 +88,10 @@ public class TestProductService {
         ));
 
         var eGuaranteesToProducts = new HashSet<>(List.of(EGuarantee.SERVICE, EGuarantee.EXCHANGE));
-
-        var products = productRepository.findAll()
-                .stream()
-                .filter(prGuarantees -> prGuarantees.getEGuarantees().containsAll(eGuaranteesToProducts))
-                .map(Mappers::fromProductToProductDto)
-                .collect(Collectors.toList());
+        var products = productService.findAllProductsWithGivenGuarantees(eGuaranteesToProducts);
 
         var eGuaranteesToProducts2 = new HashSet<>(List.of(EGuarantee.SERVICE));
-
-        var products2 = productRepository.findAll()
-                .stream()
-                .filter(prGuarantees -> prGuarantees.getEGuarantees().containsAll(eGuaranteesToProducts2))
-                .map(Mappers::fromProductToProductDto)
-                .collect(Collectors.toList());
+        var products2 = productService.findAllProductsWithGivenGuarantees(eGuaranteesToProducts2);
 
         Assertions.assertEquals(1, products.size(), "TEST 3 FAILED");
         Assertions.assertEquals(4, products2.size(), "TEST 3 FAILED");

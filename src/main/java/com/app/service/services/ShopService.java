@@ -16,20 +16,22 @@ import com.app.repository.impl.StockRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ShopValidator;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class ShopService {
 
-    private final ShopRepository shopRepository = new ShopRepositoryImpl();
-    private final ShopValidator shopValidator = new ShopValidator();
-    private final CountryValidator countryValidator = new CountryValidator();
-    private final CountryRepository countryRepository = new CountryRepositoryImpl();
-    private final StockRepository stockRepository = new StockRepositoryImpl();
+    private final ShopRepository shopRepository;
+    private final CountryRepository countryRepository;
+    private final StockRepository stockRepository;
 
     public ShopDto addShop(final ShopDto shopDTO) {
+        ShopValidator shopValidator = new ShopValidator();
+        CountryValidator countryValidator = new CountryValidator();
         shopValidator.validateShop(shopDTO);
 
         final boolean exist = shopRepository.isExistByShopAndCountry(shopDTO.getName(), shopDTO.getCountryDto().getName());

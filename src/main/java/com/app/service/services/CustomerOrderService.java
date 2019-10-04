@@ -20,6 +20,7 @@ import com.app.repository.impl.ProductRepositoryImpl;
 import com.app.repository.impl.StockRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CustomerOrderValidator;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -31,16 +32,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class CustomerOrderService {
 
-    private final CustomerOrderRepository customerOrderRepository = new CustomerOrderRepositoryImpl();
-    private final StockRepository stockRepository = new StockRepositoryImpl();
-    private final CustomerRepository customerRepository = new CustomerRepositoryImpl();
-    private final ProductRepository productRepository = new ProductRepositoryImpl();
-
-    private final CustomerOrderValidator customerOrderValidator = new CustomerOrderValidator();
+    private final CustomerOrderRepository customerOrderRepository;
+    private final StockRepository stockRepository;
+    private final CustomerRepository customerRepository;
+    private final ProductRepository productRepository;
 
     public CustomerOrderDto addCustomerOrder(CustomerOrderDto customerOrderDto) {
+        CustomerOrderValidator customerOrderValidator = new CustomerOrderValidator();
         customerOrderValidator.validateCustomerOrder(customerOrderDto);
 
         CustomerOrder customerOrder = Mappers.fromCustomerOrderDtoToCustomerOrder(customerOrderDto);

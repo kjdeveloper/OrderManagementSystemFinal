@@ -3,27 +3,22 @@ package com.app.service.services;
 import com.app.dto.CustomerDto;
 import com.app.exceptions.ExceptionCode;
 import com.app.exceptions.MyException;
-import com.app.model.Country;
-import com.app.model.Customer;
 import com.app.repository.CountryRepository;
-import com.app.repository.CustomerOrderRepository;
 import com.app.repository.CustomerRepository;
-import com.app.repository.impl.CountryRepositoryImpl;
-import com.app.repository.impl.CustomerOrderRepositoryImpl;
-import com.app.repository.impl.CustomerRepositoryImpl;
 import com.app.service.mapper.Mappers;
 import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.CustomerValidator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class CustomerService {
 
-    private final CustomerRepository customerRepository = new CustomerRepositoryImpl();
-    private final CustomerValidator customerDtoValidator = new CustomerValidator();
-    private final CountryValidator countryValidator = new CountryValidator();
-    private final CountryRepository countryRepository = new CountryRepositoryImpl();
-    private final CustomerOrderRepository customerOrderRepository = new CustomerOrderRepositoryImpl();
+    private final CustomerRepository customerRepository;
+    private final CountryRepository countryRepository;
 
     public CustomerDto addCustomer(final CustomerDto customerDto) {
+        CustomerValidator customerDtoValidator = new CustomerValidator();
+        CountryValidator countryValidator = new CountryValidator();
         customerDtoValidator.validateCustomer(customerDto);
 
         final var exist = customerRepository.isExistByNameAndSurnameAndCountry(customerDto);
