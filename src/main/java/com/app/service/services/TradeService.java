@@ -26,7 +26,7 @@ public class TradeService {
         } else {
             throw new MyException(ExceptionCode.TRADE, "TRADE WITH GIVEN NAME EXIST");
         }
-        tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException(ExceptionCode.TRADE, "CAN NOT ADD TRADE IN TRADE SERVICE"));
+        tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException(ExceptionCode.TRADE, "CANNOT ADD TRADE IN TRADE SERVICE"));
         return Mappers.fromTradeToTradeDto(trade);
     }
 }

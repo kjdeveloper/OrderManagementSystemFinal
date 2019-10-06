@@ -27,7 +27,7 @@ public class CategoryService {
             throw new MyException(ExceptionCode.CATEGORY, "CATEGORY WITH GIVEN NAME EXIST");
         }
 
-        categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException(ExceptionCode.CATEGORY, "CAN NOT ADD CATEGORY IN CATEGORY SERVICE"));
+        categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException(ExceptionCode.CATEGORY, "CANNOT ADD CATEGORY IN CATEGORY SERVICE"));
         return Mappers.fromCategoryToCategoryDto(category);
     }
 

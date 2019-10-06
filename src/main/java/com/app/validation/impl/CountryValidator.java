@@ -11,7 +11,7 @@ public class CountryValidator{
 
     public void validateCountry(final CountryDto countryDto){
         if (countryDto == null){
-            throw new MyException(ExceptionCode.COUNTRY, "COUNTRY CAN NOT BE NULL OR EMPTY");
+            throw new MyException(ExceptionCode.COUNTRY, "COUNTRY CANNOT BE NULL OR EMPTY");
         }
         if (!isNameValid(countryDto)){
             throw new MyException(ExceptionCode.COUNTRY, "INVALID COUNTRY");

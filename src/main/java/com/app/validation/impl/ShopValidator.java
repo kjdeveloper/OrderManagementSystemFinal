@@ -8,7 +8,7 @@ public class ShopValidator {
 
     public void validateShop(ShopDto shopDto){
         if (shopDto == null){
-            throw new MyException(ExceptionCode.SHOP, "SHOP CAN NOT BE NULL OR EMPTY");
+            throw new MyException(ExceptionCode.SHOP, "SHOP CANNOT BE NULL OR EMPTY");
         }
         if (!isNameValid(shopDto)){
             throw new MyException(ExceptionCode.SHOP, "INVALID SHOP NAME");

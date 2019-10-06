@@ -107,16 +107,16 @@ public class CustomerOrderService {
 
     public List<CustomerOrderDto> findOrdersBetweenDatesAndGivenPrice(LocalDate customerDateFrom, LocalDate customerDateTo, BigDecimal price) {
         if (customerDateFrom == null) {
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CANNOT BE NULL");
         }
         if (customerDateTo == null) {
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "FINISH DATE CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "FINISH DATE CANNOT BE NULL");
         }
         if (customerDateFrom.compareTo(customerDateTo) > 0) {
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CAN NOT BE AFTER FINISH DATE");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "START DATE CANNOT BE AFTER FINISH DATE");
         }
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "PRICE CANNOT BE NULL, LESS OR EQUAL ZERO");
         }
 
         return customerOrderRepository.findAll()
@@ -130,13 +130,13 @@ public class CustomerOrderService {
 
     public Map<ProducerDto, List<ProductDto>> findProductsByCustomerAndHisCountry(String customerName, String customerSurname, String countryName) {
         if (customerName == null) {
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER NAME CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER NAME CANNOT BE NULL");
         }
         if (customerSurname == null) {
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER SURNAME CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER SURNAME CANNOT BE NULL");
         }
         if (countryName == null) {
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "COUNTRY NAME CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "COUNTRY NAME CANNOT BE NULL");
         }
         return customerOrderRepository.findProductsByCustomerAndHisCountry(customerName, customerSurname, countryName)
                 .stream()

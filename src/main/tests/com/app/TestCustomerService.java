@@ -51,14 +51,14 @@ public class TestCustomerService {
     @DisplayName("Add null customer exception")
     public void test2() {
 
-        Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER CAN NOT BE NULL"))
+        Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER CANNOT BE NULL"))
                 .when(customerService).addCustomer(ArgumentMatchers.isNull());
 
         var throwable = Assertions.assertThrows(
                 MyException.class,
                 () -> customerService.addCustomer(null));
 
-        Assertions.assertEquals("CUSTOMER CAN NOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 2 FAILED");
+        Assertions.assertEquals("CUSTOMER CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 2 FAILED");
     }
 
     @Test
@@ -85,7 +85,7 @@ public class TestCustomerService {
         var countryDto = CountryDto.builder().name("POLAND").id(1L).build();
         var customerDto = CustomerDto.builder().name("KAMIL").surname("JANK").age(12).countryDto(countryDto).build();
 
-        Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER AGE CAN NOT BE BELOW 18."))
+        Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER AGE CANNOT BE BELOW 18."))
                 .when(customerService).addCustomer(customerDto);
 
         var throwable = Assertions.assertThrows(

@@ -56,7 +56,7 @@ public class ProductService {
         if (category == null) {
             categoryValidator.validateCategory(productDto.getCategoryDto());
             category = Mappers.fromCategoryDtoToCategory(categoryDto);
-            category = categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException(ExceptionCode.CATEGORY, "CAN NOT ADD CATEGORY IN PRODUCT SERVICE"));
+            category = categoryRepository.addOrUpdate(category).orElseThrow(() -> new MyException(ExceptionCode.CATEGORY, "CANNOT ADD CATEGORY IN PRODUCT SERVICE"));
         }
 
         ProducerDto producerDto = productDto.getProducerDto();
@@ -94,13 +94,13 @@ public class ProductService {
 
     public List<ProductDto> findAllProductsFromSpecificCountryBetweenCustomerAges(String country, int ageFrom, int ageTo) {
         if (country == null) {
-            throw new MyException(ExceptionCode.PRODUCT, "COUNTRY CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.PRODUCT, "COUNTRY CANNOT BE NULL");
         }
         if (ageFrom < 18) {
-            throw new MyException(ExceptionCode.AGE_UNDER_18, "LOWER AGE LIMIT CAN NOT BE LESS THAN 18");
+            throw new MyException(ExceptionCode.AGE_UNDER_18, "LOWER AGE LIMIT CANNOT BE LESS THAN 18");
         }
         if (ageFrom > ageTo) {
-            throw new MyException(ExceptionCode.INCORRECT_AGE, "LOWER AGE LIMIT CAN NOT BE HIGHER THAN UPPER LIMIT OF AGE");
+            throw new MyException(ExceptionCode.INCORRECT_AGE, "LOWER AGE LIMIT CANNOT BE HIGHER THAN UPPER LIMIT OF AGE");
         }
 
         return productRepository.findAllProductsFromSpecificCountryBetweenCustomerAges(country, ageFrom, ageTo)
@@ -112,7 +112,7 @@ public class ProductService {
 
     public List<ProductDto> findAllProductsWithGivenGuarantees(Set<EGuarantee> eGuarantees) {
         if (eGuarantees == null) {
-            throw new MyException(ExceptionCode.EGUARANTEES, "GUARANTEES CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.EGUARANTEES, "GUARANTEES CANNOT BE NULL");
         }
 
         return productRepository.findAll()

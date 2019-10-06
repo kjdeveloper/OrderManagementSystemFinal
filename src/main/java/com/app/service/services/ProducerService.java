@@ -52,12 +52,12 @@ public class ProducerService {
         if (country == null){
             countryValidator.validateCountry(producerDTO.getCountryDto());
             country = Mappers.fromCountryDtoToCountry(producerDTO.getCountryDto());
-            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CAN NOT ADD COUNTRY"));
+            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CANNOT ADD COUNTRY"));
         }
         if (trade == null){
             tradeValidator.validateTrade(producerDTO.getTradeDto());
             trade = Mappers.fromTradeDtoToTrade(producerDTO.getTradeDto());
-            trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException(ExceptionCode.TRADE, "CAN NOT ADD TRADE"));
+            trade = tradeRepository.addOrUpdate(trade).orElseThrow(() -> new MyException(ExceptionCode.TRADE, "CANNOT ADD TRADE"));
         }
         if (producer == null){
             producer = Mappers.fromProducerDtoToProducer(producerDTO);

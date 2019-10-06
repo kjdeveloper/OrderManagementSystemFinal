@@ -11,7 +11,7 @@ public class CustomerOrderValidator {
 
     public void validateCustomerOrder(CustomerOrderDto customerOrderDto){
         if (customerOrderDto == null){
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER CANNOT BE NULL");
         }
         if (!isDateValid(customerOrderDto.getDate())){
             throw new MyException(ExceptionCode.CUSTOMER_ORDER, "DATE IS NOT VALID");

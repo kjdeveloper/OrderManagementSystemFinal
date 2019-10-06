@@ -11,7 +11,7 @@ public class ProductValidator {
 
     public void validateProduct(ProductDto productDto){
         if(productDto == null){
-            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT CAN NOT BE NULL");
+            throw new MyException(ExceptionCode.PRODUCT, "PRODUCT CANNOT BE NULL");
         }
         if (!isNameValid(productDto)){
             throw new MyException(ExceptionCode.PRODUCT, "PRODUCT NAME IS NOT VALID");

@@ -105,7 +105,7 @@ public class TestProductService {
                 MyException.class,
                 () -> productService.findAllProductsWithGivenGuarantees(null));
 
-        Assertions.assertEquals("GUARANTEES CAN NOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 4 FILED");
+        Assertions.assertEquals("GUARANTEES CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 4 FILED");
     }
 
     @Test
@@ -116,7 +116,7 @@ public class TestProductService {
                 MyException.class,
                 () -> productService.addProduct(null));
 
-        Assertions.assertEquals("PRODUCT CAN NOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 5 FAILED");
+        Assertions.assertEquals("PRODUCT CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 5 FAILED");
     }
 
     @Test

@@ -11,7 +11,7 @@ public class StockValidator{
             throw new MyException(ExceptionCode.STOCK, "STOCK DTO IS NULL");
         }
         if (isQuantityValid(stockDto)){
-            throw new MyException(ExceptionCode.STOCK, "QUANTITY CAN NOT LESS THAN ZERO");
+            throw new MyException(ExceptionCode.STOCK, "QUANTITY CANNOT LESS THAN ZERO");
         }
     }
 

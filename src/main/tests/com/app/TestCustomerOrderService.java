@@ -124,7 +124,7 @@ public class TestCustomerOrderService {
                 MyException.class,
                 () -> customerOrderService.findOrdersBetweenDatesAndGivenPrice(null, lcd, price));
 
-        Assertions.assertEquals("START DATE CAN NOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 2 FAILED");
+        Assertions.assertEquals("START DATE CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 2 FAILED");
     }
 
     @Test
@@ -138,7 +138,7 @@ public class TestCustomerOrderService {
                 MyException.class,
                 () -> customerOrderService.findOrdersBetweenDatesAndGivenPrice(lcd, LocalDate.now(), price));
 
-        Assertions.assertEquals("START DATE CAN NOT BE AFTER FINISH DATE", throwable.getExceptionMessage().getMessage(), "TEST 3 FAILED");
+        Assertions.assertEquals("START DATE CANNOT BE AFTER FINISH DATE", throwable.getExceptionMessage().getMessage(), "TEST 3 FAILED");
     }
 
     @Test
@@ -152,7 +152,7 @@ public class TestCustomerOrderService {
                 MyException.class,
                 () -> customerOrderService.findOrdersBetweenDatesAndGivenPrice(lcd, null, price));
 
-        Assertions.assertEquals("FINISH DATE CAN NOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 4 FAILED");
+        Assertions.assertEquals("FINISH DATE CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 4 FAILED");
     }
 
     @Test
@@ -167,7 +167,7 @@ public class TestCustomerOrderService {
                 MyException.class,
                 () -> customerOrderService.findOrdersBetweenDatesAndGivenPrice(lcd1, lcd2, price));
 
-        Assertions.assertEquals("PRICE CAN NOT BE NULL, LESS OR EQUAL ZERO", throwable.getExceptionMessage().getMessage(), "TEST 5 FAILED");
+        Assertions.assertEquals("PRICE CANNOT BE NULL, LESS OR EQUAL ZERO", throwable.getExceptionMessage().getMessage(), "TEST 5 FAILED");
     }
 
 }

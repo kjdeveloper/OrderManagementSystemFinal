@@ -8,7 +8,7 @@ public class ProducerValidator {
 
     public void validateProducer(final ProducerDto producerDto){
         if (producerDto == null){
-            throw new MyException(ExceptionCode.PRODUCER, "FIELDS CAN NOT BE NULL OR EMPTY");
+            throw new MyException(ExceptionCode.PRODUCER, "FIELDS CANNOT BE NULL OR EMPTY");
         }
         if (!isNameValid(producerDto)){
             throw new MyException(ExceptionCode.PRODUCER, "INVALID NAME");

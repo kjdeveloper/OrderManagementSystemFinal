@@ -32,7 +32,7 @@ public class CustomerService {
         if (country == null) {
             countryValidator.validateCountry(customerDto.getCountryDto());
             country = Mappers.fromCountryDtoToCountry(customerDto.getCountryDto());
-            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CAN NOT ADD COUNTRY IN CUSTOMER SERVICE"));
+            country = countryRepository.addOrUpdate(country).orElseThrow(() -> new MyException(ExceptionCode.COUNTRY, "CANNOT ADD COUNTRY IN CUSTOMER SERVICE"));
         }
 
         var customer = Mappers.fromCustomerDtoToCustomer(customerDto);

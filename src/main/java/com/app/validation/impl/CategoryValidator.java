@@ -11,7 +11,7 @@ public class CategoryValidator {
 
     public void validateCategory(CategoryDto categoryDto){
         if (categoryDto == null){
-            throw new MyException(ExceptionCode.CATEGORY, "CATEGORY CAN NOT BE NULL OR EMPTY");
+            throw new MyException(ExceptionCode.CATEGORY, "CATEGORY CANNOT BE NULL OR EMPTY");
         }
         if (!isNameValid(categoryDto)){
             throw new MyException(ExceptionCode.CATEGORY, "INVALID CATEGORY NAME");
