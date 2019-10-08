@@ -52,7 +52,7 @@ public class TestCustomerService {
     public void test2() {
 
         Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER CANNOT BE NULL"))
-                .when(customerService).addCustomer(ArgumentMatchers.isNull());
+                .when(customerRepository).addOrUpdate(ArgumentMatchers.isNull());
 
         var throwable = Assertions.assertThrows(
                 MyException.class,
@@ -67,17 +67,13 @@ public class TestCustomerService {
         var countryDto = CountryDto.builder().name("POLAND").id(1L).build();
         var customerDto = CustomerDto.builder().name("Kamil").surname("JANK").age(31).countryDto(countryDto).build();
 
-
-       /* Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "INVALID CUSTOMER NAME"))
-                .when(customerService).addCustomer(customerDto);*/
-
         var throwable = Assertions.assertThrows(
                 MyException.class,
                 () -> customerService.addCustomer(customerDto));
 
         Assertions.assertEquals("INVALID CUSTOMER NAME", throwable.getExceptionMessage().getMessage(), "TEST 3 FAILED");
     }
-/*
+
     @Test
     @DisplayName("Add customer with wrong age exception")
     public void test4(){
@@ -85,12 +81,23 @@ public class TestCustomerService {
         var countryDto = CountryDto.builder().name("POLAND").id(1L).build();
         var customerDto = CustomerDto.builder().name("KAMIL").surname("JANK").age(12).countryDto(countryDto).build();
 
-        Mockito.doThrow(new MyException(ExceptionCode.CUSTOMER, "CUSTOMER AGE CANNOT BE BELOW 18."))
-                .when(customerService).addCustomer(customerDto);
+        var throwable = Assertions.assertThrows(
+                MyException.class,
+                () -> customerService.addCustomer(customerDto));
+
+        Assertions.assertEquals("CUSTOMER AGE CANNOT BE BELOW 18.", throwable.getExceptionMessage().getMessage(), "TEST 4 FAILED"); }
+
+    @Test
+    @DisplayName("Add customer with wrong surname exception")
+    public void test5() {
+        var countryDto = CountryDto.builder().name("POLAND").id(1L).build();
+        var customerDto = CustomerDto.builder().name("KAMIL").surname("JANKow").age(31).countryDto(countryDto).build();
 
         var throwable = Assertions.assertThrows(
                 MyException.class,
                 () -> customerService.addCustomer(customerDto));
 
-        Assertions.assertEquals("CUSTOMER AGE CAN NOT BE BELOW 18.", throwable.getExceptionMessage().getMessage(), "TEST 4 FAILED"); }*/
+        Assertions.assertEquals("INVALID CUSTOMER SURNAME", throwable.getExceptionMessage().getMessage(), "TEST 5 FAILED");
+    }
+
 }

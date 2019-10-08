@@ -11,7 +11,7 @@ public class ShopValidator {
             throw new MyException(ExceptionCode.SHOP, "SHOP CANNOT BE NULL OR EMPTY");
         }
         if (!isNameValid(shopDto)){
-            throw new MyException(ExceptionCode.SHOP, "INVALID SHOP NAME");
+            throw new MyException(ExceptionCode.SHOP, "INVALID NAME");
         }
 
     }

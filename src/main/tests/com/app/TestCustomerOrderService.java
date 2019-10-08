@@ -38,18 +38,6 @@ public class TestCustomerOrderService {
     @InjectMocks
     private CustomerOrderService customerOrderService;
 
-    private BigDecimal productPriceAfterDiscount(CustomerOrder customerOrder) {
-        if (customerOrder == null) {
-            throw new MyException(ExceptionCode.CUSTOMER_ORDER, "CUSTOMER ORDER IS NULL");
-        }
-
-        var price = customerOrder.getProduct().getPrice();
-        var discountPrice = price.multiply(BigDecimal.valueOf(customerOrder.getDiscount()));
-        var quantity = BigDecimal.valueOf(customerOrder.getQuantity());
-
-        return price.subtract(discountPrice).multiply(quantity);
-    }
-
     @Test
     @DisplayName("Find all customer orders between dates and above price")
     public void test1(){

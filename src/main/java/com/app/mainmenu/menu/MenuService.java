@@ -141,7 +141,7 @@ public class MenuService {
                         System.out.println(productsDtoConverter.toJsonView(productWithSameGuaranteeComponents));
                         break;
                     case 10:
-                        List<ShopDto> shops = option10();
+                        Set<ShopDto> shops = option10();
                         System.out.println(shopsDtoConverter.toJsonView(shops));
                         break;
                     case 11:
@@ -321,7 +321,7 @@ public class MenuService {
         return productService.findAllProductsWithGivenGuarantees(eGuarantees);
     }
 
-    private List<ShopDto> option10() {
+    private Set<ShopDto> option10() {
         return shopService.findAllShopsWithProductsWithCountryDifferentThanShopCountry();
     }
 

@@ -1,20 +1,21 @@
 package com.app;
 
-import com.app.dto.ShopDto;
-import com.app.dto.StockDto;
-import com.app.model.*;
+import com.app.exceptions.MyException;
+import com.app.model.Country;
+import com.app.model.Shop;
 import com.app.repository.StockRepository;
+import com.app.service.services.StockService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,55 +25,91 @@ public class TestStockService {
     @Mock
     private StockRepository stockRepository;
 
+    @InjectMocks
+    private StockService stockService;
+
     @Test
-    @DisplayName("Find all stocks")
+    @DisplayName("Add stock with null product")
     public void test1(){
 
-        var shop1 = Shop.builder().name("LONGI").build();
-        var shop2 = Shop.builder().name("ARONY").build();
+        var throwable = Assertions.assertThrows(
+                MyException.class,
+                () -> stockService.addProductToStock(null, "CATEGORY", "SHOP", "COUNTRY", 1)
+        );
 
-        var country1 = Country.builder().name("POLAND").build();
-        var country2 = Country.builder().name("ITALY").build();
-
-        var producer1 = Producer.builder().country(country1).build();
-        var producer2 = Producer.builder().country(country2).build();
-
-        var product1 = Product.builder().name("LONOGRYJKI").price(BigDecimal.valueOf(100)).producer(producer1).build();
-        var product2 = Product.builder().name("ARONYJKI").price(BigDecimal.valueOf(250)).producer(producer2).build();
-
-        Mockito.when(stockRepository.findAll()).thenReturn(List.of(
-                Stock.builder().id(1L).product(product1).shop(shop1).build(),
-                Stock.builder().id(2L).product(product2).shop(shop2).build()
-        ));
-
-        List<Stock> stocks = stockRepository.findAll();
-
-        Assertions.assertEquals(2, stocks.size(), "TEST 1 FAILED");
+        Assertions.assertEquals("PRODUCT NAME IS NULL", throwable.getExceptionMessage().getMessage(), "TEST 1 FAILED");
     }
 
- /*   @Test
-    @DisplayName("Find all shops which on stock have products with different country as they")
+    @Test
+    @DisplayName("Add stock with null category")
     public void test2(){
 
-        var shop1 = Shop.builder().name("LONGI").build();
-        var shop2 = Shop.builder().name("ARONY").build();
+        var throwable = Assertions.assertThrows(
+                MyException.class,
+                () -> stockService.addProductToStock("PRODUCT", null, "SHOP", "COUNTRY", 1)
+        );
+
+        Assertions.assertEquals("CATEGORY NAME IS NULL", throwable.getExceptionMessage().getMessage(), "TEST 2 FAILED");
+    }
+
+    @Test
+    @DisplayName("Add stock with null shop")
+    public void test3(){
+
+        var throwable = Assertions.assertThrows(
+                MyException.class,
+                () -> stockService.addProductToStock("PRODUCT", "CATEGORY", null, "COUNTRY", 1)
+        );
+
+        Assertions.assertEquals("SHOP NAME IS NULL", throwable.getExceptionMessage().getMessage(), "TEST 3 FAILED");
+    }
+
+    @Test
+    @DisplayName("Add stock with null country")
+    public void test4(){
+
+        var throwable = Assertions.assertThrows(
+                MyException.class,
+                () -> stockService.addProductToStock("PRODUCT", "CATEGORY", "SHOP", null, 1)
+        );
+
+        Assertions.assertEquals("COUNTRY NAME IS NULL", throwable.getExceptionMessage().getMessage(), "TEST 4 FAILED");
+    }
+
+    @Test
+    @DisplayName("Add stock with 0 quantity")
+    public void test5(){
+
+        var throwable = Assertions.assertThrows(
+                MyException.class,
+                () -> stockService.addProductToStock("PRODUCT", "CATEGORY", "SHOP", "COUNTRY", 0)
+        );
+
+        Assertions.assertEquals("QUANTITY IS LESS OR EQUAL ZERO", throwable.getExceptionMessage().getMessage(), "TEST 5 FAILED");
+    }
+
+    @Test
+    @DisplayName("Add stock with quantity less than zero")
+    public void test6(){
+
+        var throwable = Assertions.assertThrows(
+                MyException.class,
+                () -> stockService.addProductToStock("PRODUCT", "CATEGORY", "SHOP", "COUNTRY", -10)
+        );
+
+        Assertions.assertEquals("QUANTITY IS LESS OR EQUAL ZERO", throwable.getExceptionMessage().getMessage(), "TEST 6 FAILED");
+    }
+
+    /*@Test
+    @DisplayName("Find all shops with different country as they product producer")
+    public void test7() {
 
         var country1 = Country.builder().name("POLAND").build();
-        var country2 = Country.builder().name("ITALY").build();
+        var shop1 = Shop.builder().name("LONGI").country(country1).build();
 
-        var producer1 = Producer.builder().country(country1).build();
-        var producer2 = Producer.builder().country(country2).build();
+        Mockito.when(stockRepository.findShopWithDifferentCountryThanProductInShop()).thenReturn(List.of(shop1));
 
-        var product1 = Product.builder().name("LONOGRYJKI").price(BigDecimal.valueOf(100)).producer(producer1).build();
-        var product2 = Product.builder().name("ARONYJKI").price(BigDecimal.valueOf(250)).producer(producer2).build();
-
-        Mockito.when(stockRepository.findAll()).thenReturn(List.of(
-                Stock.builder().id(1L).product(product1).shop(shop1).build(),
-                Stock.builder().id(2L).product(product2).shop(shop2).build()
-        ));
-
-        var shops = stockRepository.findShopWithDifferentCountryThanProductInShop();
-
-        Assertions.assertEquals(2, shops.size(), "TEST 1 FAILED");
+        var shops = shopService.findAllShopsWithProductsWithCountryDifferentThanShopCountry();
+        Assertions.assertEquals(1, shops.size(), "TEST 7 FAILED");
     }*/
 }

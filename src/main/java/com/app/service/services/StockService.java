@@ -16,6 +16,7 @@ import com.app.service.mapper.Mappers;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class StockService {
@@ -38,7 +39,7 @@ public class StockService {
             throw new MyException(ExceptionCode.STOCK, "COUNTRY NAME IS NULL");
         }
         if (quantity <= 0) {
-            throw new MyException(ExceptionCode.STOCK, "QUANTITY IS LESS OR EQUAL 0");
+            throw new MyException(ExceptionCode.STOCK, "QUANTITY IS LESS OR EQUAL ZERO");
         }
 
         var product = productRepository.findByName(productName)

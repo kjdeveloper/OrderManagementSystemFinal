@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface ErrorRepository extends GenericRepository<Error> {
 
-    List<Error> getErrors();
 }

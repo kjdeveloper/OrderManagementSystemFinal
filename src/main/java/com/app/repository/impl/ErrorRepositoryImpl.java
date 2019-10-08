@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ErrorRepositoryImpl extends AbstractGenericRepository<Error> implements ErrorRepository {
 
-    @Override
+ /*   @Override
     public List<Error> getErrors() {
         EntityManagerFactory entityManagerFactory = DbConnection.getInstance().getEntityManagerFactory();
 
@@ -44,5 +44,5 @@ public class ErrorRepositoryImpl extends AbstractGenericRepository<Error> implem
             }
         }
         return errors;
-    }
+    }*/
 }

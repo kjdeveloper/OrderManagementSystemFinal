@@ -18,8 +18,10 @@ import com.app.validation.impl.CountryValidator;
 import com.app.validation.impl.ShopValidator;
 import lombok.RequiredArgsConstructor;
 
+import javax.persistence.SecondaryTable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -57,10 +59,10 @@ public class ShopService {
         return Mappers.fromShopToShopDto(shop);
     }
 
-    public List<ShopDto> findAllShopsWithProductsWithCountryDifferentThanShopCountry() {
+    public Set<ShopDto> findAllShopsWithProductsWithCountryDifferentThanShopCountry() {
         return stockRepository.findShopWithDifferentCountryThanProductInShop()
                 .stream()
                 .map(Mappers::fromShopToShopDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

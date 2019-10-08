@@ -99,47 +99,47 @@ public class TestProductService {
 
     @Test
     @DisplayName("Find products with same guarantees exception")
-    public void test4() {
+    public void test5() {
 
         var throwable = Assertions.assertThrows(
                 MyException.class,
                 () -> productService.findAllProductsWithGivenGuarantees(null));
 
-        Assertions.assertEquals("GUARANTEES CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 4 FILED");
+        Assertions.assertEquals("GUARANTEES CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 5 FILED");
     }
 
     @Test
     @DisplayName("add product exception")
-    public void test5(){
+    public void test6(){
 
         var throwable = Assertions.assertThrows(
                 MyException.class,
                 () -> productService.addProduct(null));
 
-        Assertions.assertEquals("PRODUCT CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 5 FAILED");
+        Assertions.assertEquals("PRODUCT CANNOT BE NULL", throwable.getExceptionMessage().getMessage(), "TEST 6 FAILED");
     }
 
     @Test
     @DisplayName("add product with wrong name exception")
-    public void test6(){
+    public void test7(){
 
-        var product = ProductDto.builder().name("strange").price(BigDecimal.valueOf(100)).build();
+        var productDto = ProductDto.builder().name("strange").price(BigDecimal.valueOf(100)).build();
         var throwable = Assertions.assertThrows(
                 MyException.class,
-                () -> productService.addProduct(product));
+                () -> productService.addProduct(productDto));
 
-        Assertions.assertEquals("PRODUCT NAME IS NOT VALID", throwable.getExceptionMessage().getMessage(), "TEST 6 FAILED");
+        Assertions.assertEquals("PRODUCT NAME IS NOT VALID", throwable.getExceptionMessage().getMessage(), "TEST 7 FAILED");
     }
 
     @Test
     @DisplayName("add product with wrong price exception")
-    public void test7(){
+    public void test8(){
 
-        var product = ProductDto.builder().name("STRANGE").price(BigDecimal.valueOf(-10)).build();
+        var productDto = ProductDto.builder().name("STRANGE").price(BigDecimal.valueOf(-10)).build();
         var throwable = Assertions.assertThrows(
                 MyException.class,
-                () -> productService.addProduct(product));
+                () -> productService.addProduct(productDto));
 
-        Assertions.assertEquals("PRODUCT PRICE IS NOT VALID", throwable.getExceptionMessage().getMessage(), "TEST 7 FAILED");
+        Assertions.assertEquals("PRODUCT PRICE IS NOT VALID", throwable.getExceptionMessage().getMessage(), "TEST 8 FAILED");
     }
 }

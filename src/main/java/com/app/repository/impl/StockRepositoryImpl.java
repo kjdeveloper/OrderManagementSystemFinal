@@ -139,7 +139,7 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
             tx.begin();
 
             shops = entityManager
-                    .createQuery("select s.shop from Stock s WHERE s.product.producer.country <> s.shop.country")
+                    .createQuery("select s.shop from Stock s WHERE s.product.producer.country.name <> s.shop.country.name")
                     .getResultList();
 
             tx.commit();
@@ -147,7 +147,7 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException(ExceptionCode.STOCK, "STOCK FIND BY PRODUCT AND SHOP EXCEPTION ");
+            throw new MyException(ExceptionCode.STOCK, "STOCK FIND BY SHOP WITH DIFFERENT COUNTRY NAME THAN PRODUCT");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -179,7 +179,7 @@ public class StockRepositoryImpl extends AbstractGenericRepository<Stock> implem
             if (tx != null) {
                 tx.rollback();
             }
-            throw new MyException(ExceptionCode.STOCK, "STOCK FIND BY PRODUCT AND SHOP EXCEPTION ");
+            throw new MyException(ExceptionCode.STOCK, "STOCK FIND BY STOCK WITH SPECIFIC PRODUCT");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
